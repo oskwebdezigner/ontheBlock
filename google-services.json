@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "610317069220",
+    "project_id": "estility-e9d71",
+    "storage_bucket": "estility-e9d71.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:610317069220:android:26f691dca5c72ce10faf31",
+        "android_client_info": {
+          "package_name": "com.app.estility"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "610317069220-hg0eea4b9rmts6aov4tkhgi3u0gk8i90.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0vSz1qjsn_RSPBB9HRD1Eqztm7DyuKw8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "610317069220-hg0eea4b9rmts6aov4tkhgi3u0gk8i90.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "610317069220-b4a6kojq20ju7u9gj7mpn1suno0rf61v.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.app.estility"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
