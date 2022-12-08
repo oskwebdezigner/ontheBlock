@@ -40,7 +40,7 @@ const TextField = (props) => {
     }).start()
   }, [focusAnim, isFocused, value])
 
-  let color = isFocused ? currentTheme.c999999 : currentTheme.themeBackground
+  let color = isFocused ? currentTheme.textColor : currentTheme.black
   if (errorText) {
     color = '#B00020'
   }
@@ -53,18 +53,18 @@ const TextField = (props) => {
           Styles().justifyCenter,
           Styles().alignCenter,
           Styles().fs14,
-          Styles().bgWhite,
           Styles().br10,
           Styles().ph20,
+          Styles().bw1,
           {
-            
+            borderColor: currentTheme.cEFEFEF,
             color :currentTheme.borderColor,
            
             
           },
           stylesInput
         ]}
-        placeholderTextColor={'white'}
+        placeholderTextColor={'black'}
         ref={inputRef}
         {...restOfProps}
         value={value}
@@ -88,20 +88,20 @@ const TextField = (props) => {
                 {
                   scale: focusAnim.interpolate({
                     inputRange: [0, 1],
-                    // outputRange: [1, 0.75],
-                    outputRange: [1, 1],
+                    outputRange: [1, 0.86],
+                    // outputRange: [1, 1],
                   }),
                 },
                 {
                   translateY: focusAnim.interpolate({
                     inputRange: [0, 1],
-                    outputRange: [24, 12],
+                    outputRange: [24, 10],
                   }),
                 },
                 {
                   translateX: focusAnim.interpolate({
                     inputRange: [0, 1],
-                    outputRange: [16, 10],
+                    outputRange: [16, 20],
                   }),
                 },
               ],
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
   labelContainer: {
     position: 'absolute',
     top : -5,
-    paddingHorizontal: 10,
+    // paddingHorizontal: 10,
   },
   label: {
     // fontSize: 16,

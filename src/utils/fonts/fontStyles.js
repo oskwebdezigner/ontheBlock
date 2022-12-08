@@ -1,8 +1,8 @@
  const fontStyles = {
-    UbuntuBold: "Ubuntu-Bold",
-    UbuntuRegular: "Ubuntu-Regular",
-    UbuntuMedium: "Ubuntu-Medium",
-    UbuntuLight: "Ubuntu-Light",
+    PoppinsBold: "Poppins-Bold",
+    PoppinsRegular: "Poppins-Regular",
+    PoppinsMedium: "Poppins-Medium",
+    PoppinSemibold: "Poppins-Semibold",
 
 }
 export default fontStyles

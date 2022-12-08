@@ -20,21 +20,22 @@ export default function ThemeButton({
       style={[
         styles(currentTheme).justifyCenter,
         styles(currentTheme).alignCenter,
-        styles().h50px,
+        styles().h60px,
         styles().overflowH,
         styles().ph25,
-        styles().br5,
+        styles().br50,
         styles().bw1,
-        {backgroundColor : withoutBg ? 'transparent' : currentTheme.themeBackground,
-          borderColor:withoutBg ? currentTheme.borderColor : currentTheme.themeBackground },
+        {backgroundColor : withoutBg ? currentTheme.cE5E5E5 : currentTheme.themeBackground,
+          borderColor:withoutBg ? currentTheme.cE5E5E5 : currentTheme.themeBackground },
         Style,
       ]}
     >
       <Text
           style={[
-            { color: withoutBg ? currentTheme.borderColor : currentTheme.white },
-            styles(currentTheme).fs14,
-            styles().fontMedium,
+            { color: withoutBg ? currentTheme.borderColor : currentTheme.black },
+            styles(currentTheme).fs16,
+            styles().fw600,
+            styles().fontSemibold,
             StyleText,
           ]}
         >

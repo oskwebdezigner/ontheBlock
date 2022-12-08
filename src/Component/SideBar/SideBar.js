@@ -1,5 +1,5 @@
 import React, {useState, useContext} from 'react'
-import {View , Text, FlatList, Switch, TouchableOpacity } from 'react-native'
+import {View , Text, FlatList, Switch, Image, TouchableOpacity } from 'react-native'
 import ThemeContext from '../../context/ThemeContext/ThemeContext';
 import { theme } from '../../context/ThemeContext/ThemeColor';
 import {AntDesign, Ionicons, Feather, MaterialIcons, FontAwesome5} from '@expo/vector-icons';
@@ -9,25 +9,37 @@ import styles from '../../screen/styles';
 const MenuItems = [
     {
         id: 1,
-        name: 'Notifications',
+        name: 'My Properties',
         icon : <Ionicons name="notifications-circle" size={30} color="white" />,
        
     },
     {
         id:2,
-        name : 'Ticket History',
+        name : 'My Stuff',
         icon : <FontAwesome5 name="ticket-alt" size={20} color="white" />,
         navigateTo:'TicketHistory'
     },
     {
         id:3,
-        name:'Change Password',
+        name:'My Documents',
         icon:<Feather name="lock" size={20} color="white" />,
         navigateTo: 'ChangePassword'
     },
     {
         id:4,
-        name:'Terms & Privacy',
+        name:'Schedule Task',
+        icon: <Feather name="file" size={20} color="white" />,
+        navigateTo: 'TermsCondition'
+    },
+    {
+        id:5,
+        name:'Finance',
+        icon: <Feather name="file" size={20} color="white" />,
+        navigateTo: 'TermsCondition'
+    },
+    {
+        id:5,
+        name:'Finance',
         icon: <Feather name="file" size={20} color="white" />,
         navigateTo: 'TermsCondition'
     }
@@ -45,26 +57,23 @@ const themeContext = useContext(ThemeContext)
 const currentTheme = theme[themeContext.ThemeValue]
 
     return (
-        <View style={[styles().mt50, styles().flex,  styles().pl15, styles().pr15]}>
+        <View style={[styles().pt35, {backgroundColor:'red'}, styles().flex,  styles().pl15, styles().pr15]}>
             
-            <View style={styles().mb50}>
+            <View>
                 <TouchableOpacity
             onPress={() => props.navigation.goBack()}
             style={[
-            styles().alignCenter,
-            styles().justifyCenter,
+            styles().alignEnd,
+            styles().justifyEnd,
             styles().backButn
             ]}>
-    
-                
-                <AntDesign name="arrowleft" size={30} color="white" />
-            
+                <AntDesign name="close" size={30} color="white" />
             </TouchableOpacity>
+            <View style={[styles().w200px, styles().h150px]}>
+                <Image source={require('../../assets/images/logo.png')} style={styles().wh100} />
+            </View>
           </View>
 
-          <View style={[styles().alignCenter, styles().mb30]}>
-              <Text style={[styles().SidebarHeading, styles().fs20, styles().fontBold, styles().bgTextWhite]}>Menu</Text>
-          </View>
           <View>
             <FlatList
             data={MenuItems}
@@ -77,7 +86,7 @@ const currentTheme = theme[themeContext.ThemeValue]
                         <View style={[styles().mr10, {width:30}]}>
                             {item.icon}
                         </View>
-                        <Text style={[styles().bgTextWhite, styles().fs16, styles().fontRegular]}>{item.name}</Text>
+                        <Text style={[styles().fs16, styles().fontRegular, {color:currentTheme.black}]}>{item.name}</Text>
                     {item.name === 'Notifications' && 
                     <View style={[styles().flex, styles().alignEnd]}>
                     <Switch
@@ -98,7 +107,7 @@ const currentTheme = theme[themeContext.ThemeValue]
                 <View style={[styles().mr10, {width:30}]}>
                     <MaterialIcons name="logout" size={20} color="white" />
                 </View>
-                <Text style={[styles().bgTextWhite, styles().fs16, styles().fontRegular]}>Logout</Text>
+                <Text style={[ styles().fs16, styles().fontRegular, {color:currentTheme.black}]}>Logout</Text>
             </TouchableOpacity>
           </View>
         </View>

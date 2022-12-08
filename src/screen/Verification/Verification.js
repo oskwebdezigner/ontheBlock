@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext } from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, TouchableOpacity, Image } from 'react-native'
 import styles from '../styles'
 import ThemeContext from '../../context/ThemeContext/ThemeContext'
 import { theme } from '../../context/ThemeContext/ThemeColor'
@@ -16,12 +16,13 @@ import {
 import { forgotPasswordVerfication, verifyAccount } from '../../apollo/server';
 import { gql, useMutation } from '@apollo/client'
 import Spinner from '../../Component/Spinner/Spinner'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+
+import AuthLayout from '../../Component/AuthLayout/AuthLayout';
 
 const VERIFY_ACCOUNT = gql`${verifyAccount}`
 
 
-const CELL_COUNT = 4;
+const CELL_COUNT = 6;
 export default function Verification(props) {
     console.log('Verification props>>>>>>>>>>>',props)
     const themeContext = useContext(ThemeContext)
@@ -58,93 +59,100 @@ export default function Verification(props) {
 
 
     return (
-        <Layout navigation={props.navigation} LeftIcon={true} withoutScroll={true} pagetitle={'Verification'} homeGrad={true} ProfileImg={false} >
-         
-            <View style={[styles().mt10]}>
-                <Text style={[styles().fontRegular, {color:currentTheme.borderColor}, styles().fs14]}>Enter the email address link with your 
-                account to reset your password.</Text>
-            </View>
+        <AuthLayout navigation={props.navigation}>
+            <View style={styles().flex}>
+        
+                <View style={[styles().w150px, styles().h100px]}>
+                    <Image source={require('../../assets/images/logo.png')} resizeMode="cover" style={styles().wh100} />
+                </View>
 
-            <View style={[styles().mt30, styles().mb25]}>
-                
-                <Text style={[styles().fs14, styles().fw400, styles().mb10, {color:currentTheme.c111111}]}>Enter Code From Phone Number</Text>
-                <CodeField
-                    ref={ref}
-                    {...props}
-                    // Use `caretHidden={false}` when users can't paste a text value, because context menu doesn't appear
-                    value={value}
-                    onChangeText={setValue}
-                    cellCount={CELL_COUNT}
-                    rootStyle={[]}
-                    keyboardType="number-pad"
-                    textContentType="oneTimeCode"
-                    renderCell={({ index, symbol, isFocused }) => {
-                        return <View
-                            key={index}
-                            style={[styles(currentTheme).verifyContainer,
-                            isFocused && {
-                                borderColor: currentTheme.themeBackground,
-                                borderWidth:1
-                            }]}>
-                            <Text
-                                style={[
-                                    styles().fs24,
-                                    styles().fontRegular,
-                                    {
-                                        color: currentTheme.themeBackground,
-                                        backgroundColor: currentTheme.white
-                                    }]}
-                                onLayout={getCellOnLayoutHandler(index)}>
-                                {symbol || (isFocused ? <Cursor /> : null)}
-                            </Text>
-                        </View>
-                    }
-                    }
-                />
+                <View style={[styles().mt25]}>
+                    <Text style={[styles().fs24, styles().fontRegular, {color:currentTheme.black}]}>
+                        Phone
+                        <Text style={[styles().fs24, styles().fontSemibold, styles().lh30, styles().fw600, {color:currentTheme.themeBackground}]}> Verification</Text> 
+                    </Text> 
+                    <Text style={[styles().fontRegular, {color:currentTheme.textColor}, styles().fs14]}>Please enter 6 digit code send to your phone number +1 357 *****</Text>
+                </View>
 
-            <View style={[styles().mt35, styles().alignCenter]}>
-                <Text style={[styles().fontRegular,  {color : currentTheme.borderColor}, styles().fs14]}>
-                    Resend code after 
-                    <Text style={{color : currentTheme.themeBackground}}>2:15 </Text>
-                    Min. 
-                    <TouchableOpacity onPress={()=>props.navigation.navigate('ResetPassword')}>
-                        <Text style={[styles().textDecorationUnderline, { color : currentTheme.themeBackground}]}>Resend</Text>
-                        </TouchableOpacity>
-                </Text>
-            </View>
+                <View style={[styles().mt30, styles().mb10]}>
+                    
+                    <CodeField
+                        ref={ref}
+                        {...props}
+                        // Use `caretHidden={false}` when users can't paste a text value, because context menu doesn't appear
+                        value={value}
+                        onChangeText={setValue}
+                        cellCount={CELL_COUNT}
+                        rootStyle={[]}
+                        keyboardType="number-pad"
+                        textContentType="oneTimeCode"
+                        renderCell={({ index, symbol, isFocused }) => {
+                            return <View
+                                key={index}
+                                style={[styles(currentTheme).verifyContainer,
+                                isFocused && {
+                                    borderColor: currentTheme.themeBackground,
+                                    borderWidth:1
+                                }]}>
+                                <Text
+                                    style={[
+                                        styles().fs24,
+                                        styles().fontRegular,
+                                        {
+                                            color: currentTheme.themeBackground,
+                                            // backgroundColor: currentTheme.white
+                                        }]}
+                                    onLayout={getCellOnLayoutHandler(index)}>
+                                    {symbol || (isFocused ? <Cursor /> : '-')}
+                                </Text>
+                            </View>
+                        }
+                        }
+                    />
 
-                
+                    <View style={[styles().flexRow, styles().mt15, styles().justifyCenter, styles().alignCenter]}>
+                        <Text style={[styles().fontRegular,  {color : currentTheme.black}, styles().fs14]}>
+                            Resend code after 
+                            <Text style={{color : currentTheme.themeBackground}}> 2:15 </Text>
+                            Min.
+                            </Text> 
+                            <TouchableOpacity onPress={()=>props.navigation.navigate('ResetPassword')}>
+                                <Text style={[styles().fontSemibold, styles().fs14, styles().textDecorationUnderline, { color : currentTheme.themeBackground}]}> Resend</Text>
+                                </TouchableOpacity>
+                        
+                    </View>
+                </View>
 
             </View>
 
             <View>
              {!loading ? 
              <ThemeButton
-                    onPress={() => {
-                        setLoading(true)
-                        if(value.length === 4){
+                    // onPress={() => {
+                    //     setLoading(true)
+                    //     if(value.length === 4){
 
-                            let user = {
-                                email : props.route?.params?.email,
-                                code : value,
-                                emailCode: emailValue
-                            }
+                    //         let user = {
+                    //             email : props.route?.params?.email,
+                    //             code : value,
+                    //             emailCode: emailValue
+                    //         }
 
-                            console.log('value',user)
+                    //         console.log('value',user)
 
-                            mutate({ variables: { ...user } }) 
-                        }
-                        else {
-                            setLoading(false)
-                        }
-                    }}
-                    StyleText={{ textTransform: 'uppercase' }}
-                   
+                    //         mutate({ variables: { ...user } }) 
+                    //     }
+                    //     else {
+                    //         setLoading(false)
+                    //     }
+                    // }}
+                    onPress={()=>props.navigation.navigate('CreatePassword')}
+                    
                     Title={"Verify"}
                 />
                : <Spinner /> }  
             </View>
         
-        </Layout>
+        </AuthLayout>
     )
 }

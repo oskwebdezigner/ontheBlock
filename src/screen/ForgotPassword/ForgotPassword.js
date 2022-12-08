@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext ,useEffect } from 'react'
-import { View, Text, TouchableOpacity, TextInput } from 'react-native'
+import { View, Text, TouchableOpacity, TextInput, Image } from 'react-native'
 import styles from '../styles'
 
 import ThemeContext from '../../context/ThemeContext/ThemeContext'
@@ -7,8 +7,8 @@ import { theme } from '../../context/ThemeContext/ThemeColor'
 
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import Layout from '../../Component/Layout/Layout';
-import TextField from '../../Component/TextField/TextField';
+import AuthLayout from '../../Component/AuthLayout/AuthLayout';
+import TextField from '../../Component/FloatTextField/FloatTextField';
 import ThemeButton from '../../Component/ThemeButton/ThemeButton';
 
 import { validateFunc } from '../../constraints/constraints'
@@ -24,23 +24,23 @@ export default function ForgotPassword(props) {
     const themeContext = useContext(ThemeContext)
     const currentTheme = theme[themeContext.ThemeValue]
 
-    const [Username, setUsername] = useState('')
-    const [Usererror, setUserError] = useState(null)
+    const [PhoneNumber, setPhoneNumber] = useState('')
+    const [PhoneNumbererror, setPhoneNumberError] = useState(null)
 
     const [loading , setLoading] = useState(false)
 
     const isFocused = useIsFocused()
 
     useEffect(() => {
-        setUsername('')
-        setUserError(null)
+        setPhoneNumber('')
+        setPhoneNumberError(null)
     },[isFocused])
 
     function validation(){
         let status = true
         const emailError = validateFunc(Username ? { email: Username } : null,'email')
         if(emailError){
-            setUserError(...emailError.email)
+            setPhoneNumberError(...emailError.email)
             status = false
         }
         return status
@@ -66,32 +66,37 @@ export default function ForgotPassword(props) {
     }
 
     return (
-        <Layout navigation={props.navigation} LeftIcon={true} withoutScroll={true} pagetitle={'Forgot Password'} homeGrad={true} ProfileImg={false} >
-            
-            <View style={styles().mt10}>
-                <Text style={[styles().fs14, styles().fontRegular,{color:currentTheme.borderColor}]}>
-                    Enter the email address link with your account to reset your password.
-                </Text>
+        <AuthLayout navigation={props.navigation}>
+      
+        <View style={styles().flex}>
+            <View style={[styles().w150px, styles().h100px]}>
+                <Image source={require('../../assets/images/logo.png')} resizeMode="cover" style={styles().wh100} />
+            </View>
+
+            <View style={[styles().mt25]}>
+                <Text style={[styles().fs24, styles().fontRegular, {color:currentTheme.black}]}>
+                    Forgot
+                    <Text style={[styles().fs24, styles().fontSemibold, styles().lh30, styles().fw600, {color:currentTheme.themeBackground}]}> Password</Text> 
+                </Text> 
+                
             </View>
 
             <View style={styles().mt10}>
+                
                 <TextField
-                    keyboardType='email-address'
+                    keyboardType='numeric'
+                    value={PhoneNumber}
+                    label="Phone Number"
+                    errorText={PhoneNumbererror}
                     autoCapitalize='none'
-                    value={Username}
-                    PlaceholderInfo="Email Address"
-                    errorText={Usererror}
                     style
-                    SetEditinfo={(e)=> {
-                        setUserError(null)
-                        setUsername(text)
-                      }
-                      } 
                     onChangeText={(text) => {
-                        setUserError(null)
-                        setUsername(text)
+                        setPhoneNumberError(false)
+                        setPhoneNumber(text)
                     }}
                 />
+            </View>
+
             </View>
 
             <View style={styles().mt20}>
@@ -110,11 +115,11 @@ export default function ForgotPassword(props) {
                         props.navigation.navigate('Verification',{ email : Username })
                         }}
                     
-                    Title={"Send Instruction"}
+                    Title={"Send"}
                 /> : <Spinner /> }   
             </View>
        
 
-        </Layout>
+        </AuthLayout>
     )
 }

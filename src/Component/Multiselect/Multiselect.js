@@ -28,20 +28,16 @@ export default function Multiselect({
                 justifyContent: 'center',
             },
             container: {
-                flex: 0.25,
+                // flex: 0.25,
             },
             selectToggle: [
                 {
-                    paddingTop: 20,
-                    paddingBottom:20,
-                    backgroundColor:currentTheme.white,
-                    borderRadius:10,
-                    paddingLeft:25,
-                    alignItems:'center',
-                    alignContent:'center',
-                    alignSelf:'center',
-                    justifyContent:'center',
-                    height: 60,
+                    paddingTop: 5,
+                    // paddingBottom:20,
+                    // backgroundColor:currentTheme.black,
+                    paddingLeft:15,
+                    height: 40,
+                    justifyContent:'flex-end',
                     // borderWidth:2
                     
                 },
@@ -50,9 +46,9 @@ export default function Multiselect({
             selectToggleText: {
                 fontFamily: fontStyles.PoppinsRegular,
                 fontSize: 12,
-                color:currentTheme.themeBackground,
+                color:currentTheme.black,
                 // borderWidth:2,
-                height:'100%',
+                // height:'100%',
             },
             itemText: {
                 paddingTop: 10,
@@ -64,7 +60,7 @@ export default function Multiselect({
         showCancelButton={true}
         hideSearch={true}
         items={ListItems}
-        selectToggleIconComponent={<FontAwesome name="angle-down" size={20} color={currentTheme.themeBackground} style={{right:10}} />}
+        selectToggleIconComponent={<AntDesign name="caretdown" size={14} color={currentTheme.black} style={{right:10}} />}
         IconRenderer={MaterialIcons}
         uniqueKey="_id"
         displayKey='name'

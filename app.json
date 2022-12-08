@@ -1,13 +1,12 @@
 {
   "expo": {
-    "name": "Hawta",
-    "slug": "hawta",
+    "name": "OntheBlock",
+    "slug": "ontheblock",
     "version": "0.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
-     
       "resizeMode": "cover"
     },
     "updates": {
@@ -26,17 +25,23 @@
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "This app uses the location to determine the delivery address for your orders."
       },
-      "bundleIdentifier": "com.app.hawta"
+      "bundleIdentifier": "com.app.ontheblock"
     },
     "android": {
       "versionCode": 0,
-      "package":  "com.app.hawta",
-      
+      "package": "com.app.ontheblock",
       "useNextNotificationsApi": true,
-      "permissions":["CAMERA","LOCATION","ACCESS_FINE_LOCATION"]
+      "permissions": [
+        "CAMERA",
+        "LOCATION",
+        "ACCESS_FINE_LOCATION"
+      ]
     },
     "notification": {
       "iosDisplayInForeground": true
-    }
+    },
+    "plugins": [
+      "expo-media-library"
+    ]
   }
 }

@@ -8,6 +8,7 @@ import { gql, useMutation } from '@apollo/client'
 import { useQuery } from '@apollo/react-hooks';
 import { getCartItems } from '../../apollo/client';
 import UserContext from '../../context/User/User';
+import { DrawerActions } from '@react-navigation/native';
 const GETCARTITEMS = gql`${getCartItems}`
 
 export default function Header(props){
@@ -21,7 +22,11 @@ export default function Header(props){
 
    
 
-    
+    function EmptyView(){
+        return(
+            <View style={[styles().w25px, {backgroundColor:'red'}]} />
+        )
+    }
 
     function Back(){
         return(
@@ -41,17 +46,27 @@ export default function Header(props){
         )
     }
 
-    function HomeLogo(){
+    function Menu(){
         return(
-            <View>
-                <Image source={require('../../assets/images/home-logo.png')} />
+            <TouchableOpacity onPress={() => props.navigation.dispatch(DrawerActions.toggleDrawer())} style={[styles().boxpeshadow, styles().br5, styles().pall5, styles().wh40px, styles().justifyEvenly]}>
+                <View style={[styles().w15px, styles(currentTheme).menuBarIcon]}></View>
+                <View style={[styles().w30px, styles(currentTheme).menuBarIcon]}></View>
+                <View style={[styles().w15px, styles(currentTheme).menuBarIcon]}></View>
+            </TouchableOpacity>
+        )
+    }
+
+    function NotiIcon(){
+        return(
+            <View style={[styles().mr10, styles().wh25px, styles().overflowH]}>
+                <Image source={require('../../assets/images/bell-icon.png')} style={styles().wh100} resizeMode="contain" />
             </View>
         )
     }
 
     function ProfileImg(){
         return(
-            <TouchableOpacity onPress={()=>props.navigation.navigate('Profile')} style={[styles().wh30px, styles().br15]}>
+            <TouchableOpacity  style={[styles().wh30px, styles().br15]}>
                 <Image source={require('../../assets/images/user-img.png')} resizeMode={'cover'} style={styles().wh100}/>
             </TouchableOpacity>
         )
@@ -72,17 +87,21 @@ export default function Header(props){
             ]}>
                
                 {
-                    props.LeftIcon ? <Back/> : null
+                    props.LeftIcon ? <Back/> : <Menu />
                 }
+                
+                <Text style={[styles().fs20, styles().fw700, styles().fontSemibold, {color:currentTheme.borderColor}]}>{props.pagetitle}</Text>
+                
+                <View style={[styles().flexRow, styles().justifyBetween, styles().alignCenter]}>
                 {
-                    props.HomeIcon ? <HomeLogo/> : null
+                    props.NotiIcon ? <NotiIcon /> : null
                 }
-                
-                <Text style={[styles().fs18, styles().fw700, styles().fontBold, {color:currentTheme.borderColor}]}>{props.pagetitle}</Text>
-                
-                <View>
                 {
                     props.ProfileImg ? <ProfileImg/> : null
+                }
+                {
+                    props.NotiIcon === undefined || props.ProfileImg === undefined ? <View style={[styles().w25px]} /> : null
+                    
                 }
                 </View>
                 

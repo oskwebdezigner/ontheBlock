@@ -22,6 +22,17 @@ import Animated from "react-native-reanimated";
 
 // Stacks Screen
 import Home from "../screen/Home/Home";
+import MaintenanceDetail from '../screen/MaintenanceDetail/MaintenanceDetail';
+import SinglePropertyListing from '../screen/SinglePropertyListing/SinglePropertyListing';
+import InventoryCategoryList from '../screen/InventoryCategoryList/InventoryCategoryList';
+import InventorySingleList from "../screen/InventorySingleList/InventorySingleList";
+import DocumentListing from '../screen/DocumentListing/DocumentListing';
+import PropertyData from "../screen/PropertyData/PropertyData";
+import InventoryEdit from '../screen/InventoryEdit/InventoryEdit';
+import DocumentEdit from "../screen/DocumentEdit/DocumentEdit";
+import HandymenEdit from "../screen/HandymenEdit/HandymenEdit";
+import ScheduleEdit from "../screen/ScheduleEdit/ScheduleEdit";
+
 import Draws from '../screen/Draws/Draws';
 import NotificationsScreen from "../screen/NotificationsScreen/NotificationsScreen";
 import PrizeDetail from "../screen/PrizeDetail/PrizeDetail";
@@ -40,9 +51,16 @@ import Faq from '../screen/Faq/Faq';
 // Auth Stack
 import LandingScreen from '../screen/Landing/Landing';
 import Login from '../screen/Login/Login';
-import ForgotPassword from "../screen/ForgotPassword/ForgotPassword";
-import SignUp from "../screen/SignUp/SignUp";
+import LetsBegin from '../screen/LetsBegin/LetsBegin';
+import ChooseGoals from "../screen/ChooseGoals/ChooseGoals";
+import TellAboutYourself from "../screen/TellAboutYourself/TellAboutYourself";
+import TellAboutHome from '../screen/TellAboutHome/TellAboutHome';
 import Verification from "../screen/Verification/Verification";
+import CreatePassword from "../screen/CreatePassword/CreatePassword";
+import ForgotPassword from "../screen/ForgotPassword/ForgotPassword";
+
+import SignUp from "../screen/SignUp/SignUp";
+
 import ResetPassword from "../screen/ResetPassword/ResetPassword";
 
 import SideBar from "../Component/SideBar/SideBar";
@@ -65,7 +83,14 @@ function authenticationNavigator() {
     <AuthenticationStack.Navigator headerMode="none">
       
       <AuthenticationStack.Screen name="Landing" component={LandingScreen} />
-      
+      <AuthenticationStack.Screen name="Login" component={Login} />
+      <AuthenticationStack.Screen name="LetsBegin" component={LetsBegin} />
+      <AuthenticationStack.Screen name="ChooseGoals" component={ChooseGoals} />
+      <AuthenticationStack.Screen name="ForgotPassword" component={ForgotPassword} />
+      <AuthenticationStack.Screen name="Verification" component={Verification} />
+      <AuthenticationStack.Screen name="TellAboutYourself" component={TellAboutYourself} />
+      <AuthenticationStack.Screen name="CreatePassword" component={CreatePassword} />
+      <AuthenticationStack.Screen name="TellAboutHome" component={TellAboutHome} />
       
       {/* <AuthenticationStack.Screen name="Signup" component={SignUp} /> */}
       {/* <AuthenticationStack.Screen
@@ -90,12 +115,18 @@ function authenticationNavigator() {
 function HomeNavigator() {
   return (
     <HomeStack.Navigator headerMode="none">
-        <HomeStack.Screen name="Login" component={Login} />
-        <HomeStack.Screen name="ForgotPassword" component={ForgotPassword} />
-        <HomeStack.Screen name="Verification" component={Verification} />
-        <HomeStack.Screen name="ResetPassword" component={ResetPassword} />
-        <HomeStack.Screen name="Signup" component={SignUp} />
         <HomeStack.Screen name="Home" component={Home} />
+        <HomeStack.Screen name="MaintenanceDetail" component={MaintenanceDetail} />
+        <HomeStack.Screen name="SinglePropertyListing" component={SinglePropertyListing} />
+        <HomeStack.Screen name="InventoryCategoryList" component={InventoryCategoryList} />
+        <HomeStack.Screen name="InventorySingleList" component={InventorySingleList} />
+        <HomeStack.Screen name="DocumentListing" component={DocumentListing} />
+        <HomeStack.Screen name="PropertyData" component={PropertyData} />
+        <HomeStack.Screen name="InventoryEdit" component={InventoryEdit} />
+        <HomeStack.Screen name="DocumentEdit" component={DocumentEdit} />
+        <HomeStack.Screen name="HandymenEdit" component={HandymenEdit} />
+        <HomeStack.Screen name="ScheduleEdit" component={ScheduleEdit} />
+
         <HomeStack.Screen name="PrizeDetail" component={PrizeDetail} />
         <HomeStack.Screen name="Profile" component={Profile} />
         <HomeStack.Screen name="PersonalDetails" component={PersonalDetails} />
@@ -150,20 +181,31 @@ function Drawer() {
   return (
     <UserProvider>
       <View style={{ flex: 1, }}>
+      
         <SideDrawer.Navigator
           screenOptions={{
             swipeEnabled:false
           }}
-          
+          drawerType="slide"
+            drawerStyle={{
+              // flex: 1,
+              backgroundColor: 'transparent',
+              // borderTopLeftRadius:30,
+              // borderTopRightRadius:30,
+              // overflow: "hidden",
+              width: "80%",
+            }}
           drawerContent={(props) => {
             setProgress(props.progress);
             return <SideBar {...props} />;
           }}
         >
           <SideDrawer.Screen name="Home">
-            {(props) => <MyTabs {...props} style={animatedStyle} />}
+            {(props) => <HomeNavigator {...props} style={animatedStyle} />}
           </SideDrawer.Screen>
+          
         </SideDrawer.Navigator>
+        
       </View>
     </UserProvider>
   );

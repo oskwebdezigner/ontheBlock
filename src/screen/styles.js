@@ -207,6 +207,9 @@ const styles = (props = null) =>
     bottom25:{
       bottom:25
     },
+    mtminus5:{
+      marginTop:-5
+    },
     mt0:{
       marginTop:0
     },
@@ -359,6 +362,18 @@ const styles = (props = null) =>
     },
     mv25: {
       marginVertical: 25,
+    },
+    mall5: {
+      margin: 5,
+    },
+    mall10: {
+      margin: 10,
+    },
+    mall15: {
+      margin: 15,
+    },
+    mall20: {
+      margin: 20,
     },
     pt0:{
       paddingTop:0
@@ -561,14 +576,29 @@ const styles = (props = null) =>
     w100: {
       width: "100%",
     },
+    w15px:{
+      width:15
+    },
+    w30px:{
+      width:30
+    },
     w25px:{
       width:25
     },
     w50px:{
       width:50
     },
+    w60px:{
+      width:60
+    },
     w100px:{
       width:100
+    },
+    w150px:{
+      width:150,
+    },
+    w200px:{
+      width:200
     },
     wh100: {
       width: "100%",
@@ -630,6 +660,9 @@ const styles = (props = null) =>
     h5px:{
       height:5
     },
+    h25px:{
+      height:25
+    },
     h30px:{
       height:30
     },
@@ -655,8 +688,17 @@ const styles = (props = null) =>
     h100px: {
       height: 100,
     },
+    h110px:{
+      height:110
+    },
+    h130px:{
+      height:130
+    },
     h140px:{
       height:140
+    },
+    h150px:{
+      height:150
     },
     h200px: {
       height: 200,
@@ -725,16 +767,16 @@ const styles = (props = null) =>
       fontSize:50
     },
     fontBold: {
-      fontFamily: fontStyles.UbuntuBold,
+      fontFamily: fontStyles.PoppinsBold,
     },
     fontRegular: {
-      fontFamily: fontStyles.UbuntuRegular,
+      fontFamily: fontStyles.PoppinsRegular,
     },
     fontMedium: {
-      fontFamily: fontStyles.UbuntuMedium,
+      fontFamily: fontStyles.PoppinsMedium,
     },
-    fontLight: {
-      fontFamily: fontStyles.UbuntuLight,
+    fontSemibold: {
+      fontFamily: fontStyles.PoppinSemibold,
     },
     lh36:{
       lineHeight:36,
@@ -809,6 +851,30 @@ const styles = (props = null) =>
       borderRadius: 5,
       backgroundColor: props !== null ? props.SliderDots : 'transparent',
     },
+
+    CircleBullent : {
+      width : 8,
+      height :8,
+      borderRadius : 8,
+      marginRight : 5,
+      backgroundColor : '#000'
+    },
+    ActiveCricleBullent : {
+      width : 30,
+      height :8,
+      borderRadius : 40,
+      marginRight : 5,
+      backgroundColor : props !== null ? props.themeBackground : 'transparent'
+    },
+    passEye : {
+      position :'absolute',
+      padding : 20,
+      right : 0,
+    },
+    menuBarIcon:{
+      backgroundColor:props !== null ? props.themeBackground : 'transparent',
+      height:2
+    },
     
 
 
@@ -842,14 +908,14 @@ const styles = (props = null) =>
   
   
     verifyContainer: {
-      width: 65,
+      width: 44,
       height: 55,
       borderRadius : 10,
       // lineHeight: 40,
       fontSize: 20,
       justifyContent: "center",
       borderBottomWidth: 1,
-      backgroundColor:'white',
+      backgroundColor:props !== null ? props.blackish : 'transparent',
       borderColor: "#EFF0F3",
       textAlign: "center",
       alignContent: "center",

@@ -60,10 +60,10 @@ export default function App(){
     const client = await setupApolloClient()
 
     await Font.loadAsync({
-      "Ubuntu-Bold" : require('./src/assets/font/Ubuntu-Bold.ttf'),
-      "Ubuntu-Regular" :require('./src/assets/font/Ubuntu-Regular.ttf'),
-      "Ubuntu-Light" :require('./src/assets/font/Ubuntu-Light.ttf'),
-      "Ubuntu-Medium" :require('./src/assets/font/Ubuntu-Medium.ttf'),
+      "Poppins-Bold" : require('./src/assets/font/Poppins-Bold.ttf'),
+      "Poppins-Regular" :require('./src/assets/font/Poppins-Regular.ttf'),
+      "Poppins-Medium" :require('./src/assets/font/Poppins-Medium.ttf'),
+      "Poppins-Semibold" :require('./src/assets/font/Poppins-Semibold.ttf'),
     })
     const token = await AsyncStorage.getItem('token')
     if (token){
@@ -110,7 +110,7 @@ console.log("client",client)
        <AuthContext.Provider value={{ token , setTokenAsync , logout}}>
        
        {Platform.OS === 'android' && 
-       <MyStatusBar backgroundColor={'transparent'} style="light" /> }
+       <MyStatusBar backgroundColor={'transparent'} style="dark" /> }
 
      {Platform.OS === 'ios' && 
       <StatusBar  

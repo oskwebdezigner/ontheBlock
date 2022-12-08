@@ -3,213 +3,107 @@ import {  Platform,Animated, Dimensions, FlatList, Text, TouchableOpacity, View 
 import ThemeContext from '../../context/ThemeContext/ThemeContext';
 import { theme } from '../../context/ThemeContext/ThemeColor';
 import styles from '../styles';
-import { Ionicons , Foundation, FontAwesome5, Feather, Octicons, AntDesign, FontAwesome } from '@expo/vector-icons';
+import { Ionicons , Foundation, FontAwesome5, Feather, Octicons, AntDesign, FontAwesome, Entypo } from '@expo/vector-icons';
 import Layout from '../../Component/Layout/Layout';
-import PrizeComponent from '../../Component/PrizeComponent/PrizeComponent';
-import CountDownComponent from '../../Component/CountDownComponent/CountDownComponent';
-import SoldPrize from '../../Component/SoldPrize/SoldPrize';
-import Winners from '../../Component/Winners/Winners';
+import ThemeButton from '../../Component/ThemeButton/ThemeButton';
 
 const {width, height} = Dimensions.get('window');
 
-const ClosingSoonPrize = [
+const HomeTopList = [
     {
-        id:0,
-        totalNo:1950, 
-        SoldNo:855,
-        amount:'AED30,000',
-        Image: require('../../assets/images/prize-img.png')
+        Image: require('../../assets/images/home-top-img1.png'),
+        title:'Add Document'
     },
     {
-        id:1,
-        totalNo:1500, 
-        SoldNo:750,
-        amount:'AED30,000',
-        Image: require('../../assets/images/prize-img.png')
+        Image: require('../../assets/images/home-top-img2.png'),
+        title:'Add Item'
     },
     {
-        id:2,
-        totalNo:1200, 
-        SoldNo:480,
-        amount:'AED30,000',
-        Image: require('../../assets/images/prize-img.png')
-    },
-    {
-        id:3,
-        totalNo:2500, 
-        SoldNo:1140,
-        amount:'AED30,000',
-        Image: require('../../assets/images/prize-img.png')
-    },
-    {
-        id:4,
-        totalNo:1950, 
-        SoldNo:855,
-        amount:'AED30,000',
-        Image: require('../../assets/images/prize-img.png')
-    },
-    {
-        id:5,
-        totalNo:2000, 
-        SoldNo:186,
-        amount:'AED30,000',
-        Image: require('../../assets/images/prize-img.png')
+        Image: require('../../assets/images/home-top-img3.png'),
+        title:'More'
     },
 ]
 
-const CountDownList = [
+const PropertiesList = [
     {
         id:0,
-        totalNo:1950, 
-        SoldNo:855,
-        amount:'AED30,000',
-        Image: require('../../assets/images/closingPrizeImg.png'),
-        Title:'Win Studio Apartment in Dubai or',
-        OtherAmount:'AED 50.00'
+        Image:require('../../assets/images/home-property-img1.jpg'),
+        GridImage:require('../../assets/images/home-property-grid-img1.jpg'),
+        title:'Nacoa Apartment',
+        address:'Alexander City, New York'
     },
     {
         id:1,
-        totalNo:1500, 
-        SoldNo:750,
-        amount:'AED30,000',
-        Image: require('../../assets/images/closingPrizeImg.png'),
-        Title:'Win Studio Apartment in Dubai or',
-        OtherAmount:'AED 50.00'
+        Image:require('../../assets/images/home-property-img2.jpg'),
+        GridImage:require('../../assets/images/home-property-grid-img1.jpg'),
+        title:'Astute Homes',
+        address:'Alexander City, New York'
     },
     {
         id:2,
-        totalNo:1200, 
-        SoldNo:480,
-        amount:'AED30,000',
-        Image: require('../../assets/images/closingPrizeImg.png'),
-        Title:'Win Studio Apartment in Dubai or',
-        OtherAmount:'AED 50.00'
+        Image:require('../../assets/images/home-property-img1.jpg'),
+        GridImage:require('../../assets/images/home-property-grid-img1.jpg'),
+        title:'Nacoa Apartment',
+        address:'Alexander City, New York'
     },
     {
         id:3,
-        totalNo:3500, 
-        SoldNo:1140,
-        amount:'AED30,000',
-        Image: require('../../assets/images/closingPrizeImg.png'),
-        Title:'Win Studio Apartment in Dubai or',
-        OtherAmount:'AED 50.00'
+        Image:require('../../assets/images/home-property-img2.jpg'),
+        GridImage:require('../../assets/images/home-property-grid-img1.jpg'),
+        title:'Astute Homes',
+        address:'Alexander City, New York'
     },
     {
         id:4,
-         totalNo:1950, 
-        SoldNo:855,
-        amount:'AED30,000',
-        Image: require('../../assets/images/closingPrizeImg.png'),
-        Title:'Win Studio Apartment in Dubai or',
-        OtherAmount:'AED 50.00'
-    },
-    {
-        id:5,
-        totalNo:2000, 
-        SoldNo:186,
-        amount:'AED30,000',
-        Image: require('../../assets/images/closingPrizeImg.png'),
-        Title:'Win Studio Apartment in Dubai or',
-        OtherAmount:'AED 50.00'
-    },
+        Image:require('../../assets/images/home-property-img1.jpg'),
+        GridImage:require('../../assets/images/home-property-grid-img1.jpg'),
+        title:'Nacoa Apartment',
+        address:'Alexander City, New York'
+    }
 ]
 
-const SoldPrizeList = [
+const UpcomingMaintenance = [
     {
         id:0,
-        amount:'AED30,000',
-        Image: require('../../assets/images/sold-prize.png'),
-        sku: 'CG-01661',
-        SoldDate:'October 25, 2022',
-        
+        upcomingImage:require('../../assets/images/upcoming-maintenance-home-img1.jpg'),
+        upcomingDetailImage:require('../../assets/images/upcoming-maintenance-detail-img1.jpg'),
+        title:'Floor Maintenance',
+        address:'Astute Homes',
+        publishedDate:'November 16, 2022',
+        content:"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged."
     },
     {
         id:1,
-        amount:'AED30,000',
-        Image: require('../../assets/images/sold-prize.png'),
-        sku: 'CG-01661',
-        SoldDate:'October 25, 2022',
+        upcomingImage:require('../../assets/images/upcoming-maintenance-home-img2.jpg'),
+        title:'Roof Maintenance',
+        address:'Astute Homes',
+        publishedDate:'November 16, 2022',
+        content:"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged."
     },
     {
         id:2,
-        amount:'AED30,000',
-        Image: require('../../assets/images/sold-prize.png'),
-        sku: 'CG-01661',
-        SoldDate:'October 25, 2022',
+        upcomingImage:require('../../assets/images/upcoming-maintenance-home-img1.jpg'),
+        title:'Floor Maintenance',
+        address:'Astute Homes',
+        publishedDate:'November 16, 2022',
+        content:"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged."
     },
     {
         id:3,
-        amount:'AED30,000',
-        Image: require('../../assets/images/sold-prize.png'),
-        sku: 'CG-01661',
-        SoldDate:'October 25, 2022',
+        upcomingImage:require('../../assets/images/upcoming-maintenance-home-img2.jpg'),
+        title:'Floor Maintenance',
+        address:'Astute Homes',
+        publishedDate:'November 16, 2022',
+        content:"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged."
     },
     {
         id:4,
-        amount:'AED30,000',
-        Image: require('../../assets/images/sold-prize.png'),
-        sku: 'CG-01661',
-        SoldDate:'October 25, 2022',
-    },
-    {
-        id:5,
-        amount:'AED30,000',
-        Image: require('../../assets/images/sold-prize.png'),
-        sku: 'CG-01661',
-        SoldDate:'October 25, 2022',
-    },
-]
-
-const WinnersList = [
-    {
-        id:0,
-        amount:'AED30,000',
-        Image: require('../../assets/images/sold-prize.png'),
-        name:'Biju Vijayan',
-        coupon: 'CG-01654-01897-O',
-        announcedDate:'11:12 AM 06 October, 2022',
-        
-    },
-    {
-        id:1,
-        amount:'AED30,000',
-        Image: require('../../assets/images/sold-prize.png'),
-        name:'Biju Vijayan',
-        coupon: 'CG-01654-01897-O',
-        announcedDate:'11:12 AM 06 October, 2022',
-    },
-    {
-        id:2,
-        amount:'AED30,000',
-        Image: require('../../assets/images/sold-prize.png'),
-        name:'Biju Vijayan',
-        coupon: 'CG-01654-01897-O',
-        announcedDate:'11:12 AM 06 October, 2022',
-    },
-    {
-        id:3,
-        amount:'AED30,000',
-        Image: require('../../assets/images/sold-prize.png'),
-        name:'Biju Vijayan',
-        coupon: 'CG-01654-01897-O',
-        announcedDate:'11:12 AM 06 October, 2022',
-    },
-    {
-        id:4,
-        amount:'AED30,000',
-        Image: require('../../assets/images/sold-prize.png'),
-        name:'Biju Vijayan',
-        coupon: 'CG-01654-01897-O',
-        announcedDate:'11:12 AM 06 October, 2022',
-    },
-    {
-        id:5,
-        amount:'AED30,000',
-        Image: require('../../assets/images/sold-prize.png'),
-        name:'Biju Vijayan',
-        coupon: 'CG-01654-01897-O',
-        announcedDate:'11:12 AM 06 October, 2022',
-    },
+        upcomingImage:require('../../assets/images/upcoming-maintenance-home-img1.jpg'),
+        title:'Floor Maintenance',
+        address:'Astute Homes',
+        publishedDate:'November 16, 2022',
+        content:"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged."
+    }
 ]
 
 export default function Home(props){
@@ -217,48 +111,161 @@ export default function Home(props){
   
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
+
+  const [Grid, SetGrid] = useState(false);
   
 
 return( 
-    <Layout navigation={props.navigation} HomeIcon={true} homeSlider={true} homeGrad={true} ProfileImg={true}>
-        
-        <TouchableOpacity style={[styles().ph20, styles().mb20]} onPress={()=>props.navigation.navigate('Login')}>
-            <Text style={[styles().fs20, styles().fontBold, {color:currentTheme.themeBackground}]}>Login</Text>
-        </TouchableOpacity>
-    <View style={[styles().flex, styles().mb20, styles().pl20]}>
-        <Text style={[styles().fs18, styles().fontBold, styles().fw700, styles().mb10, {color:currentTheme.borderColor}]}>Closing Soon</Text>
-        <PrizeComponent  item={ClosingSoonPrize} onPress={()=>props.navigation.navigate('PrizeDetail')} />
-    </View>
+    <Layout navigation={props.navigation} NotiIcon={true} withoutScroll={true} ProfileImg={true} pagetitle={'Hi, John Smith'} style={styles().ph0}>
+        <View style={[styles().flex, {paddingLeft:width * 0.06}]}>
+        <FlatList
+            data={UpcomingMaintenance}
+            showsVerticalScrollIndicator={false}
+            ListHeaderComponent={
+                <View>
+                    <View style={[{paddingRight:width * 0.06}, styles().pl5, styles().mt25, styles().pv5]}>
+                        <View style={[styles(currentTheme).boxpeshadow, styles().mb20, styles().ph25, styles().pv35, styles().br10]}>
+                            <FlatList
+                                data={HomeTopList}
+                                horizontal
+                                showsHorizontalScrollIndicator={false}
+                                renderItem={({ item , index }) => {
+                                    return (
+                                        <View style={[styles().justifyCenter, index === 0 ? null : styles().alignCenter, { width :index === 0 ? width * 0.28 : width * 0.24}]}>
+                                            <View style={[styles().wh30px, styles().justifyCenter,  styles().mb10, styles().overflowH, index === 0 ? styles().alignSelfCenter : null]}>
+                                                <Image source={item.Image} resizeMode="contain" style={styles().wh100} />
+                                            </View>
+                                            <Text>{item.title}</Text>
+                                        </View>
 
-    <View style={[styles().w100, styles().ph20, styles().mb10, styles().h100px, styles().br10, styles().overflowH, {borderWidth:0}]}>
-        <Image source={require('../../assets/images/home-banner.png')} style={styles().wh100} resizeMode="contain" />
-    </View>
+                                    )
+                                }}
+                                keyExtractor={(item, index) => index.toString()}
+                            />
+                        </View>
+                    </View>
 
-    <View style={[styles().flex, styles().ph20, styles().mb20]}>
-        <CountDownComponent item={CountDownList} />
-    </View>
+                    <View style={[styles().flexRow, styles().justifyBetween, styles().alignCenter, {paddingRight:width * 0.06}]}>
+                        <Text style={[styles().fs16, styles().fontSemibold, styles().lh26, {color:currentTheme.black}]}>Your Properties</Text>
+                        <TouchableOpacity onPress={()=>SetGrid(!Grid)}>
+                            <Text style={[styles().fs14, styles().fontRegular, {color:currentTheme.textColor}]}>See All</Text>
+                        </TouchableOpacity>
+                    </View>
 
-    <View style={[styles().h300px, styles().ph20, styles().pt35, {backgroundColor:currentTheme.themeBackground}]}>
-        <Text style={[styles().fs24, styles().fontBold, styles().fw700, styles().textUpper, styles().mb5, styles(currentTheme).bgTextWhite]}>Sold Out</Text>
-        <Text style={[styles().fs12, styles().fontMedium, styles().lh18, styles(currentTheme).bgTextWhite]}>All our sold out campaigns along with their corresponding draw dates are listed here.</Text>
-    </View>
+                    {
+                        Grid ? 
+                        <View style={[styles().mb20, styles().mt5]}>
+                            <FlatList
+                                data={PropertiesList}
+                                horizontal
+                                showsHorizontalScrollIndicator={false}
+                                renderItem={({ item , index }) => {
+                                    return (
+                                        <TouchableOpacity onPress={()=>props.navigation.navigate('SinglePropertyListing', {singleList:item})} style={[styles().justifyCenter, { width :width * 0.85, marginLeft:index === 0 ? 0 : width * 0.03}]}>
+                                            <View style={[styles().h150px, styles().br10, styles().overflowH, styles().justifyCenter,  styles().mb10]}>
+                                                <Image source={item.GridImage} resizeMode="contain" style={styles().wh100} />
+                                            </View>
+                                            <Text style={[styles().fs14, styles().fontSemibold, {color:currentTheme.black}]}>{item.title}</Text>
+                                            <View style={[styles().flexRow, styles().alignCenter, styles().justifyStart, styles().flex, styles().flexWrap]}>
+                                                <FontAwesome name="map-marker" size={16} color={currentTheme.themeBackground} style={styles().mr5}/>
+                                                <Text style={[styles().fs10, styles().fontRegular, {color:currentTheme.textColor}]}>{item.address}</Text>
+                                            </View>
+                                        </TouchableOpacity>
 
-    <View style={[styles().ph20, styles().mt_170]}>
-        <SoldPrize item={SoldPrizeList} />
-    </View>
+                                    )
+                                }}
+                                keyExtractor={(item, index) => index.toString()}
+                            />
+                        </View> : <View style={[styles().mb20, styles().mt5]}>
+                            <FlatList
+                                data={PropertiesList}
+                                horizontal
+                                showsHorizontalScrollIndicator={false}
+                                renderItem={({ item , index }) => {
+                                    return (
+                                        <TouchableOpacity onPress={()=>props.navigation.navigate('SinglePropertyListing', {singleList:item})} style={[styles().justifyCenter, { width :width * 0.43, marginLeft:index === 0 ? 0 : width * 0.03}]}>
+                                            <View style={[styles().h150px, styles().br10, styles().overflowH, styles().justifyCenter,  styles().mb10]}>
+                                                <Image source={item.Image} resizeMode="contain" style={styles().wh100} />
+                                            </View>
+                                            <Text style={[styles().fs14, styles().fontSemibold, {color:currentTheme.black}]}>{item.title}</Text>
+                                            <View style={[styles().flexRow, styles().alignCenter, styles().justifyStart, styles().flex, styles().flexWrap]}>
+                                                <FontAwesome name="map-marker" size={16} color={currentTheme.themeBackground} style={styles().mr5}/>
+                                                <Text style={[styles().fs10, styles().fontRegular, {color:currentTheme.textColor}]}>{item.address}</Text>
+                                            </View>
+                                        </TouchableOpacity>
 
-    <View style={[styles().w100, styles().ph20, styles().mb20, styles().h100px, styles().br10, styles().overflowH, {borderWidth:0}]}>
-        <Image source={require('../../assets/images/home-banner.png')} style={styles().wh100} resizeMode="contain" />
-    </View>
+                                    )
+                                }}
+                                keyExtractor={(item, index) => index.toString()}
+                            />
+                        </View> 
+                    }
+                    {/* <View style={[styles().mb20, styles().mt5]}>
+                        <FlatList
+                            data={PropertiesList}
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            renderItem={({ item , index }) => {
+                                return (
+                                    <TouchableOpacity onPress={()=>props.navigation.navigate('SinglePropertyListing', {singleList:item})} style={[styles().justifyCenter, { width :width * 0.43, marginLeft:index === 0 ? 0 : width * 0.03}]}>
+                                        <View style={[styles().h150px, styles().br10, styles().overflowH, styles().justifyCenter,  styles().mb10]}>
+                                            <Image source={item.Image} resizeMode="contain" style={styles().wh100} />
+                                        </View>
+                                        <Text style={[styles().fs14, styles().fontSemibold, {color:currentTheme.black}]}>{item.title}</Text>
+                                        <View style={[styles().flexRow, styles().alignCenter, styles().justifyStart, styles().flex, styles().flexWrap]}>
+                                            <FontAwesome name="map-marker" size={16} color={currentTheme.themeBackground} style={styles().mr5}/>
+                                            <Text style={[styles().fs10, styles().fontRegular, {color:currentTheme.textColor}]}>{item.address}</Text>
+                                        </View>
+                                    </TouchableOpacity>
 
-    <View style={[styles().h300px, styles().ph20, styles().pt35, {backgroundColor:currentTheme.blue}]}>
-        <Text style={[styles().fs24, styles().fontBold, styles().fw700, styles().textUpper, styles().mb5, styles(currentTheme).bgTextWhite]}>Winners</Text>
-        <Text style={[styles().fs12, styles().fontMedium, styles().lh18, styles(currentTheme).bgTextWhite]}>All our winners are announced in this section.</Text>
-    </View>
+                                )
+                            }}
+                            keyExtractor={(item, index) => index.toString()}
+                        />
+                    </View> */}
 
-    <View style={[styles().ph20, styles().mt_170]}>
-        <Winners item={WinnersList} />
-    </View>
+                    <View style={[styles().flexRow, styles().justifyBetween, styles().alignCenter, {paddingRight:width * 0.06}]}>
+                        <Text style={[styles().fs16, styles().fontSemibold, styles().lh26, {color:currentTheme.black}]}>Upcoming Maintenance</Text>
+                        <TouchableOpacity>
+                            <Text style={[styles().fs14, styles().fontRegular, {color:currentTheme.textColor}]}>See All</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            }
+            renderItem={({ item , index }) => {
+                return (
+                    <View style={{paddingHorizontal:3}}>
+                        <View style={[styles().justifyBetween, styles().flexRow, styles().boxpeshadow, styles().br10, styles().ph15, styles().pv15, styles().mb20, index === 0 ? styles().mt5 : null, { width : width * 0.88}]}>
+                            <View style={[styles().w100px, styles().h110px, styles().br10, styles().overflowH]}>
+                                <Image source={item.upcomingImage} resizeMode="cover" style={styles().wh100} />
+                            </View>
+                            <View style={[styles().flex, styles().justifyBetween, styles().ml10]}>
+                                <Text style={[styles().fs14, styles().fontSemibold, {color:currentTheme.black}]}>{item.title}</Text>
+                                <View style={[styles().flexRow, styles().alignCenter, styles().justifyStart]}>
+                                    <View style={styles().mtminus5}>
+                                        <Entypo name="home" size={10} color={currentTheme.textColor} style={styles().mr5}/>
+                                    </View>
+                                    <Text style={[styles().fs10, styles().fontRegular, {color:currentTheme.textColor}]}>{item.address}</Text>
+                                </View>
+                                <View style={[styles().flexRow,  styles().alignCenter]}>
+                                    <View style={styles().mtminus5}>
+                                        <Entypo name="calendar" size={10} color={currentTheme.textColor} style={styles().mr5}/>
+                                    </View>
+                                    <Text style={[styles().fs10, styles().fontRegular, {color:currentTheme.textColor}]}>{item.publishedDate}</Text>
+                                </View>
+                                <ThemeButton onPress={()=>props.navigation.navigate('MaintenanceDetail', {maintenance:item})} Title={'View Details'} Style={[styles().h40px, styles().mt10, styles().w98]} StyleText={styles().fs12} />
+                            </View>
+                            <TouchableOpacity style={[styles().wh20px, styles().alignCenter, styles().justifyCenter, styles().br5, {backgroundColor:currentTheme.themeSecondary}]}>
+                                <FontAwesome5 name="ellipsis-h" size={12} color={currentTheme.black} />
+                            </TouchableOpacity>
+                            
+                        </View>
+                    </View>
+                )
+            }}
+            keyExtractor={(item, index) => index.toString()}
+        />
+        </View>
         
          
     </Layout>
