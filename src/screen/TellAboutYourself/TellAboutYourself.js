@@ -1,145 +1,289 @@
-import React , { useContext ,useEffect,useState,  } from 'react'
-import {  Platform,Animated, Dimensions, FlatList, Text, TouchableOpacity, View ,Image } from 'react-native';
-import ThemeContext from '../../context/ThemeContext/ThemeContext';
-import { theme } from '../../context/ThemeContext/ThemeColor';
-import styles from '../styles';
-import { CommonActions } from '@react-navigation/native';
-import { Ionicons , Foundation, FontAwesome5, Feather, Octicons, AntDesign, FontAwesome } from '@expo/vector-icons';
+import React, { useContext, useEffect, useState } from "react";
+import {
+  Platform,
+  Animated,
+  Dimensions,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  View,
+  Image,
+} from "react-native";
+import ThemeContext from "../../context/ThemeContext/ThemeContext";
+import { theme } from "../../context/ThemeContext/ThemeColor";
+import styles from "../styles";
+import { CommonActions } from "@react-navigation/native";
+import {
+  Ionicons,
+  Foundation,
+  FontAwesome5,
+  Feather,
+  Octicons,
+  AntDesign,
+  FontAwesome,
+} from "@expo/vector-icons";
 
 // import TextField from '../../Component/TextField/TextField';
-import ThemeButton from '../../Component/ThemeButton/ThemeButton';
-import AuthLayout from '../../Component/AuthLayout/AuthLayout';
-import TextField from '../../Component/FloatTextField/FloatTextField';
+import ThemeButton from "../../Component/ThemeButton/ThemeButton";
+import AuthLayout from "../../Component/AuthLayout/AuthLayout";
+import TextField from "../../Component/FloatTextField/FloatTextField";
+import FlashMessage from "../../Component/FlashMessage/FlashMessage";
+import { useQuery, useMutation, useSubscription } from "@apollo/react-hooks";
+import gql from "graphql-tag";
+import { SendPhoneCode } from "../../apollo/server";
+import Spinner from "../../Component/Spinner/Spinner";
+const { width, height } = Dimensions.get("window");
 
-const {width, height} = Dimensions.get('window');
+export default function TellAboutYourself(props) {
+  let goal = props?.route?.params.goal;
+  const SEND_PHONE_CODE = gql`
+    ${SendPhoneCode}
+  `;
 
+  const themeContext = useContext(ThemeContext);
+  const currentTheme = theme[themeContext.ThemeValue];
 
-export default function TellAboutYourself(props){
+  const [FirstName, SetFirstName] = useState("");
+  const [FirstNameError, SetFirstNameError] = useState(false);
 
-  
-  const themeContext = useContext(ThemeContext)
-  const currentTheme = theme[themeContext.ThemeValue]
+  const [LastName, SetLastName] = useState("");
+  const [LastNameError, SetLastNameError] = useState(false);
 
-  
-  const [FirstName, SetFirstName] = useState('')
-  const [FirstNameError, SetFirstNameError] = useState(false)
+  const [Email, SetEmail] = useState("");
+  const [EmailError, SetEmailError] = useState(false);
 
-  const [LastName, SetLastName] = useState('')
-  const [LastNameError, SetLastNameError] = useState(false)
+  const [PhoneNumber, SetPhoneNumber] = useState("");
+  const [PhoneNumberError, SetPhoneNumberError] = useState(false);
 
-  const [Email, SetEmail] = useState('')
-  const [EmailError, SetEmailError] = useState(false)
+  const [Address, setAddress] = useState("");
+  const [AddressError, setAddressError] = useState(false);
 
-  const [PhoneNumber, SetPhoneNumber] = useState('')
-  const [PhoneNumberError, SetPhoneNumberError] = useState(false)
+  const [loading, setLoading] = useState(false);
 
-//   function validate(){
-//     let status = true
-//     if(UserName === ''){
-//       setUserError(true)
-//       status = false
-//     }
-//     if(Password === ''){
-//       setPasswordError(true)
-//       status = false
-//     }
-//     return status
-//   }
-  
+  const [mutate, { client }] = useMutation(SEND_PHONE_CODE, {
+    onCompleted,
+    onError,
+  });
 
-return( 
+  async function onCompleted(data) {
+    try {
+      console.log("SendPhoneCode res :", data);
+      // FlashMessage({ msg: "Phone Verified Successfully", type: "success" });
+      props.navigation.navigate("Verification", {
+        user: {
+          firstName: FirstName,
+          lastName: LastName,
+          email: Email.trim().toLowerCase(),
+          address: Address,
+          phone: `+${PhoneNumber}`,
+        },
+        goal: goal,
+      });
+      setLoading(false);
+    } catch (e) {
+      console.log(e);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function onError(error) {
+    FlashMessage({ msg: "Invalid Phone Number!", type: "danger" });
+    setLoading(false);
+    console.log("SendPhoneCode error  :", error);
+  }
+
+  function GetInfo() {
+    let emailregex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    let status = true;
+    if (FirstName === "") {
+      FlashMessage({ msg: "Enter First Name", type: "warning" });
+      SetFirstNameError(true);
+      status = false;
+      return;
+    }
+
+    if (LastName === "") {
+      FlashMessage({ msg: "Enter Last Name", type: "warning" });
+      SetLastNameError(true);
+      status = false;
+      return;
+    }
+
+    if (Email === "") {
+      FlashMessage({ msg: "Enter Email Address", type: "warning" });
+      SetEmailError(true);
+      status = false;
+      return;
+    }
+    if (!emailregex.test(Email.trim().toLowerCase())) {
+      FlashMessage({ msg: "Invalid Email Address", type: "warning" });
+      SetEmailError(true);
+      status = false;
+      return;
+    }
+
+    if (PhoneNumber === "") {
+      FlashMessage({ msg: "Enter Phone Number", type: "warning" });
+      SetPhoneNumberError(true);
+      status = false;
+      return;
+    }
+    if (PhoneNumber.length < 10) {
+      FlashMessage({
+        msg: "Phone Number Length must be greater than 10",
+        type: "warning",
+      });
+      SetPhoneNumberError(true);
+      status = false;
+      return;
+    }
+
+    if (status) {
+      mutate({
+        variables: {
+          phone: `+${PhoneNumber}`,
+        },
+      });
+
+      // props.navigation.navigate("Verification");
+      // props.navigation.navigate("CreatePassword", {
+      //   user: {
+      //     firstName: FirstName,
+      //     lastName: LastName,
+      //     email: Email.trim().toLowerCase(),
+      //     address: Address,
+      //     phone: PhoneNumber,
+      //   },
+      //   code: "",
+      //   goal: goal,
+      // });
+    }
+  }
+
+  return (
     <AuthLayout navigation={props.navigation}>
-        
-    <View style={[styles().w150px, styles().h100px]}>
-      <Image source={require('../../assets/images/logo.png')} resizeMode="cover" style={styles().wh100} />
-    </View>
-
-    <View style={[styles().mt25, styles().mb15]}>
-        <Text style={[styles().fs24, styles().fontRegular, {color:currentTheme.black}]}>Tell us About</Text> 
-         <Text style={[styles().fs24, styles().fontSemibold, styles().lh30, styles().fw600, {color:currentTheme.themeBackground}]}>Yourself</Text> 
-    </View>
-
-    <View style={styles().mb20}>
-      <TextField
-            keyboardType='default'
-            value={FirstName}
-            label="First Name"
-            errorText={FirstNameError}
-            autoCapitalize='none'
-            style
-            onChangeText={(text) => {
-              SetFirstNameError(false)
-              SetFirstName(text)
-            }}
+      <View style={[styles().w150px, styles().h100px]}>
+        <Image
+          source={require("../../assets/images/logo.png")}
+          resizeMode="cover"
+          style={styles().wh100}
         />
-    </View>
+      </View>
 
-    <View style={styles().mb20}>
-      <TextField
-            keyboardType='default'
-            value={LastName}
-            label="Last Name"
-            errorText={LastNameError}
-            autoCapitalize='none'
-            style
-            onChangeText={(text) => {
-                SetLastNameError(false)
-              SetLastName(text)
-            }}
+      <View style={[styles().mt25, styles().mb15]}>
+        <Text
+          style={[
+            styles().fs24,
+            styles().fontRegular,
+            { color: currentTheme.black },
+          ]}
+        >
+          Tell us About
+        </Text>
+        <Text
+          style={[
+            styles().fs24,
+            styles().fontSemibold,
+            styles().lh30,
+            styles().fw600,
+            { color: currentTheme.themeBackground },
+          ]}
+        >
+          Yourself
+        </Text>
+      </View>
+
+      <View style={styles().mb20}>
+        <TextField
+          keyboardType="default"
+          value={FirstName}
+          label="First Name"
+          errorText={FirstNameError}
+          autoCapitalize="none"
+          style
+          onChangeText={(text) => {
+            SetFirstNameError(false);
+            SetFirstName(text);
+          }}
         />
-    </View>
+      </View>
 
-    <View style={styles().mb20}>
-      <TextField
-            keyboardType='default'
-            value={Email}
-            label="Email"
-            errorText={EmailError}
-            autoCapitalize='none'
-            style
-            onChangeText={(text) => {
-                SetEmailError(false)
-              SetEmail(text)
-            }}
+      <View style={styles().mb20}>
+        <TextField
+          keyboardType="default"
+          value={LastName}
+          label="Last Name"
+          errorText={LastNameError}
+          autoCapitalize="none"
+          style
+          onChangeText={(text) => {
+            SetLastNameError(false);
+            SetLastName(text);
+          }}
         />
-    </View>
+      </View>
 
-    <View style={styles().mb20}>
-      <TextField
-            keyboardType='numeric'
-            value={PhoneNumber}
-            label="Phone Number"
-            errorText={PhoneNumberError}
-            autoCapitalize='none'
-            style
-            onChangeText={(text) => {
-              SetPhoneNumberError(false)
-              SetPhoneNumber(text)
-            }}
+      <View style={styles().mb20}>
+        <TextField
+          keyboardType="default"
+          value={Email}
+          label="Email"
+          errorText={EmailError}
+          autoCapitalize="none"
+          style
+          onChangeText={(text) => {
+            SetEmailError(false);
+            SetEmail(text);
+          }}
         />
-    </View>
+      </View>
 
-    <View style={styles().mb20}>
-      <TextField
-            keyboardType='default'
-            value={''}
-            label="Address (optional)"
-            // errorText={UserError}
-            autoCapitalize='none'
-            style
-            onChangeText={(text) => {
+      <View style={styles().mb20}>
+        <TextField
+          // keyboardType="phone-pad"
+          keyboardType="numeric"
+          value={PhoneNumber}
+          label="Phone Number"
+          errorText={PhoneNumberError}
+          autoCapitalize="none"
+          style
+          onChangeText={(text) => {
+            SetPhoneNumberError(false);
+            SetPhoneNumber(text);
+          }}
+        />
+      </View>
+
+      <View style={styles().mb20}>
+        <TextField
+          keyboardType="default"
+          value={Address}
+          label="Address (optional)"
+          // errorText={UserError}
+          autoCapitalize="none"
+          style
+          onChangeText={(text) => {
             //   setUserError(false)
-            //   SetUserName(text)
-            }}
+            setAddress(text);
+          }}
         />
-    </View>
+      </View>
 
-    <View style={styles().mt10}>
-      <ThemeButton Title={'Next'} onPress={()=>props.navigation.navigate('Verification')} />
-      <ThemeButton Title={'Back'} withoutBg={true} Style={styles().mt20} onPress={()=>props.navigation.goBack()} />
-    </View>
-    
-         
+      <View style={styles().mt10}>
+        {loading ? (
+          <Spinner />
+        ) : (
+          <ThemeButton Title={"Next"} onPress={() => GetInfo()} />
+        )}
+        <ThemeButton
+          Title={"Back"}
+          withoutBg={true}
+          Style={styles().mt20}
+          onPress={() => props.navigation.goBack()}
+        />
+      </View>
     </AuthLayout>
-    )
+  );
 }

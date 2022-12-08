@@ -1,125 +1,153 @@
-import React, { useState, useRef, useContext ,useEffect } from 'react'
-import { View, Text, TouchableOpacity, TextInput, Image } from 'react-native'
-import styles from '../styles'
+import React, { useState, useRef, useContext, useEffect } from "react";
+import { View, Text, TouchableOpacity, TextInput, Image } from "react-native";
+import styles from "../styles";
 
-import ThemeContext from '../../context/ThemeContext/ThemeContext'
-import { theme } from '../../context/ThemeContext/ThemeColor'
+import ThemeContext from "../../context/ThemeContext/ThemeContext";
+import { theme } from "../../context/ThemeContext/ThemeColor";
 
-import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
-import AuthLayout from '../../Component/AuthLayout/AuthLayout';
-import TextField from '../../Component/FloatTextField/FloatTextField';
-import ThemeButton from '../../Component/ThemeButton/ThemeButton';
+import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import AuthLayout from "../../Component/AuthLayout/AuthLayout";
+import TextField from "../../Component/FloatTextField/FloatTextField";
+import ThemeButton from "../../Component/ThemeButton/ThemeButton";
 
-import { validateFunc } from '../../constraints/constraints'
-import { useIsFocused } from '@react-navigation/native'
-import { forgotPassword } from '../../apollo/server';
-import { gql, useMutation } from '@apollo/client'
-import Spinner from '../../Component/Spinner/Spinner'
+import { validateFunc } from "../../constraints/constraints";
+import { useIsFocused } from "@react-navigation/native";
+import { forgotPassword } from "../../apollo/server";
+import { gql, useMutation } from "@apollo/client";
+import Spinner from "../../Component/Spinner/Spinner";
+import FlashMessage from "../../Component/FlashMessage/FlashMessage";
 
-const FORGOT_PASSWORD = gql`${forgotPassword}`
+const FORGOT_PASSWORD = gql`
+  ${forgotPassword}
+`;
 
 export default function ForgotPassword(props) {
+  const themeContext = useContext(ThemeContext);
+  const currentTheme = theme[themeContext.ThemeValue];
 
-    const themeContext = useContext(ThemeContext)
-    const currentTheme = theme[themeContext.ThemeValue]
+  const [PhoneNumber, setPhoneNumber] = useState("");
+  const [PhoneNumbererror, setPhoneNumberError] = useState(null);
 
-    const [PhoneNumber, setPhoneNumber] = useState('')
-    const [PhoneNumbererror, setPhoneNumberError] = useState(null)
+  const [loading, setLoading] = useState(false);
 
-    const [loading , setLoading] = useState(false)
+  const isFocused = useIsFocused();
 
-    const isFocused = useIsFocused()
+  useEffect(() => {
+    setPhoneNumber("");
+    setPhoneNumberError(null);
+  }, [isFocused]);
 
-    useEffect(() => {
-        setPhoneNumber('')
-        setPhoneNumberError(null)
-    },[isFocused])
+  const [mutate, { client }] = useMutation(FORGOT_PASSWORD, {
+    onCompleted,
+    onError,
+  });
 
-    function validation(){
-        let status = true
-        const emailError = validateFunc(Username ? { email: Username } : null,'email')
-        if(emailError){
-            setPhoneNumberError(...emailError.email)
-            status = false
-        }
-        return status
+  async function onCompleted(data) {
+    try {
+      console.log("forgotPassword res :", data);
+      props.navigation.navigate("Verification", {
+        forgot_email: PhoneNumber.trim().toLowerCase(),
+      });
+      setLoading(false);
+    } catch (e) {
+      console.log(e);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function onError(error) {
+    setLoading(false);
+    console.log("forgotPassword error :", error);
+  }
+
+  function ForgotPassword() {
+    let emailregex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    let status = true;
+    if (PhoneNumber === "") {
+      FlashMessage({ msg: "Enter Email Address!", type: "warning" });
+      setPhoneNumberError(true);
+      status = false;
+      return;
+    }
+    if (!emailregex.test(PhoneNumber.trim().toLowerCase())) {
+      FlashMessage({ msg: "Invalid Email Address!", type: "warning" });
+      setPhoneNumberError(true);
+      status = false;
+      return;
     }
 
-    const [mutate, { client }] = useMutation(FORGOT_PASSWORD, { onCompleted, onError })
-
-    async function onCompleted(data){
-        try {
-            props.navigation.navigate('Verification',{ email : Username })
-        }
-        catch (e) {
-            console.log(e)
-        }
-        finally {
-            setLoading(false)
-        }
+    if (status) {
+      setLoading(true);
+      let user = {
+        email: PhoneNumber.toLowerCase().trim(),
+      };
+      mutate({ variables: { ...user } });
+    } else {
+      setLoading(false);
     }
+  }
 
-    function onError(error){
-        setLoading(false)
-        console.log('error',error)
-    }
+  return (
+    <AuthLayout navigation={props.navigation}>
+      <View style={styles().flex}>
+        <View style={[styles().w150px, styles().h100px]}>
+          <Image
+            source={require("../../assets/images/logo.png")}
+            resizeMode="cover"
+            style={styles().wh100}
+          />
+        </View>
 
-    return (
-        <AuthLayout navigation={props.navigation}>
-      
-        <View style={styles().flex}>
-            <View style={[styles().w150px, styles().h100px]}>
-                <Image source={require('../../assets/images/logo.png')} resizeMode="cover" style={styles().wh100} />
-            </View>
+        <View style={[styles().mt25]}>
+          <Text
+            style={[
+              styles().fs24,
+              styles().fontRegular,
+              { color: currentTheme.black },
+            ]}
+          >
+            Forgot
+            <Text
+              style={[
+                styles().fs24,
+                styles().fontSemibold,
+                styles().lh30,
+                styles().fw600,
+                { color: currentTheme.themeBackground },
+              ]}
+            >
+              {" "}
+              Password
+            </Text>
+          </Text>
+        </View>
 
-            <View style={[styles().mt25]}>
-                <Text style={[styles().fs24, styles().fontRegular, {color:currentTheme.black}]}>
-                    Forgot
-                    <Text style={[styles().fs24, styles().fontSemibold, styles().lh30, styles().fw600, {color:currentTheme.themeBackground}]}> Password</Text> 
-                </Text> 
-                
-            </View>
+        <View style={styles().mt10}>
+          <TextField
+            keyboardType="default"
+            value={PhoneNumber}
+            label="Email"
+            errorText={PhoneNumbererror}
+            autoCapitalize="none"
+            style
+            onChangeText={(text) => {
+              setPhoneNumberError(false);
+              setPhoneNumber(text);
+            }}
+          />
+        </View>
+      </View>
 
-            <View style={styles().mt10}>
-                
-                <TextField
-                    keyboardType='numeric'
-                    value={PhoneNumber}
-                    label="Phone Number"
-                    errorText={PhoneNumbererror}
-                    autoCapitalize='none'
-                    style
-                    onChangeText={(text) => {
-                        setPhoneNumberError(false)
-                        setPhoneNumber(text)
-                    }}
-                />
-            </View>
-
-            </View>
-
-            <View style={styles().mt20}>
-             {!loading ? <ThemeButton
-                    onPress={() => {
-                        // setLoading(true)
-                        // if(validation()){
-                        //      let user = {
-                        //         email : Username.toLowerCase().trim(),
-                        //     }
-                        //     mutate({ variables: { ...user } }) 
-                        //  }
-                        //  else{
-                        //         setLoading(false)
-                        //     }
-                        props.navigation.navigate('Verification',{ email : Username })
-                        }}
-                    
-                    Title={"Send"}
-                /> : <Spinner /> }   
-            </View>
-       
-
-        </AuthLayout>
-    )
+      <View style={styles().mt20}>
+        {!loading ? (
+          <ThemeButton onPress={() => ForgotPassword()} Title={"Send"} />
+        ) : (
+          <Spinner />
+        )}
+      </View>
+    </AuthLayout>
+  );
 }

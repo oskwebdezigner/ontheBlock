@@ -8,9 +8,9 @@ export const LoginUser = `mutation Login($facebookId:String,$email:String,$passw
      phone
      referral_id
    }
-  }`
+  }`;
 
-  export const estates =`
+export const estates = `
   query estates{
     estates{
       _id
@@ -18,18 +18,18 @@ export const LoginUser = `mutation Login($facebookId:String,$email:String,$passw
       image
       is_active
     }
-  }`
+  }`;
 
-  export const configuration = `query configuration {
+export const configuration = `query configuration {
      configuration{
     _id
     currency_symbol
     currency
     delivery_charges
     }
-  }`
+  }`;
 
-  export const updateOrder = `subscription updateOrder($userId:String!){
+export const updateOrder = `subscription updateOrder($userId:String!){
     updateOrder(userId:$userId){
     order{
       _id
@@ -60,9 +60,9 @@ export const LoginUser = `mutation Login($facebookId:String,$email:String,$passw
     }
       origin
     }
-  }`
+  }`;
 
-  export const newOrder = `subscription newOrder($userId:String!){
+export const newOrder = `subscription newOrder($userId:String!){
     newOrder(userId:$userId){
       order{
         _id
@@ -93,9 +93,9 @@ export const LoginUser = `mutation Login($facebookId:String,$email:String,$passw
       }
         origin
     }
-  }`
+  }`;
 
-  export const orders = `query orders{
+export const orders = `query orders{
     orders{
       _id
       amount
@@ -123,10 +123,9 @@ export const LoginUser = `mutation Login($facebookId:String,$email:String,$passw
     phone
       }
     }
-    }`
+    }`;
 
-
-  export const completedOrders = `query completedOrders{
+export const completedOrders = `query completedOrders{
     completedOrders{
       _id
       amount
@@ -154,9 +153,9 @@ export const LoginUser = `mutation Login($facebookId:String,$email:String,$passw
     phone
       }
     }
-    }`
+    }`;
 
-  export const placeOrder = `mutation placeOrder($amount:String, $user_id: String,
+export const placeOrder = `mutation placeOrder($amount:String, $user_id: String,
     $delivery_charges: String,$rider_id: String,
    $inputItem:[InputItem],
    $delivery_address:String,
@@ -193,9 +192,9 @@ $latitude: String,
        rider_id
    
        }
-     }`
+     }`;
 
-  export const products = `query products{
+export const products = `query products{
     products{
       _id
       title
@@ -205,24 +204,9 @@ $latitude: String,
       description
       category_id
     }
-  }`
+  }`;
 
-  export const profile = `
-  query{
-    profile{
-      _id
-      name
-      last_name
-      phone
-      email
-      notificationToken
-      picture
-      gender
-      dateofbirth
-    }
-  }`
-
-  export const createUser = `
+export const createUser = `
     mutation CreateUser($facebookId:String,$phone:String,$email:String,$password:String,$name:String,$notificationToken:String,$appleId:String,$referral_id:String){
     createUser(userInput:{
         facebookId:$facebookId,
@@ -243,13 +227,7 @@ $latitude: String,
         notificationToken
         referral_id
     }
-}`
-
-export const forgotPassword = `mutation forgotPassword($email : String!){
-    forgotPassword(email : $email){
-      result
-    }
-  }`
+}`;
 
 export const forgotPasswordVerfication = `mutation forgotPasswordVerification(
     $email :String!
@@ -259,9 +237,9 @@ export const forgotPasswordVerfication = `mutation forgotPasswordVerification(
     code :$code){
       result
     }
-  }`
+  }`;
 
-  export const verifyAccount = ` mutation verifyAccount($email:String!,$code: String!,$emailCode: String! ){
+export const verifyAccount = ` mutation verifyAccount($email:String!,$code: String!,$emailCode: String! ){
     verifyAccount(verifyInput:{
       email:$email,
       code:$code,
@@ -269,20 +247,20 @@ export const forgotPasswordVerfication = `mutation forgotPasswordVerification(
     }){
       result
     }
-  }`
+  }`;
 export const newPassword = `mutation newPassword($email :String! , 
     $newPassword : String!){
     newPassword(email : $email,
     newPassword :$newPassword){
       result
     }
-  }`
+  }`;
 
-  export const resetPassword = `mutation resetPassword($password:String!,$newPassword:String!,$email:String!){
+export const resetPassword = `mutation resetPassword($password:String!,$newPassword:String!,$email:String!){
     resetPassword(password: $password,newPassword:$newPassword, email:$email ){
       result
     }
-  }`
+  }`;
 
 export const updateUser = `mutation updateUser(
   $name : String
@@ -299,4 +277,164 @@ export const updateUser = `mutation updateUser(
     phone
     picture
   }
-}`
+}`;
+
+//ontheblock
+
+export const goals = `query goals {
+  
+  goals {
+    limit
+    page
+    results {
+      description
+      image
+      name
+      _id
+    }
+    totalPages
+    totalResults
+  }
+}`;
+
+export const signup = `mutation Signup(
+  $name : String
+  $phone : String
+  $address:String
+  $email:String
+  $password:String
+  $last_name:String
+) {
+
+   Signup(userInput : {
+    name :$name,
+    last_name :$last_name,
+    phone :$phone ,
+    picture: $picture
+    address: $address
+    email: $email
+    password: $password
+  })
+
+  signup {
+    _id
+    token
+    tokenExpiration
+    role
+    address
+    phoneVerified
+    isEmailVerified
+    first_name
+    last_name
+    phone
+    email
+    notificationToken
+    photo
+    isOnline
+  }
+}`;
+
+export const verifyPhone = `mutation VerifyPhone($code: String, $phone: String) {
+  verifyPhone(code: $code, phone: $phone) {
+    phone
+    result
+  }
+}`;
+
+export const SendPhoneCode = `mutation SendPhoneCode($phone: String) {
+  sendPhoneCode(phone: $phone) {
+    result
+    phone
+  }
+}`;
+
+export const RegisterWithProperty = `mutation RegisterWithProperty($userInput: UserInput, $propertyInput: InputProperty) {
+  registerWithProperty(userInput: $userInput, propertyInput: $propertyInput) {
+    _id
+    token
+    tokenExpiration
+    role
+    address
+    phoneVerified
+    isEmailVerified
+    first_name
+    last_name
+    phone
+    email
+    notificationToken
+    photo
+    isOnline
+  }
+}`;
+
+export const PropertyTypes = `query PropertyTypes {
+  propertyTypes {
+    page
+    limit
+    totalPages
+    totalResults
+    results {
+      name
+      image
+      description
+      _id
+      createdAt
+      updatedAt
+    }
+}
+}
+`;
+
+export const profile = `query Profile {
+  profile {
+    _id
+    role
+    first_name
+    last_name
+    phone
+    email
+    createdAt
+    updatedAt
+    notificationToken
+    photo
+    is_active
+  }
+}`;
+
+export const login = `mutation Login($email: String, $password: String, $notificationToken: String) {
+  login(email: $email, password: $password, notificationToken: $notificationToken) {
+    _id
+    token
+    tokenExpiration
+    role
+    address
+    phoneVerified
+    isEmailVerified
+    first_name
+    last_name
+    phone
+    email
+    notificationToken
+    photo
+    isOnline
+  }
+}`;
+
+export const forgotPassword = `mutation ForgotPassword($email: String!) {
+  forgotPassword(email: $email) {
+    result
+  }
+}`;
+
+export const ForgotPasswordVerification = `mutation ForgotPasswordVerification($email: String!, $code: String!) {
+  forgotPasswordVerification(email: $email, code: $code) {
+    result
+    token
+  }
+}`;
+
+export const ForgetPasswordChange = `mutation ForgetPasswordChange($token: String!, $password: String!) {
+  forgetPasswordChange(token: $token, password: $password) {
+    result
+  }
+}`;

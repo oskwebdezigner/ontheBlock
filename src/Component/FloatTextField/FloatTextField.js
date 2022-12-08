@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState ,useContext } from 'react'
+import React, { useEffect, useRef, useState, useContext } from "react";
 import {
   Text,
   TextInput,
@@ -7,10 +7,10 @@ import {
   Animated,
   Easing,
   TouchableWithoutFeedback,
-} from 'react-native'
-import ThemeContext from '../../context/ThemeContext/ThemeContext'
-import { theme } from '../../context/ThemeContext/ThemeColor'
-import Styles from '../../screen/styles';
+} from "react-native";
+import ThemeContext from "../../context/ThemeContext/ThemeContext";
+import { theme } from "../../context/ThemeContext/ThemeColor";
+import Styles from "../../screen/styles";
 const TextField = (props) => {
   const {
     label,
@@ -22,14 +22,14 @@ const TextField = (props) => {
     stylesInput,
     childrenPassword,
     ...restOfProps
-  } = props
-  const [isFocused, setIsFocused] = useState(false)
+  } = props;
+  const [isFocused, setIsFocused] = useState(false);
 
-  const inputRef = useRef(null)
-  const focusAnim = useRef(new Animated.Value(0)).current
+  const inputRef = useRef(null);
+  const focusAnim = useRef(new Animated.Value(0)).current;
 
-  const themeContext = useContext(ThemeContext)
-  const currentTheme = theme[themeContext.ThemeValue]
+  const themeContext = useContext(ThemeContext);
+  const currentTheme = theme[themeContext.ThemeValue];
 
   useEffect(() => {
     Animated.timing(focusAnim, {
@@ -37,17 +37,18 @@ const TextField = (props) => {
       duration: 150,
       easing: Easing.bezier(0.4, 0, 0.2, 1),
       useNativeDriver: true,
-    }).start()
-  }, [focusAnim, isFocused, value])
+    }).start();
+  }, [focusAnim, isFocused, value]);
 
-  let color = isFocused ? currentTheme.textColor : currentTheme.black
+  let color = isFocused ? currentTheme.textColor : currentTheme.black;
   if (errorText) {
-    color = '#B00020'
+    color = "#B00020";
   }
 
   return (
     <View style={[style]}>
       <TextInput
+        returnKeyType="done"
         style={[
           Styles().h60px,
           Styles().justifyCenter,
@@ -58,27 +59,24 @@ const TextField = (props) => {
           Styles().bw1,
           {
             borderColor: currentTheme.cEFEFEF,
-            color :currentTheme.borderColor,
-           
-            
+            color: currentTheme.borderColor,
           },
-          stylesInput
+          stylesInput,
         ]}
-        placeholderTextColor={'black'}
+        placeholderTextColor={"black"}
         ref={inputRef}
         {...restOfProps}
         value={value}
         onBlur={(event) => {
-          setIsFocused(false)
-          onBlur?.(event)
+          setIsFocused(false);
+          onBlur?.(event);
         }}
         onFocus={(event) => {
-          setIsFocused(true)
-          onFocus?.(event)
+          setIsFocused(true);
+          onFocus?.(event);
         }}
       />
-      <TouchableWithoutFeedback
-      onPress={() => inputRef.current?.focus()}>
+      <TouchableWithoutFeedback onPress={() => inputRef.current?.focus()}>
         <Animated.View
           style={[
             styles.labelContainer,
@@ -112,8 +110,7 @@ const TextField = (props) => {
             style={[
               styles.label,
               {
-                color
-                
+                color,
               },
               // isFocused && {
               //   fontSize : 12
@@ -121,17 +118,16 @@ const TextField = (props) => {
             ]}
           >
             {label}
-            {errorText ? '*' : ''}
+            {errorText ? "*" : ""}
           </Text>
         </Animated.View>
-     
       </TouchableWithoutFeedback>
-            
+
       {childrenPassword}
       {!!errorText && <Text style={styles.error}>{errorText}</Text>}
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   input: {
@@ -144,22 +140,20 @@ const styles = StyleSheet.create({
     // borderBottomWidth : 1
   },
   labelContainer: {
-    position: 'absolute',
-    top : -5,
+    position: "absolute",
+    top: -5,
     // paddingHorizontal: 10,
   },
   label: {
     // fontSize: 16,
-    fontSize : 12,
-    
+    fontSize: 12,
   },
   error: {
     // marginTop: 4,
     marginLeft: 12,
     fontSize: 12,
-    color: '#B00020',
-    
+    color: "#B00020",
   },
-})
+});
 
-export default TextField
+export default TextField;
