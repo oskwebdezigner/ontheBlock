@@ -139,6 +139,7 @@ export default function Verification(props) {
   }
 
   async function ResendOTP() {
+    setCounter(counts);
     if (forgot_email) {
       mutate_resend({
         variables: {

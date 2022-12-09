@@ -32,7 +32,7 @@ import InventoryEdit from "../screen/InventoryEdit/InventoryEdit";
 import DocumentEdit from "../screen/DocumentEdit/DocumentEdit";
 import HandymenEdit from "../screen/HandymenEdit/HandymenEdit";
 import ScheduleEdit from "../screen/ScheduleEdit/ScheduleEdit";
-
+import InventoryAddCategory from "../screen/InventoryAddCategory/InventoryAddCategory";
 import Draws from "../screen/Draws/Draws";
 import NotificationsScreen from "../screen/NotificationsScreen/NotificationsScreen";
 import PrizeDetail from "../screen/PrizeDetail/PrizeDetail";
@@ -141,6 +141,10 @@ function HomeNavigator() {
         name="InventorySingleList"
         component={InventorySingleList}
       />
+      {/* <HomeStack.Screen
+        name="InventoryAddCategory"
+        component={InventoryAddCategory}
+      /> */}
       <HomeStack.Screen name="DocumentListing" component={DocumentListing} />
       <HomeStack.Screen name="PropertyData" component={PropertyData} />
       <HomeStack.Screen name="InventoryEdit" component={InventoryEdit} />

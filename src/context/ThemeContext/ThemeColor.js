@@ -4,7 +4,7 @@ export const theme = {
     borderColor: "#333333",
     textColor: "#969AA8",
     lightBlue: "#3B4C68",
-
+    white: "#fff",
     authGradient: ["#FEF9E2", "#FFFFFF"],
     whiteGrad: ["#ffffff", "#ffffff"],
     sidebarGrad: ["#FAEB97", "#ffffff"],

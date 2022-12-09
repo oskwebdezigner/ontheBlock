@@ -36,7 +36,7 @@ export default function ChooseGoals(props) {
   const { loading, error, data, refetch } = useQuery(GOALS, {
     fetchPolicy: "cache-and-network",
     onCompleted: ({ goals }) => {
-    //   console.log("goals res :", goals.results);
+      //   console.log("goals res :", goals.results);
       setTopgoals(goals.results);
     },
     onError: (err) => {
@@ -45,7 +45,7 @@ export default function ChooseGoals(props) {
   });
 
   if (loading) return <Loader />;
-  if (error) return alert("Something Went Wrong While Choosing Goals!");
+  // if (error) return alert("Something Went Wrong While Choosing Goals!");
   return (
     <AuthLayout navigation={props.navigation} withoutScroll={true}>
       <View style={[styles().w150px, styles().h100px]}>

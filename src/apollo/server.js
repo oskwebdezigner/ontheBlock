@@ -438,3 +438,122 @@ export const ForgetPasswordChange = `mutation ForgetPasswordChange($token: Strin
     result
   }
 }`;
+
+export const properties = `query Properties {
+  properties {
+    results {
+      _id
+      bathrooms
+      bedrooms
+      city
+      country
+      description
+      images
+      is_active
+      name
+      owned_years
+      type {
+        name
+        image
+        description
+        _id
+      }
+      zip_code
+      address
+    }
+  }
+}`;
+
+export const upcommingTasksList = `query UpcommingTasksList {
+  upcommingTasksList {
+    results {
+      _id
+      schedule_date
+      description
+      get_notifications
+      property {
+        bathrooms
+        bedrooms
+        city
+        country
+        description
+        images
+        name
+        _id
+        address
+      }
+      is_completed
+      createdAt
+    }
+    page
+    limit
+    totalPages
+    totalResults
+  }
+}
+`;
+
+export const updateProperty = `mutation UpdateProperty($updatePropertyId: ID!, $updatePropertyInput: InputProperty) {
+  updateProperty(id: $updatePropertyId, updatePropertyInput: $updatePropertyInput) {
+    _id
+    bathrooms
+    bedrooms
+    country
+    description
+    images
+    name
+    owned_years
+    type {
+      _id
+      image
+      name
+      description
+    }
+    zip_code
+    city
+    address
+    is_active
+  }
+}`;
+
+export const getInventoryByCategory = `query GetInventoryByCategory {
+  getInventoryByCategory {
+    _id
+    inventories {
+      images
+      model_no
+      name
+      serail_no
+      type {
+        name
+        image
+        description
+        _id
+      }
+      brand
+      description
+      _id
+    }
+    category {
+      image
+      name
+      description
+      _id
+    }
+  }
+}`;
+
+export const categories = `query Categories($options: options) {
+  categories(options: $options) {
+    results {
+      name
+      image
+      description
+      _id
+    }
+    page
+    limit
+    totalPages
+    totalResults
+  }
+}`;

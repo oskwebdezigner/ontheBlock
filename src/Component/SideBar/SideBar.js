@@ -31,7 +31,7 @@ const MenuItems = [
     id: 2,
     name: "My Stuff",
     Image: require("../../assets/images/my-stuff.png"),
-    // navigateTo:'TicketHistory'
+    navigateTo: "InventoryCategoryList",
   },
   {
     id: 3,

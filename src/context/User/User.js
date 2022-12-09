@@ -16,10 +16,12 @@ export const UserProvider = (props) => {
   useEffect(() => {
     refetch();
   }, [token]);
+
   const { loading, data, error, refetch, client } = useQuery(PROFILE, {
     fetchPolicy: "no-cache",
   });
-  console.log("UserProvider>>>>> token", data, token);
+
+  console.log("UserProvider ==========>>>>>", data, token);
 
   const user =
     loading || error || !data.profile

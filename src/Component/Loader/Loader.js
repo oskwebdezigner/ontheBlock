@@ -1,14 +1,11 @@
 import React, { useContext } from "react";
 import { ActivityIndicator, View } from "react-native";
-// import { connect } from "react-redux";
-// import { useSelector } from "react-redux";
 import ThemeContext from "../../context/ThemeContext/ThemeContext";
 import { theme } from "../../context/ThemeContext/ThemeColor";
 export default function Loader(props) {
-  // let loading = useSelector((state) => state.Loading.loading);
-  // if (!loading) {
-  //   return null;
-  // }
+  if (!props.loading) {
+    return null;
+  }
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
   return (
@@ -20,6 +17,7 @@ export default function Loader(props) {
         justifyContent: "center",
         position: "absolute",
         // backgroundColor: "red",
+        alignSelf: "center",
         elevation: 10,
         zIndex: 190000,
       }}
@@ -35,15 +33,6 @@ export default function Loader(props) {
         }}
       />
       <ActivityIndicator size="large" color={currentTheme.themeBackground} />
-      {/* <LottieView
-        autoPlay={true}
-        loop={true}
-        style={{height: 40, width: 40}}
-        source={require('../../shared/assets/ball_loader.json')}
-      /> */}
     </View>
   );
 }
-
-// export default connect(mapStateToProps)(Loader);
-// export default Loader;

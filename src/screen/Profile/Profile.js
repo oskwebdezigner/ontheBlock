@@ -26,7 +26,6 @@ export default function Profile(props) {
   console.log("Profile user Context", user);
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
-
   const [modalVisible, setModalVisible] = useState(false);
   const [CurrentSelect, SetCurrentSelect] = useState(false);
 
@@ -105,8 +104,8 @@ export default function Profile(props) {
             { borderColor: currentTheme.themeBackground },
           ]}
         >
-          {user?.picture ? (
-            <Image source={{ uri: user?.picture }} style={styles().wh100} />
+          {user?.photo ? (
+            <Image source={{ uri: user?.photo }} style={styles().wh100} />
           ) : (
             <Image
               source={require("../../assets/images/default-img.png")}
@@ -123,7 +122,9 @@ export default function Profile(props) {
             { color: currentTheme.borderColor },
           ]}
         >
-          Alex Tsimikas
+          {user?.first_name?.toUpperCase() +
+            " " +
+            user?.last_name?.toUpperCase()}
         </Text>
         <Text
           style={[
@@ -142,7 +143,7 @@ export default function Profile(props) {
             { color: currentTheme.borderColor },
           ]}
         >
-          test.hashone@gmail.com
+          {user?.email}
         </Text>
       </View>
     );

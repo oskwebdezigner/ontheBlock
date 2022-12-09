@@ -42,8 +42,8 @@ const request = async (operation) => {
     // get the authentication token from local storage if it exists
     // return the headers to the context so httpLink can read them
     headers: {
-    //   authorization: token ? `Bearer ${token}` : "",
-      authorization: token ? `${token}` : "",
+      //   authorization: token ? `Bearer ${token}` : "",
+      authorization: token ? token : "",
     },
   });
 };
