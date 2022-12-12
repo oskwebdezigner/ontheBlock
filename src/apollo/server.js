@@ -557,3 +557,41 @@ export const categories = `query Categories($options: options) {
     totalResults
   }
 }`;
+
+export const updateInventory = `mutation UpdateInventory($updateInventoryId: ID!, $updateInventoryInput: InputInventory) {
+  updateInventory(id: $updateInventoryId, updateInventoryInput: $updateInventoryInput) {
+    _id
+    name
+    description
+    images
+    type {
+      name
+      _id
+      description
+      image
+    }
+    brand
+    model_no
+    serail_no
+    is_active
+  }
+}`;
+
+export const addFolder = `mutation AddFolder($inputFolder: InputFolder) {
+  addFolder(inputFolder: $inputFolder) {
+    name
+    inventory {
+      _id
+      images
+      name
+      serail_no
+    }
+    _id
+    files {
+      name
+      mimetype
+      _id
+      path
+    }
+  }
+}`;

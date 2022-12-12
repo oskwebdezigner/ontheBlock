@@ -48,65 +48,6 @@ const HomeTopList = [
   },
 ];
 
-const PropertiesList = [
-  {
-    id: 0,
-    Image: require("../../assets/images/home-property-img1.jpg"),
-    GridImage: require("../../assets/images/home-property-grid-img1.jpg"),
-    title: "Nacoa Apartment",
-    address: "Alexander City, New York",
-  },
-];
-
-const UpcomingMaintenance = [
-  {
-    id: 0,
-    upcomingImage: require("../../assets/images/upcoming-maintenance-home-img1.jpg"),
-    upcomingDetailImage: require("../../assets/images/upcoming-maintenance-detail-img1.jpg"),
-    title: "Floor Maintenance",
-    address: "Astute Homes",
-    publishedDate: "November 16, 2022",
-    content:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
-  },
-  {
-    id: 1,
-    upcomingImage: require("../../assets/images/upcoming-maintenance-home-img2.jpg"),
-    title: "Roof Maintenance",
-    address: "Astute Homes",
-    publishedDate: "November 16, 2022",
-    content:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
-  },
-  {
-    id: 2,
-    upcomingImage: require("../../assets/images/upcoming-maintenance-home-img1.jpg"),
-    title: "Floor Maintenance",
-    address: "Astute Homes",
-    publishedDate: "November 16, 2022",
-    content:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
-  },
-  {
-    id: 3,
-    upcomingImage: require("../../assets/images/upcoming-maintenance-home-img2.jpg"),
-    title: "Floor Maintenance",
-    address: "Astute Homes",
-    publishedDate: "November 16, 2022",
-    content:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
-  },
-  {
-    id: 4,
-    upcomingImage: require("../../assets/images/upcoming-maintenance-home-img1.jpg"),
-    title: "Floor Maintenance",
-    address: "Astute Homes",
-    publishedDate: "November 16, 2022",
-    content:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
-  },
-];
-
 export default function Home(props) {
   const PROPERTIES = gql`
     ${properties}
@@ -145,7 +86,6 @@ export default function Home(props) {
     },
   });
 
-  console.log("=======>", data);
   //   if (loading) return <Loader />;
   return (
     <Layout

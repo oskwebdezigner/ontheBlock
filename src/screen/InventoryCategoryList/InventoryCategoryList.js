@@ -32,6 +32,7 @@ import gql from "graphql-tag";
 import Layout from "../../Component/Layout/Layout";
 import ThemeButton from "../../Component/ThemeButton/ThemeButton";
 import { getInventoryByCategory } from "../../apollo/server";
+import { useIsFocused } from "@react-navigation/native";
 
 const { width, height } = Dimensions.get("window");
 
@@ -59,7 +60,7 @@ export default function InventoryCatList(props) {
     }
   );
 
-  console.log("inventory=========>", data?.getInventoryByCategory);
+  // console.log("inventory=========>", data?.getInventoryByCategory);
   function handleOnScroll(event) {
     //calculate screenIndex by contentOffset and screen width
     Setpage(
@@ -68,10 +69,14 @@ export default function InventoryCatList(props) {
       )
     );
   }
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    refetch();
+  }, [isFocused]);
 
   return (
     <Layout
-      loading={loading}
+      // loading={loading}
       navigation={props.navigation}
       LeftIcon={true}
       withoutScroll={true}
@@ -130,16 +135,18 @@ export default function InventoryCatList(props) {
                             borderRadius: 10,
                           }}
                         >
-                          <Image
-                            source={{
-                              uri: item?.inventories[index]?.images[index],
-                            }}
-                            style={{
-                              height: "100%",
-                              width: "100%",
-                              borderRadius: 10,
-                            }}
-                          />
+                          {item?.inventories[index]?.images ? (
+                            <Image
+                              source={{
+                                uri: item?.inventories[index]?.images[index],
+                              }}
+                              style={{
+                                height: "100%",
+                                width: "100%",
+                                borderRadius: 10,
+                              }}
+                            />
+                          ) : null}
                         </View>
                         <View
                           style={[
@@ -271,13 +278,53 @@ export default function InventoryCatList(props) {
                             styles().br5,
                           ]}
                         >
-                          <Image
-                            source={{
-                              uri: InventoryCategoryTitle.images[0],
-                            }}
-                            resizeMode="contain"
-                            style={[styles().wh100]}
-                          />
+                          {InventoryCategoryTitle.images ? (
+                            <Image
+                              source={{
+                                uri: InventoryCategoryTitle.images[0],
+                              }}
+                              resizeMode="contain"
+                              style={[styles().wh100]}
+                            />
+                          ) : (
+                            <View
+                              style={[
+                                styles().wh100,
+                                styles().br10,
+
+                                {
+                                  backgroundColor: currentTheme.white,
+                                  borderWidth: 0.5,
+                                  borderColor: currentTheme.themeBackground,
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  shadowColor: "#000",
+                                  shadowOffset: {
+                                    width: 0,
+                                    height: 2,
+                                  },
+                                  shadowOpacity: 0.25,
+                                  shadowRadius: 3.84,
+                                  elevation: 5,
+                                },
+                              ]}
+                            >
+                              <Ionicons
+                                name="image"
+                                size={50}
+                                color={currentTheme.BCBCBC}
+                              />
+                              <Text
+                                style={{
+                                  color: currentTheme.BCBCBC,
+                                  fontWeight: "bold",
+                                  fontSize: 12,
+                                }}
+                              >
+                                No Image
+                              </Text>
+                            </View>
+                          )}
                           <TouchableOpacity
                             onPress={() =>
                               props.navigation.navigate("InventoryEdit", {
@@ -323,7 +370,10 @@ export default function InventoryCatList(props) {
                                 styles(currentTheme).bgTextWhite,
                               ]}
                             >
-                              1/{InventoryCategoryTitle?.images?.length}
+                              {InventoryCategoryTitle?.images ? 1 : 0}/
+                              {InventoryCategoryTitle?.images
+                                ? InventoryCategoryTitle?.images?.length
+                                : 0}
                             </Text>
                           </View>
                         </View>
@@ -345,48 +395,48 @@ export default function InventoryCatList(props) {
             );
           }}
           keyExtractor={(item, index) => index.toString()}
-          ListFooterComponent={
-            <View style={styles().mb100}>
-              <View
-                style={[styles().flexRow, styles().mb20, styles().alignCenter]}
-              >
-                <View
-                  style={[styles().wh30px, styles().overflowH, styles().mr5]}
-                >
-                  <Image
-                    source={require("../../assets/images/personal-items.png")}
-                    resizeMode="contain"
-                    style={styles().wh100}
-                  />
-                </View>
-                <Text
-                  style={[
-                    styles().fs16,
-                    styles().lh18,
-                    styles().fw600,
-                    { color: currentTheme.CACCD3 },
-                  ]}
-                >
-                  Personal Items
-                </Text>
-              </View>
-              <View
-                style={[
-                  styles().bw1,
-                  styles().br5,
-                  styles().wh130px,
-                  styles().alignCenter,
-                  styles().justifyCenter,
-                  {
-                    borderColor: currentTheme.textColor,
-                    borderStyle: "dashed",
-                  },
-                ]}
-              >
-                <Feather name="plus" size={40} color={currentTheme.textColor} />
-              </View>
-            </View>
-          }
+          // ListFooterComponent={
+          //   <View style={styles().mb100}>
+          //     <View
+          //       style={[styles().flexRow, styles().mb20, styles().alignCenter]}
+          //     >
+          //       <View
+          //         style={[styles().wh30px, styles().overflowH, styles().mr5]}
+          //       >
+          //         <Image
+          //           source={require("../../assets/images/personal-items.png")}
+          //           resizeMode="contain"
+          //           style={styles().wh100}
+          //         />
+          //       </View>
+          //       <Text
+          //         style={[
+          //           styles().fs16,
+          //           styles().lh18,
+          //           styles().fw600,
+          //           { color: currentTheme.CACCD3 },
+          //         ]}
+          //       >
+          //         Personal Items
+          //       </Text>
+          //     </View>
+          //     <View
+          //       style={[
+          //         styles().bw1,
+          //         styles().br5,
+          //         styles().wh130px,
+          //         styles().alignCenter,
+          //         styles().justifyCenter,
+          //         {
+          //           borderColor: currentTheme.textColor,
+          //           borderStyle: "dashed",
+          //         },
+          //       ]}
+          //     >
+          //       <Feather name="plus" size={40} color={currentTheme.textColor} />
+          //     </View>
+          //   </View>
+          // }
         />
       </View>
 

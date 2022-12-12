@@ -75,11 +75,13 @@ export default function InventorySingleList(props) {
                     styles().br10,
                   ]}
                 >
-                  <Image
-                    source={{ uri: InventoryCategoryTitle.images[0] }}
-                    resizeMode="contain"
-                    style={[styles().wh100]}
-                  />
+                  {InventoryCategoryTitle?.images ? (
+                    <Image
+                      source={{ uri: InventoryCategoryTitle?.images[0] }}
+                      resizeMode="contain"
+                      style={[styles().wh100]}
+                    />
+                  ) : null}
                   <TouchableOpacity
                     onPress={() =>
                       props.navigation.navigate("InventoryEdit", {

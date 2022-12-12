@@ -7,5 +7,5 @@ export default function Spinner() {
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
 
-  return <ActivityIndicator size={50} color={currentTheme.themeBackground} />;
+  return <ActivityIndicator size={40} color={currentTheme.themeBackground} />;
 }

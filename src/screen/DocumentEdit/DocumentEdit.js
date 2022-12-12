@@ -1,11 +1,7 @@
 import React, { useContext, useState, useCallback } from "react";
 import {
-  Platform,
   Dimensions,
-  FlatList,
-  KeyboardAvoidingView,
   Text,
-  TextInput,
   ActivityIndicator,
   TouchableOpacity,
   View,
@@ -14,106 +10,26 @@ import {
 import ThemeContext from "../../context/ThemeContext/ThemeContext";
 import { theme } from "../../context/ThemeContext/ThemeColor";
 import styles from "../styles";
-
 import Layout from "../../Component/Layout/Layout";
 import TextField from "../../Component/FloatTextField/FloatTextField";
 import ThemeButton from "../../Component/ThemeButton/ThemeButton";
-import {
-  AntDesign,
-  Ionicons,
-  EvilIcons,
-  FontAwesome,
-} from "@expo/vector-icons";
-
+import { EvilIcons, Ionicons, AntDesign } from "@expo/vector-icons";
 import Spinner from "../../Component/Spinner/Spinner";
-
-import RangeSlider, { Slider } from "react-native-range-slider-expo";
-import Multiselect from "../../Component/Multiselect/Multiselect";
-import { ScrollView } from "react-native-gesture-handler";
 import CameraComponent from "../../Component/CameraComponent/CameraComponent";
-import MultipleImagePicker from "../../Component/CameraComponent/MultipleImagePicker";
-import { ImageBackground } from "react-native-web";
+import DocumentComponent from "../../Component/DocumentPicker/DocumentPicker";
+import * as DocumentPicker from "expo-document-picker";
 
-const { width, height } = Dimensions.get("window");
 export default function DocumentEdit(props) {
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
 
-  const [PropertyNick, setPropertyNick] = useState("");
-  const [PropertyNickError, setPropertyNickError] = useState(false);
-
-  const [value, setValue] = useState(0);
-
-  const [PropertyType, setPropertyType] = useState("");
-  const [Residence, setResidence] = useState("");
-
-  const [Street, setStreet] = useState("");
-  const [StreetError, setStreetError] = useState(false);
-
-  const [City, setCity] = useState("");
-  const [CityError, setCityError] = useState(false);
-
-  const [State, setState] = useState("");
-  const [StateError, setStateError] = useState(false);
-
-  const [Zipcode, setZipcode] = useState("");
-  const [ZipcodeError, setZipcodeError] = useState(false);
-
-  const PropertyTypeList = [
-    {
-      name: "Apartment",
-      _id: 0,
-    },
-    {
-      name: "Bangalow",
-      _id: 1,
-    },
-  ];
-  const ResidenceList = [
-    {
-      name: "Primary Residence",
-      _id: 0,
-    },
-    {
-      name: "Secondary Residence",
-      _id: 1,
-    },
-  ];
-
-  const [ItemCat, setItemCat] = useState("");
-
-  const [ItemName, setItemName] = useState("");
-  const [ItemNameError, setItemNameError] = useState(false);
-
-  const [ItemBrand, setItemBrand] = useState("");
-  const [ItemBrandError, setItemBrandError] = useState(false);
-
-  const [ItemModel, setItemModel] = useState("");
-  const [ItemModelError, setItemModelError] = useState(false);
-
-  const [ItemSerial, setItemSerial] = useState("");
-  const [ItemSerialError, setItemSerialError] = useState(false);
-
   const [ItemDocName, setItemDocName] = useState("");
   const [ItemDocNameError, setItemDocNameError] = useState(false);
 
-  const [profilePicLoading, setProfilePicLoading] = useState(false);
-  const [profilePic, setProfilePic] = useState("");
+  const [DocumentfileLoading, setDocumentfileLoading] = useState(false);
+  const [Documentfile, setDocumentfile] = useState([]);
 
-  const ItemCategList = [
-    {
-      name: "Kitchen",
-      _id: 0,
-    },
-    {
-      name: "Systems",
-      _id: 1,
-    },
-    {
-      name: "Utilities",
-      _id: 2,
-    },
-  ];
+  console.log("state=======>", Documentfile);
 
   return (
     <Layout
@@ -201,260 +117,67 @@ export default function DocumentEdit(props) {
               styles().alignCenter,
             ]}
           >
-            {!profilePicLoading ? (
-              <CameraComponent
-                loading={(e) => setProfilePicLoading(e)}
-                update={(e) => {
-                  setProfilePic(e);
-                }}
-              >
-                {profilePic !== "" ? (
-                  <View
-                    style={[
-                      styles().mt10,
-                      styles().justifyCenter,
-                      styles().alignCenter,
-                      styles().br5,
-                      styles().bw1,
-                      styles().wh40px,
-                      {
-                        top: -3,
-                        borderStyle: "dashed",
-                        borderColor: currentTheme.textColor,
-                      },
-                    ]}
-                  >
-                    <Image
-                      source={{ uri: profilePic }}
-                      style={styles().wh100}
-                    />
-                    {/* <EvilIcons name="image" size={30} color={currentTheme.iconColor} /> */}
-                  </View>
-                ) : (
-                  <View
-                    style={[
-                      styles().mt10,
-                      styles().justifyCenter,
-                      styles().alignCenter,
-                      styles().br5,
-                      styles().bw1,
-                      styles().wh40px,
-                      {
-                        borderStyle: "dashed",
-                        borderColor: currentTheme.textColor,
-                      },
-                    ]}
-                  >
-                    <EvilIcons
-                      name="image"
-                      size={20}
-                      color={currentTheme.textColor}
-                    />
-                  </View>
-                )}
-              </CameraComponent>
-            ) : (
-              <ActivityIndicator color={currentTheme.themeBackground} />
-            )}
-            <View
+            {Documentfile.map((file, i) => {
+              return (
+                <View
+                  key={i}
+                  style={[
+                    styles().mt10,
+                    styles().justifyCenter,
+                    styles().alignCenter,
+                    styles().br5,
+                    styles().bw1,
+                    styles().wh40px,
+
+                    {
+                      borderStyle: "dashed",
+                      borderColor: currentTheme.textColor,
+                      marginLeft: 10,
+                      padding: 5,
+                    },
+                  ]}
+                >
+                  <Ionicons
+                    name="document-attach"
+                    color={currentTheme.themeBackground}
+                    size={20}
+                  />
+                  <Text style={{ fontSize: 7 }} numberOfLines={1}>
+                    {file.name + "rishta hojaega naam brara hogea to"}
+                  </Text>
+                </View>
+              );
+            })}
+            <TouchableOpacity
+              onPress={async () => {
+                let document = await DocumentPicker.getDocumentAsync({
+                  type: "*/*",
+                });
+                setDocumentfile((prevfiles) => [...prevfiles, document]);
+              }}
               style={[
-                styles().ml5,
                 styles().mt10,
                 styles().justifyCenter,
                 styles().alignCenter,
                 styles().br5,
                 styles().bw1,
                 styles().wh40px,
-                { borderStyle: "dashed", borderColor: currentTheme.textColor },
+                {
+                  top: -3,
+                  borderStyle: "dashed",
+                  borderColor: currentTheme.textColor,
+                  marginLeft: 10,
+                },
               ]}
             >
-              <EvilIcons
-                name="image"
+              <AntDesign
+                name="addfile"
+                color={currentTheme.c727477}
                 size={20}
-                color={currentTheme.textColor}
               />
-            </View>
-            <View
-              style={[
-                styles().ml10,
-                styles().mt10,
-                styles().justifyCenter,
-                styles().alignCenter,
-                styles().br5,
-                styles().bw1,
-                styles().wh40px,
-                { borderStyle: "dashed", borderColor: currentTheme.textColor },
-              ]}
-            >
-              <EvilIcons
-                name="image"
-                size={20}
-                color={currentTheme.textColor}
-              />
-            </View>
-            <View
-              style={[
-                styles().ml10,
-                styles().mt10,
-                styles().justifyCenter,
-                styles().alignCenter,
-                styles().br5,
-                styles().bw1,
-                styles().wh40px,
-                { borderStyle: "dashed", borderColor: currentTheme.textColor },
-              ]}
-            >
-              <EvilIcons
-                name="image"
-                size={20}
-                color={currentTheme.textColor}
-              />
-            </View>
-            <View
-              style={[
-                styles().ml10,
-                styles().mt10,
-                styles().justifyCenter,
-                styles().alignCenter,
-                styles().br5,
-                styles().bw1,
-                styles().wh40px,
-                { borderStyle: "dashed", borderColor: currentTheme.textColor },
-              ]}
-            >
-              <EvilIcons
-                name="image"
-                size={20}
-                color={currentTheme.textColor}
-              />
-            </View>
-            <View
-              style={[
-                styles().ml10,
-                styles().mt10,
-                styles().justifyCenter,
-                styles().alignCenter,
-                styles().br5,
-                styles().bw1,
-                styles().wh40px,
-                { borderStyle: "dashed", borderColor: currentTheme.textColor },
-              ]}
-            >
-              <EvilIcons
-                name="image"
-                size={20}
-                color={currentTheme.textColor}
-              />
-            </View>
-            <View
-              style={[
-                styles().ml5,
-                styles().mt10,
-                styles().justifyCenter,
-                styles().alignCenter,
-                styles().br5,
-                styles().bw1,
-                styles().wh40px,
-                { borderStyle: "dashed", borderColor: currentTheme.textColor },
-              ]}
-            >
-              <EvilIcons
-                name="image"
-                size={20}
-                color={currentTheme.textColor}
-              />
-            </View>
-            <View
-              style={[
-                styles().ml10,
-                styles().mt10,
-                styles().justifyCenter,
-                styles().alignCenter,
-                styles().br5,
-                styles().bw1,
-                styles().wh40px,
-                { borderStyle: "dashed", borderColor: currentTheme.textColor },
-              ]}
-            >
-              <EvilIcons
-                name="image"
-                size={20}
-                color={currentTheme.textColor}
-              />
-            </View>
-            <View
-              style={[
-                styles().ml10,
-                styles().mt10,
-                styles().justifyCenter,
-                styles().alignCenter,
-                styles().br5,
-                styles().bw1,
-                styles().wh40px,
-                { borderStyle: "dashed", borderColor: currentTheme.textColor },
-              ]}
-            >
-              <EvilIcons
-                name="image"
-                size={20}
-                color={currentTheme.textColor}
-              />
-            </View>
-            <View
-              style={[
-                styles().ml10,
-                styles().mt10,
-                styles().justifyCenter,
-                styles().alignCenter,
-                styles().br5,
-                styles().bw1,
-                styles().wh40px,
-                { borderStyle: "dashed", borderColor: currentTheme.textColor },
-              ]}
-            >
-              <EvilIcons
-                name="image"
-                size={20}
-                color={currentTheme.textColor}
-              />
-            </View>
-            <View
-              style={[
-                styles().ml10,
-                styles().mt10,
-                styles().justifyCenter,
-                styles().alignCenter,
-                styles().br5,
-                styles().bw1,
-                styles().wh40px,
-                { borderStyle: "dashed", borderColor: currentTheme.textColor },
-              ]}
-            >
-              <EvilIcons
-                name="image"
-                size={20}
-                color={currentTheme.textColor}
-              />
-            </View>
-            <View
-              style={[
-                styles().ml10,
-                styles().mt10,
-                styles().justifyCenter,
-                styles().alignCenter,
-                styles().br5,
-                styles().bw1,
-                styles().wh40px,
-                { borderStyle: "dashed", borderColor: currentTheme.textColor },
-              ]}
-            >
-              <EvilIcons
-                name="image"
-                size={20}
-                color={currentTheme.textColor}
-              />
-            </View>
+            </TouchableOpacity>
           </View>
+
           <View style={[styles().ml15, styles().mt10]}>
             <Text
               style={[
@@ -463,7 +186,7 @@ export default function DocumentEdit(props) {
                 { color: currentTheme.lightRed },
               ]}
             >
-              You Can Upload Pdf, Word Or Picture
+              You Can Upload Pdf, Word etc
             </Text>
           </View>
         </View>
