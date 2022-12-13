@@ -24,6 +24,7 @@ import {
   EvilIcons,
   FontAwesome,
   MaterialCommunityIcons,
+  Entypo,
 } from "@expo/vector-icons";
 import Spinner from "../../Component/Spinner/Spinner";
 import { useQuery, useMutation, useSubscription } from "@apollo/react-hooks";
@@ -72,7 +73,7 @@ export default function InventoryEdit(props) {
   const [ItemSerial, setItemSerial] = useState("");
   const [ItemSerialError, setItemSerialError] = useState(false);
 
-  const [images, setImages] = useState(inventory_item?.images);
+  const [images, setImages] = useState('');
   //   const [ItemDocName, setItemDocName] = useState("");
   //   const [ItemDocNameError, setItemDocNameError] = useState(false);
 
@@ -101,7 +102,7 @@ export default function InventoryEdit(props) {
   async function onCompleted(data) {
     try {
       FlashMessage({ msg: "Inventory Updated!", type: "success" });
-      console.log("addFolder res :", data.updateInventory);
+      console.log("updateInventory res :", data.updateInventory);
       // props.navigation.navigate("InventoryCategoryList");
       setLoading(false);
     } catch (e) {
@@ -115,7 +116,7 @@ export default function InventoryEdit(props) {
   function onError(error) {
     FlashMessage({ msg: error?.message?.toString(), type: "danger" });
     setLoading(false);
-    console.log("addFolder error  :", error);
+    console.log("updateInventory error  :", error);
   }
 
   const [addFolder_mutate, {}] = useMutation(ADD_FOLDER, {
@@ -155,13 +156,20 @@ export default function InventoryEdit(props) {
     });
   };
 
+  const deleteImage = async (i) => {
+    let newArr = [...images];
+    newArr.splice(i, 1);
+    setImages(() => [...newArr]);
+  };
+
   useEffect(() => {
     setItemCat(category?._id);
     setItemName(inventory_item?.name);
     setItemBrand(inventory_item?.brand);
     setItemModel(inventory_item?.model_no);
     setItemSerial(inventory_item?.serail_no);
-  }, [isFocused]);
+    setImages(inventory_item?.images);
+  }, []);
 
   async function UpdateItem() {
     setLoading(true);
@@ -201,6 +209,8 @@ export default function InventoryEdit(props) {
     //   });
     // }
   }
+
+  console.log("=====", images);
 
   return (
     <Layout
@@ -331,23 +341,42 @@ export default function InventoryEdit(props) {
               {images
                 ? images?.map((img, i) => {
                     return (
-                      <View
-                        key={i}
-                        style={[
-                          styles().justifyCenter,
-                          styles().alignCenter,
-                          styles().br5,
-                          styles().bw1,
-                          styles().wh40px,
-                          {
-                            borderStyle: "dashed",
-                            borderColor: currentTheme.textColor,
-                            marginLeft: 10,
-                          },
-                        ]}
-                      >
-                        <Image source={{ uri: img }} style={styles().wh100} />
-                        {/* <EvilIcons name="image" size={30} color={currentTheme.iconColor} /> */}
+                      <View style={{}}>
+                        <TouchableOpacity
+                          onPress={() => deleteImage(i)}
+                          activeOpacity={0.6}
+                          style={[
+                            styles().posAbs,
+                            styles().zIndex10,
+                            {
+                              right: -7,
+                              top: -5,
+                            },
+                          ]}
+                        >
+                          <Entypo
+                            color={"black"}
+                            size={20}
+                            name={"circle-with-cross"}
+                          />
+                        </TouchableOpacity>
+                        <View
+                          key={i}
+                          style={[
+                            styles().justifyCenter,
+                            styles().alignCenter,
+                            styles().br5,
+                            styles().bw1,
+                            styles().wh40px,
+                            {
+                              borderStyle: "dashed",
+                              borderColor: currentTheme.textColor,
+                              marginLeft: 10,
+                            },
+                          ]}
+                        >
+                          <Image source={{ uri: img }} style={styles().wh100} />
+                        </View>
                       </View>
                     );
                   })

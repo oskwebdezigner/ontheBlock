@@ -595,3 +595,44 @@ export const addFolder = `mutation AddFolder($inputFolder: InputFolder) {
     }
   }
 }`;
+
+export const addInventory = `mutation AddInventory($inputInventory: InputInventory) {
+  addInventory(inputInventory: $inputInventory) {
+    _id
+    brand
+    description
+    name
+    model_no
+    serail_no
+    images
+  }
+}`;
+
+export const addHandyman = `mutation AddHandyman($inputHandyman: InputHandyman) {
+  addHandyman(inputHandyman: $inputHandyman) {
+    _id
+    name
+    contact_no
+    occupation
+  }
+}`;
+
+export const handymen = `query Handymen {
+  handymen {
+    results {
+      _id
+      contact_no
+      name
+      occupation
+      property {
+        _id
+        name
+        description
+      }
+    }
+    limit
+    totalResults
+    totalPages
+    page
+  }
+}`;

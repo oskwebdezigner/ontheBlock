@@ -30,7 +30,7 @@ const { width, height } = Dimensions.get("window");
 
 export default function MaintenaceDetail(props) {
   const item = props.route.params.maintenance;
-
+  console.log("task >>>>>>", item);
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
 
@@ -45,6 +45,7 @@ export default function MaintenaceDetail(props) {
     {
       id: 1,
       name: "Reschedule Date",
+      onPress: () => props.navigation.navigate("ScheduleEdit", { task: item }),
     },
     {
       id: 2,
@@ -144,7 +145,7 @@ export default function MaintenaceDetail(props) {
             styles().mt20,
           ]}
         >
-          <View>
+          <View style={[styles().flex]}>
             <Text
               style={[
                 styles().fs16,

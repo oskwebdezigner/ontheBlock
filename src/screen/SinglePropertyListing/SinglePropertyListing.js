@@ -29,6 +29,7 @@ const { width, height } = Dimensions.get("window");
 
 export default function SinglePropertyListing(props) {
   const property = props?.route?.params?.singleList;
+  // const propertyID = props?.route?.params?.propertyID;
   console.log("single Property Listing :", property);
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
@@ -62,7 +63,7 @@ export default function SinglePropertyListing(props) {
       id: 4,
       SingleListIcon: require("../../assets/images/SinglePropertyList-img5.png"),
       SingleListName: "My Handymen",
-      navigateTo: "HandymenEdit",
+      navigateTo: "MyHandymen",
     },
     {
       id: 5,

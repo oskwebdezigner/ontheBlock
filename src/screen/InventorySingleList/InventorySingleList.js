@@ -31,12 +31,11 @@ const { width, height } = Dimensions.get("window");
 
 export default function InventorySingleList(props) {
   const inventory = props.route.params.inventoryListing;
-  console.log("inventory :", inventory);
+  const property = props.route.params.property;
+  console.log("inventory ====>>>>>>", property);
 
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
-
-  const InventoryName = props.route.params.inventoryListing;
 
   return (
     <Layout
@@ -132,7 +131,16 @@ export default function InventorySingleList(props) {
           styles().bottom20,
         ]}
       >
-        <ThemeButton Title={"Add New Inventory"} />
+        <ThemeButton
+          onPress={() =>
+            props.navigation.navigate("InventoryAddCategory", {
+              inventory_id: inventory.category._id,
+              inventory_name: inventory.category.name,
+              property: property,
+            })
+          }
+          Title={"Add New Inventory"}
+        />
       </View>
     </Layout>
   );

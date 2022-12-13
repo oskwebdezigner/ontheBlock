@@ -63,8 +63,8 @@ export default function Home(props) {
 
   const { loading, error, data, refetch } = useQuery(PROPERTIES, {
     fetchPolicy: "cache-and-network",
-    onCompleted: ({ propperties }) => {
-      //   console.log("properties res :", data);
+    onCompleted: ({ properties }) => {
+      console.log("properties res :", properties.results);
     },
     onError: (err) => {
       console.log("error in properties :", err);

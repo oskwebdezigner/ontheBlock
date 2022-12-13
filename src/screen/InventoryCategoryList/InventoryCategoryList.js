@@ -240,6 +240,7 @@ export default function InventoryCatList(props) {
                         props.navigation.navigate("InventorySingleList", {
                           inventoryListing: item,
                           category: item.category,
+                          property: property,
                         })
                       }
                     >
