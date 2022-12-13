@@ -57,7 +57,7 @@ export default function SinglePropertyListing(props) {
       id: 3,
       SingleListIcon: require("../../assets/images/SinglePropertyList-img4.png"),
       SingleListName: "Schedule Task",
-      navigateTo: "ScheduleEdit",
+      navigateTo: "AddTask",
     },
     {
       id: 4,

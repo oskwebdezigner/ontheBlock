@@ -140,7 +140,11 @@ export default function PropertyData(props) {
   }, [property]);
 
   // console.log("propertyTypes :", data?.propertyTypes);
-  console.log("propertyType :", PropertyType);
+
+  let propt = data?.propertyTypes?.results?.find((item) => {
+    return item._id === PropertyType;
+  });
+  console.log("propertyType :", PropertyType, propt);
   return (
     <Layout
       navigation={props.navigation}
@@ -188,11 +192,12 @@ export default function PropertyData(props) {
             </Text>
             <Multiselect
               ListItems={data?.propertyTypes?.results}
-              SelectText={
-                property?.type?.name
-                  ? property?.type?.name
-                  : data?.propertyTypes?.results[0]?.name
-              }
+              SelectText={propt?.name}
+              // SelectText={
+              //   property?.type?.name
+              //     ? property?.type?.name
+              //     : data?.propertyTypes?.results[0]?.name
+              // }
               value={PropertyType}
               setValue={(e) => {
                 setPropertyType(e[0]);

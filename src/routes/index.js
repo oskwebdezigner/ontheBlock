@@ -33,6 +33,7 @@ import DocumentEdit from "../screen/DocumentEdit/DocumentEdit";
 import HandymenEdit from "../screen/HandymenEdit/HandymenEdit";
 import MyHandymen from "../screen/MyHandymen/MyHandymen";
 import ScheduleEdit from "../screen/ScheduleEdit/ScheduleEdit";
+import AddTask from "../screen/AddTask/AddTask";
 import InventoryAddCategory from "../screen/InventoryAddCategory/InventoryAddCategory";
 import Draws from "../screen/Draws/Draws";
 import NotificationsScreen from "../screen/NotificationsScreen/NotificationsScreen";
@@ -153,6 +154,7 @@ function HomeNavigator() {
       <HomeStack.Screen name="HandymenEdit" component={HandymenEdit} />
       <HomeStack.Screen name="MyHandymen" component={MyHandymen} />
       <HomeStack.Screen name="ScheduleEdit" component={ScheduleEdit} />
+      <HomeStack.Screen name="AddTask" component={AddTask} />
       <HomeStack.Screen name="PrizeDetail" component={PrizeDetail} />
       <HomeStack.Screen name="Profile" component={Profile} />
       <HomeStack.Screen name="PersonalDetails" component={PersonalDetails} />

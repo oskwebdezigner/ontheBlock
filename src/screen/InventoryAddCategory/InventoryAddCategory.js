@@ -38,7 +38,7 @@ import { ImageBackground } from "react-native-web";
 import { uploadImageToCloudinary } from "../../Component/CameraComponent/CloudUpload";
 import { useQuery, useMutation, useSubscription } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import { addInventory } from "../../apollo/server";
+import { addInventory, categories } from "../../apollo/server";
 import FlashMessage from "../../Component/FlashMessage/FlashMessage";
 import UserContext from "../../context/User/User";
 
@@ -47,8 +47,10 @@ export default function InventoryAddCategory(props) {
   const ADD_INVENTORY = gql`
     ${addInventory}
   `;
+  const CATEGORIES = gql`
+    ${categories}
+  `;
   const user = useContext(UserContext);
-  console.log(user);
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
   let { inventory_name, inventory_id, property } = props?.route?.params;
@@ -75,6 +77,19 @@ export default function InventoryAddCategory(props) {
 
   const [Loading, setLoading] = useState(false);
   const [images, setImages] = useState("");
+
+  const { loading, error, data, refetch } = useQuery(CATEGORIES, {
+    variables: {
+      options: {
+        limit: 10000,
+      },
+    },
+    fetchPolicy: "cache-and-network",
+    onCompleted: ({ categories }) => {},
+    onError: (err) => {
+      console.log("error in categories :", err);
+    },
+  });
 
   const setImage = async (image) => {
     await uploadImageToCloudinary(image).then((img) => {
@@ -133,15 +148,19 @@ export default function InventoryAddCategory(props) {
             images: images,
             model_no: ItemModel,
             name: ItemName,
-            type: inventory_id,
+            type: inventory_id ? inventory_id : ItemCat,
             added_by: user._id,
-            property: property._id,
+            property: property?._id,
           },
         },
       });
     }
   }
+  let ctg = data?.categories?.results?.find((item) => {
+    return item._id === ItemCat;
+  });
 
+  console.log(inventory_id, ItemCat, ctg?.name, property?._id);
   return (
     <Layout
       navigation={props.navigation}
@@ -171,11 +190,17 @@ export default function InventoryAddCategory(props) {
             >
               Item Category
             </Text>
-            <Multiselect
+            {/* <Multiselect
               ListItems={ItemCategList}
               SelectText={inventory_name}
               value={ItemCat}
               setValue={setItemCat}
+            /> */}
+            <Multiselect
+              ListItems={data?.categories?.results}
+              SelectText={ctg?.name}
+              value={ItemCat}
+              setValue={(e) => setItemCat(e[0])}
             />
           </View>
 

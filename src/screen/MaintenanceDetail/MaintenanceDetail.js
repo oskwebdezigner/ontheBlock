@@ -44,7 +44,7 @@ export default function MaintenaceDetail(props) {
     },
     {
       id: 1,
-      name: "Reschedule Date",
+      name: "Schedule Task",
       onPress: () => props.navigation.navigate("ScheduleEdit", { task: item }),
     },
     {
@@ -129,11 +129,13 @@ export default function MaintenaceDetail(props) {
             styles().overflowH,
           ]}
         >
-          <Image
-            source={{ uri: item.property.images[0] }}
-            resizeMode="cover"
-            style={styles().wh100}
-          />
+          {item?.property?.images ? (
+            <Image
+              source={{ uri: item?.property?.images[0] }}
+              resizeMode="cover"
+              style={styles().wh100}
+            />
+          ) : null}
         </View>
 
         <View

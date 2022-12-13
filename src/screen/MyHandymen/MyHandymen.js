@@ -24,6 +24,7 @@ import {
   Ionicons,
   EvilIcons,
   FontAwesome,
+  Feather,
 } from "@expo/vector-icons";
 
 import Spinner from "../../Component/Spinner/Spinner";
@@ -37,7 +38,7 @@ import { ImageBackground } from "react-native-web";
 import FlashMessage from "../../Component/FlashMessage/FlashMessage";
 import { useQuery, useMutation, useSubscription } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import { handymen } from "../../apollo/server";
+import { deleteHandyman, handymen } from "../../apollo/server";
 import { useIsFocused } from "@react-navigation/native";
 
 const { width, height } = Dimensions.get("window");
@@ -47,10 +48,14 @@ export default function HandymenEdit(props) {
   const HANDYMEN = gql`
     ${handymen}
   `;
+  const DELETE_HANDMEN = gql`
+    ${deleteHandyman}
+  `;
   const isFocused = useIsFocused();
   const [Loading, setLoading] = useState(false);
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
+
   const { loading, error, data, refetch } = useQuery(HANDYMEN, {
     fetchPolicy: "cache-and-network",
     onCompleted: ({ handymen }) => {
@@ -61,6 +66,37 @@ export default function HandymenEdit(props) {
       FlashMessage({ msg: err?.message?.toString(), type: "danger" });
     },
   });
+
+  const [mutate, { client }] = useMutation(DELETE_HANDMEN, {
+    onCompleted,
+    onError,
+  });
+
+  async function onCompleted(data) {
+    try {
+      FlashMessage({ msg: "Handmen Deleted!", type: "success" });
+      console.log("deleteHandyman res :", data.deleteHandyman);
+      refetch();
+    } catch (e) {
+      console.log(e);
+    } finally {
+    }
+  }
+
+  function onError(error) {
+    FlashMessage({ msg: error?.message?.toString(), type: "danger" });
+    console.log("deleteHandyman error  :", error);
+  }
+
+  async function DeleteHandyman(id) {
+    await mutate({
+      variables: {
+        deleteHandymanInput: {
+          id: id,
+        },
+      },
+    });
+  }
 
   useEffect(() => {
     refetch();
@@ -124,6 +160,12 @@ export default function HandymenEdit(props) {
                 <View
                   style={{ flex: 1, paddingHorizontal: 10, paddingVertical: 5 }}
                 >
+                  <TouchableOpacity
+                    onPress={() => DeleteHandyman(item._id)}
+                    style={{ position: "absolute", right: 0 }}
+                  >
+                    <Feather name="delete" color={"black"} size={20} />
+                  </TouchableOpacity>
                   <Text
                     numberOfLines={1}
                     style={{
@@ -151,6 +193,26 @@ export default function HandymenEdit(props) {
                     {item.contact_no}
                   </Text>
                 </View>
+              </View>
+            );
+          }}
+          ListEmptyComponent={() => {
+            return (
+              <View
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginTop: 20,
+                }}
+              >
+                <Text
+                  style={{
+                    color: currentTheme.textColor,
+                    fontSize: 14,
+                  }}
+                >
+                  No Handmens
+                </Text>
               </View>
             );
           }}

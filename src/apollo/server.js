@@ -468,30 +468,37 @@ export const upcommingTasksList = `query UpcommingTasksList {
   upcommingTasksList {
     results {
       _id
-      schedule_date
-      description
-      get_notifications
-      property {
-        bathrooms
-        bedrooms
-        city
-        country
-        description
-        images
+      assign_to {
         name
         _id
-        address
+        contact_no
+        occupation
       }
       is_completed
-      createdAt
+      get_notifications
+      description
+      schedule_date
+      inventory {
+        _id
+        name
+        type {
+          name
+        }
+      }
+      property {
+        _id
+        name
+        images
+        address
+        description
+      }
     }
-    page
     limit
+    page
     totalPages
     totalResults
   }
-}
-`;
+}`;
 
 export const updateProperty = `mutation UpdateProperty($updatePropertyId: ID!, $updatePropertyInput: InputProperty) {
   updateProperty(id: $updatePropertyId, updatePropertyInput: $updatePropertyInput) {
@@ -516,8 +523,8 @@ export const updateProperty = `mutation UpdateProperty($updatePropertyId: ID!, $
   }
 }`;
 
-export const getInventoryByCategory = `query GetInventoryByCategory {
-  getInventoryByCategory {
+export const getInventoryByCategory = `query GetInventoryByCategory($propertyId: ID!) {
+  getInventoryByCategory(propertyId: $propertyId) {
     _id
     inventories {
       images
@@ -634,5 +641,85 @@ export const handymen = `query Handymen {
     totalResults
     totalPages
     page
+  }
+}`;
+
+export const updateTask = `mutation UpdateTask($updateTaskId: ID!, $updateTaskInput: InputTask) {
+  updateTask(id: $updateTaskId, updateTaskInput: $updateTaskInput) {
+    _id
+    added_by {
+      _id
+      first_name
+      email
+      photo
+      phone
+    }
+    assign_to {
+      _id
+      name
+      occupation
+      contact_no
+    }
+    description
+    get_notifications
+    inventory {
+      _id
+      name
+    }
+    property {
+      _id
+      images
+      name
+      description
+      address
+    }
+    schedule_date
+  }
+}`;
+
+export const deleteHandyman = `mutation DeleteHandyman($deleteHandymanInput: DeleteHandymanInput) {
+  deleteHandyman(deleteHandymanInput: $deleteHandymanInput) {
+    _id
+    name
+    occupation
+    contact_no
+  }
+}`;
+
+export const addTask = `mutation AddTask($inputTask: InputTask) {
+  addTask(inputTask: $inputTask) {
+    _id
+    added_by {
+      _id
+      email
+      first_name
+    }
+    description
+    get_notifications
+    is_completed
+    schedule_date
+    assign_to {
+      _id
+      name
+      occupation
+      contact_no
+    }
+    property {
+      _id
+      name
+      description
+      address
+    }
+  }
+}
+`;
+
+export const inventories = `query Inventories($options: options, $filters: Inventoryfilters) {
+  inventories(options: $options, filters: $filters) {
+    results {
+      _id
+      name
+      is_active
+    }
   }
 }`;

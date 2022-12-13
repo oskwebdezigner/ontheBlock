@@ -52,15 +52,22 @@ export default function InventoryCatList(props) {
   const { loading, error, data, refetch } = useQuery(
     GET_INVENTORY_BY_CATEGORY,
     {
+      variables: {
+        propertyId: property?._id,
+      },
+    },
+    {
       fetchPolicy: "cache-and-network",
-      onCompleted: ({ getInventoryByCategory }) => {},
+      onCompleted: ({ getInventoryByCategory }) => {
+        console.log("success getinventorybycategory");
+      },
       onError: (err) => {
         console.log("error in getInventoryByCategory :", err);
       },
     }
   );
 
-  // console.log("inventory=========>", data?.getInventoryByCategory);
+  console.log("inventory=========>", data?.getInventoryByCategory);
   function handleOnScroll(event) {
     //calculate screenIndex by contentOffset and screen width
     Setpage(
@@ -76,7 +83,7 @@ export default function InventoryCatList(props) {
 
   return (
     <Layout
-      // loading={loading}
+      loading={loading}
       navigation={props.navigation}
       LeftIcon={true}
       withoutScroll={true}
@@ -438,10 +445,30 @@ export default function InventoryCatList(props) {
           //     </View>
           //   </View>
           // }
+          ListEmptyComponent={() => {
+            return (
+              <View
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginTop: 20,
+                }}
+              >
+                <Text
+                  style={{
+                    color: currentTheme.textColor,
+                    fontSize: 14,
+                  }}
+                >
+                  No Inventory
+                </Text>
+              </View>
+            );
+          }}
         />
       </View>
 
-      {/* <View
+      <View
         style={[
           styles().left20,
           styles().right20,
@@ -450,10 +477,14 @@ export default function InventoryCatList(props) {
         ]}
       >
         <ThemeButton
-          onPress={() => props.navigation.navigate("InventoryAddCategory")}
+          onPress={() =>
+            props.navigation.navigate("InventoryAddCategory", {
+              property: property,
+            })
+          }
           Title={"Add New Inventory"}
         />
-      </View> */}
+      </View>
     </Layout>
   );
 }

@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect, useReducer, useRef } from "react";
 import { StatusBar } from "expo-status-bar";
 import {
   Platform,
@@ -18,6 +18,7 @@ import { ApolloProvider } from "@apollo/client";
 import setupApolloClient from "./src/apollo/index";
 import { AuthContext } from "./src/context/Auth/auth";
 import * as SplashScreen from "expo-splash-screen";
+import * as Notifications from "expo-notifications";
 
 const themeValue = "Yellow";
 const STATUSBAR_HEIGHT = StatusBar.currentHeight;
@@ -27,6 +28,76 @@ export default function App() {
   const [fontLoaded, setFontLoaded] = useState(false);
   const [client, setupClient] = useState(null);
   const [token, setToken] = useState(false);
+
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: true,
+    }),
+  });
+
+  const notificationListener = useRef();
+  const responseListener = useRef();
+  async function permissionForPushNotificationsAsync() {
+    // let token;
+    const {
+      status: existingStatus,
+    } = await Notifications.getPermissionsAsync();
+    console.log("existingStatus:", existingStatus);
+    let finalStatus = existingStatus;
+    if (existingStatus !== "granted") {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== "granted") {
+      // alert('Failed to get push token for push notification!');
+      return false;
+    }
+    if (finalStatus == "granted") {
+      let token = (await Notifications.getExpoPushTokenAsync()).data;
+      console.log("Notification Expo Token:", token);
+
+      return token;
+    }
+
+    if (Platform.OS === "android") {
+      Notifications.setNotificationChannelAsync("default", {
+        name: "default",
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: "#FF231F7C",
+      });
+    }
+  }
+  useEffect(() => {
+    permissionForPushNotificationsAsync().then(async (token) => {
+      // setExpoPushToken(token);
+      await AsyncStorage.setItem("notification_token", token);
+    });
+    // console.log("token:", expoPushToken);
+    // This listener is fired whenever a notification is received while the app is foregrounded
+    notificationListener.current = Notifications.addNotificationReceivedListener(
+      (notification) => {
+        console.log("notification:", notification.data);
+      }
+    );
+
+    // // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(
+      (response) => {
+        console.log("response :", response.notification.request.content.data);
+        // navigate(response.notification.request.content.data?.navigate);
+      }
+    );
+
+    return () => {
+      Notifications.removeNotificationSubscription(
+        notificationListener.current
+      );
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
 
   useEffect(() => {
     try {

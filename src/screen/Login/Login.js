@@ -33,6 +33,8 @@ import { login } from "../../apollo/server";
 import FlashMessage from "../../Component/FlashMessage/FlashMessage";
 import Spinner from "../../Component/Spinner/Spinner";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Notifications from "expo-notifications";
+
 const { width, height } = Dimensions.get("window");
 
 export default function Login(props) {
@@ -43,9 +45,45 @@ export default function Login(props) {
   const [Password, SetPassword] = useState("");
   const [passError, setPasswordError] = useState(false);
   const [Loading, setLoading] = useState(false);
+  const [notificationToken, setNotificationToken] = useState("");
+
   const LOGIN = gql`
     ${login}
   `;
+
+  async function permissionForPushNotificationsAsync() {
+    // let token;
+    const {
+      status: existingStatus,
+    } = await Notifications.getPermissionsAsync();
+    console.log("existingStatus:", existingStatus);
+    let finalStatus = existingStatus;
+    if (existingStatus !== "granted") {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== "granted") {
+      // alert('Failed to get push token for push notification!');
+      return false;
+    }
+    if (finalStatus == "granted") {
+      let token = (await Notifications.getExpoPushTokenAsync()).data;
+      await AsyncStorage.setItem("notification_token", token);
+      console.log("Notification Expo Token:", token);
+      setNotificationToken(token);
+      return token;
+    }
+
+    if (Platform.OS === "android") {
+      Notifications.setNotificationChannelAsync("default", {
+        name: "default",
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: "#FF231F7C",
+      });
+    }
+  }
+
   const [mutate, { client }] = useMutation(LOGIN, {
     onCompleted,
     onError,
@@ -89,11 +127,15 @@ export default function Login(props) {
         variables: {
           email: UserName.trim().toLowerCase(),
           password: Password.trim(),
-          notificationToken: null,
+          notificationToken: notificationToken,
         },
       });
     }
   }
+
+  useEffect(() => {
+    permissionForPushNotificationsAsync();
+  }, []);
 
   return (
     <AuthLayout navigation={props.navigation}>

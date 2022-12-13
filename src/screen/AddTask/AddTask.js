@@ -20,47 +20,59 @@ import gql from "graphql-tag";
 import Layout from "../../Component/Layout/Layout";
 import TextField from "../../Component/FloatTextField/FloatTextField";
 import ThemeButton from "../../Component/ThemeButton/ThemeButton";
-import {
-  AntDesign,
-  Ionicons,
-  EvilIcons,
-  FontAwesome,
-} from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 
 import Spinner from "../../Component/Spinner/Spinner";
 import Multiselect from "../../Component/Multiselect/Multiselect";
 import { Calendar, CalendarList, Agenda } from "react-native-calendars";
-import { handymen, updateTask } from "../../apollo/server";
+import { addTask, handymen, inventories } from "../../apollo/server";
 import FlashMessage from "../../Component/FlashMessage/FlashMessage";
 import UserContext from "../../context/User/User";
 import moment from "moment";
 
 const { width, height } = Dimensions.get("window");
 
-export default function ScheduleEdit(props) {
-  let task = props?.route?.params?.task;
+export default function AddTask(props) {
+  let task = props?.route?.params?.property;
   const user = useContext(UserContext);
   const HANDYMEN = gql`
     ${handymen}
   `;
-  const UPDATE_TASK = gql`
-    ${updateTask}
+  const ADD_TASK = gql`
+    ${addTask}
   `;
-
-  console.log("schedule task ====>", task);
+  const INVENTORIES = gql`
+    ${inventories}
+  `;
+  //   console.log("schedule task ====>", task);
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
-
-  const [PersonName, setPersonName] = useState("");
-  const [PersonNameError, setPersonNameError] = useState(false);
-
-  const [PersonPhone, setPersonPhone] = useState("");
-  const [PersonPhoneError, setPersonPhoneError] = useState(false);
+  const [invenetory, setInvenetory] = useState("");
   const [Loading, setLoading] = useState(false);
   const [schedule_dates, setSchedule_dates] = useState({
     selectedDate: "",
     markedDates: {},
   });
+
+  const {
+    loading: inventoryLoading,
+    error: inventoryError,
+    data: inventoryData,
+    refetch: inventoryRefetch,
+  } = useQuery(
+    INVENTORIES,
+
+    {
+      fetchPolicy: "cache-and-network",
+      onCompleted: ({ inventories }) => {
+        // console.log("inventories res :", inventories);
+      },
+      onError: (err) => {
+        console.log("error in inventories :", err);
+      },
+    }
+  );
+
   const { loading, error, data, refetch } = useQuery(HANDYMEN, {
     fetchPolicy: "cache-and-network",
     onCompleted: ({ handymen }) => {
@@ -72,15 +84,15 @@ export default function ScheduleEdit(props) {
     },
   });
 
-  const [mutate, { client }] = useMutation(UPDATE_TASK, {
+  const [mutate, { client }] = useMutation(ADD_TASK, {
     onCompleted,
     onError,
   });
 
   async function onCompleted(data) {
     try {
-      FlashMessage({ msg: "Task Updated!", type: "success" });
-      console.log("updateTask res :", data.updateTask);
+      FlashMessage({ msg: "Task Added!", type: "success" });
+      console.log("addTask res :", data.addTask);
       setLoading(false);
     } catch (e) {
       console.log(e);
@@ -93,21 +105,8 @@ export default function ScheduleEdit(props) {
   function onError(error) {
     FlashMessage({ msg: error?.message?.toString(), type: "danger" });
     setLoading(false);
-    console.log("updateTask error :", error);
+    console.log("addTask error :", error);
   }
-
-  const MainTenanceList = [
-    {
-      name: "Floor",
-      _id: 0,
-    },
-    {
-      name: "Roof",
-      _id: 1,
-    },
-  ];
-  const [MaintenanceType, setMaintenanceType] = useState("");
-
   const [handyman, setHandyman] = useState("");
   const [MaintenanceDesc, setMaintenanceDesc] = useState("");
   const [MaintenanceDescError, setMaintenanceDescError] = useState(false);
@@ -142,32 +141,33 @@ export default function ScheduleEdit(props) {
     });
   };
 
-  async function UpdateTask() {
+  async function Addtask() {
     setLoading(true);
     let data = {
-      updateTaskId: task?._id,
-      updateTaskInput: {
+      inputTask: {
+        added_by: user._id,
+        assign_to: handyman,
         description: MaintenanceDesc,
         get_notifications: NotificationCheck,
-        inventory: task?.inventory?._id,
-        property: task?.property?._id,
+        inventory: invenetory,
+        property: task._id,
         schedule_date: schedule_dates.selectedDate,
-        assign_to: AssignTask === "Yes" ? handyman : "",
-        added_by: user?._id,
       },
     };
-    console.log("update data :", data);
+    console.log("add data :", data);
     await mutate({
       variables: data,
     });
   }
-  console.log(schedule_dates.selectedDate);
+  let inv = inventoryData?.inventories?.results?.find((item) => {
+    return item._id === invenetory;
+  });
   return (
     <Layout
       navigation={props.navigation}
       LeftIcon={true}
       withoutScroll={true}
-      pagetitle={"Schedule Task"}
+      pagetitle={"Add Task"}
     >
       <KeyboardAvoidingView style={styles().flex}>
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -195,7 +195,7 @@ export default function ScheduleEdit(props) {
               />
             </View>
 
-            <View
+            {/* <View
               style={[
                 styles().mt30,
                 styles().h60px,
@@ -225,8 +225,8 @@ export default function ScheduleEdit(props) {
               >
                 {task?.inventory?.name}
               </Text>
-            </View>
-            {/* <View
+            </View> */}
+            <View
               style={[
                 styles().mt30,
                 styles().h60px,
@@ -247,12 +247,12 @@ export default function ScheduleEdit(props) {
                 What type of maintenance
               </Text>
               <Multiselect
-                ListItems={MainTenanceList}
-                SelectText={"Floor"}
-                value={MaintenanceType}
-                setValue={setMaintenanceType}
+                ListItems={inventoryData?.inventories?.results}
+                SelectText={inv?.name}
+                value={invenetory}
+                setValue={(e) => setInvenetory(e[0])}
               />
-            </View> */}
+            </View>
 
             <View style={styles().mt15}>
               <TextField
@@ -458,7 +458,7 @@ export default function ScheduleEdit(props) {
             {Loading ? (
               <Spinner />
             ) : (
-              <ThemeButton onPress={() => UpdateTask()} Title={"Save"} />
+              <ThemeButton onPress={() => Addtask()} Title={"Save"} />
             )}
           </View>
         </ScrollView>

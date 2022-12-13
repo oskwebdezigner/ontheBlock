@@ -64,7 +64,7 @@ export default function Home(props) {
   const { loading, error, data, refetch } = useQuery(PROPERTIES, {
     fetchPolicy: "cache-and-network",
     onCompleted: ({ properties }) => {
-      console.log("properties res :", properties.results);
+      console.log("properties res >>>>>>>>>>>>>>>>>", properties.results);
     },
     onError: (err) => {
       console.log("error in properties :", err);
@@ -77,9 +77,13 @@ export default function Home(props) {
     data: upcomingData,
     refetch: upcomingRefetch,
   } = useQuery(UPCOMING_TASK_LIST, {
+    // variables: {},
     fetchPolicy: "cache-and-network",
     onCompleted: ({ upcommingTasksList }) => {
-      //   console.log("properties res :", data);
+      console.log(
+        "upcommingTasksList res ================>",
+        upcommingTasksList.results
+      );
     },
     onError: (err) => {
       console.log("error in upcommingTasksList :", err);
@@ -300,9 +304,12 @@ export default function Home(props) {
                             styles().mb10,
                           ]}
                         >
-                          {item.images[0] ? (
+                          {item?.images?.length !== 0 ? (
                             <Image
-                              source={{ uri: item.images[0] }}
+                              source={{
+                                uri: item?.images[0],
+                              }}
+                              // source={{ uri: item.images[0] }}
                               resizeMode="cover"
                               style={[styles().wh100, styles().br10]}
                             />
@@ -311,7 +318,6 @@ export default function Home(props) {
                               style={[
                                 styles().wh100,
                                 styles().br10,
-
                                 {
                                   backgroundColor: currentTheme.white,
                                   borderWidth: 0.5,
@@ -467,11 +473,13 @@ export default function Home(props) {
                       styles().overflowH,
                     ]}
                   >
-                    <Image
-                      source={{ uri: item?.property.images[0] }}
-                      resizeMode="cover"
-                      style={styles().wh100}
-                    />
+                    {item?.property.images ? (
+                      <Image
+                        source={{ uri: item?.property.images[0] }}
+                        resizeMode="cover"
+                        style={styles().wh100}
+                      />
+                    ) : null}
                   </View>
                   <View
                     style={[
@@ -564,6 +572,21 @@ export default function Home(props) {
             );
           }}
           keyExtractor={(item, index) => index.toString()}
+          ListEmptyComponent={() => {
+            return (
+              <View
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginTop: 20,
+                }}
+              >
+                <Text style={{ color: currentTheme.textColor, fontSize: 14 }}>
+                  No Upcoming Tasks
+                </Text>
+              </View>
+            );
+          }}
         />
       </View>
     </Layout>
