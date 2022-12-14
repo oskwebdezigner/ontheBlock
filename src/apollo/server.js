@@ -262,23 +262,6 @@ export const resetPassword = `mutation resetPassword($password:String!,$newPassw
     }
   }`;
 
-export const updateUser = `mutation updateUser(
-  $name : String
-  $phone : String
-  $picture:String
-){
-  updateUser(updateUserInput : {
-    name :$name,
-    phone :$phone ,
-    picture: $picture
-  }){
-    name
-    email
-    phone
-    picture
-  }
-}`;
-
 //ontheblock
 
 export const goals = `query goals {
@@ -627,8 +610,8 @@ export const addHandyman = `mutation AddHandyman($inputHandyman: InputHandyman) 
   }
 }`;
 
-export const handymen = `query Handymen {
-  handymen {
+export const handymen = `query Handymen($filters: Handymanfilters, $options: options) {
+  handymen(filters: $filters, options: $options) {
     results {
       _id
       contact_no
@@ -797,5 +780,29 @@ export const files = `query Files($options: options) {
     limit
     totalPages
     totalResults
+  }
+}`;
+
+export const updateUser = `mutation UpdateUser($updateUserInput: UpdateUserInput) {
+  updateUser(updateUserInput: $updateUserInput) {
+    _id
+    email
+    first_name
+    last_name
+    notificationToken
+    phone
+    photo
+    role
+    is_active
+  }
+}`;
+
+export const addFile = `mutation AddFile($folderId: ID!, $inputFile: InputFile) {
+  addFile(folderId: $folderId, inputFile: $inputFile) {
+    _id
+    createdAt
+    mimetype
+    name
+    path
   }
 }`;

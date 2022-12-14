@@ -35,7 +35,10 @@ import { ScrollView } from "react-native-gesture-handler";
 import CameraComponent from "../../Component/CameraComponent/CameraComponent";
 import MultipleImagePicker from "../../Component/CameraComponent/MultipleImagePicker";
 import { ImageBackground } from "react-native-web";
-import { uploadImageToCloudinary } from "../../Component/CameraComponent/CloudUpload";
+import {
+  uploadImageToCloudinary,
+  uploadImageToImageKit,
+} from "../../Component/CameraComponent/CloudUpload";
 import { useQuery, useMutation, useSubscription } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import { addInventory, categories } from "../../apollo/server";
@@ -92,8 +95,12 @@ export default function InventoryAddCategory(props) {
   });
 
   const setImage = async (image) => {
-    await uploadImageToCloudinary(image).then((img) => {
-      setImages((previmgs) => [...previmgs, img]);
+    // await uploadImageToCloudinary(image).then((img) => {
+    //   setImages((previmgs) => [...previmgs, img]);
+    // });
+
+    await uploadImageToImageKit(image).then((img) => {
+      setImages((previmgs) => [...previmgs, img.url]);
     });
   };
 
@@ -166,7 +173,7 @@ export default function InventoryAddCategory(props) {
       navigation={props.navigation}
       LeftIcon={true}
       withoutScroll={true}
-      pagetitle={"Category Details"}
+      pagetitle={"Item Details"}
     >
       <KeyboardAvoidingView style={styles().flex}>
         <ScrollView showsVerticalScrollIndicator={false}>

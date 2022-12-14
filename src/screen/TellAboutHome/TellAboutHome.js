@@ -140,7 +140,7 @@ export default function TellAboutHome(props) {
         userInput: {
           address: user?.address,
           email: user?.email,
-          first_name: user.firstName,
+          first_name: user?.firstName,
           goals: goal?._id,
           last_name: user?.lastName,
           password: password,

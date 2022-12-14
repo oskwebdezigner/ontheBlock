@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Text,
   TouchableOpacity,
@@ -7,7 +7,8 @@ import {
   FlatList,
   Switch,
   Image,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  ActivityIndicator,
 } from "react-native";
 import ThemeContext from "../../context/ThemeContext/ThemeContext";
 import { theme } from "../../context/ThemeContext/ThemeColor";
@@ -25,129 +26,279 @@ import Layout from "../../Component/Layout/Layout";
 import UserContext from "../../context/User/User";
 import ThemeButton from "../../Component/ThemeButton/ThemeButton";
 import { ScrollView } from "react-native-gesture-handler";
-
+import CameraComponent from "../../Component/CameraComponent/CameraComponent";
+import { uploadImageToCloudinary } from "../../Component/CameraComponent/CloudUpload";
+import { useQuery, useMutation, useSubscription } from "@apollo/react-hooks";
+import gql from "graphql-tag";
+import { updateUser } from "../../apollo/server";
+import Spinner from "../../Component/Spinner/Spinner";
+import FlashMessage from "../../Component/FlashMessage/FlashMessage";
 
 export default function EditProfile(props) {
+  const UPDATE_USER = gql`
+    ${updateUser}
+  `;
+
+  const [mutate, { client }] = useMutation(UPDATE_USER, {
+    onCompleted,
+    onError,
+  });
+
+  async function onCompleted(data) {
+    try {
+      FlashMessage({ msg: "Profile Update!", type: "success" });
+      console.log("updateUser res :", data.updateUser);
+      user?.refetch();
+      // props.navigation.navigate("InventoryCategoryList");
+      setLoading(false);
+    } catch (e) {
+      console.log(e);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function onError(error) {
+    FlashMessage({ msg: error?.message?.toString(), type: "danger" });
+    setLoading(false);
+    console.log("updateUser error  :", error);
+  }
+
   const user = useContext(UserContext);
   console.log("Profile user Context", user);
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
-  
- const [fname, setFname] = useState('');
- const [fnameError, setFnameError] = useState(false)
 
- const [lname, setLname] = useState('')
- const [lnameError, setLnameError] = useState(false)
+  const [fname, setFname] = useState("");
+  const [fnameError, setFnameError] = useState(false);
 
- const [email, setEmail] = useState('')
- const [emailError, setEmailError] = useState(false)
+  const [lname, setLname] = useState("");
+  const [lnameError, setLnameError] = useState(false);
 
- const [phone, setPhone] = useState('')
- const [phoneError, setPhoneError] = useState(false)
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState(false);
 
- const [address, setAddress] = useState('')
- 
+  const [phone, setPhone] = useState("");
+  const [phoneError, setPhoneError] = useState(false);
+
+  const [address, setAddress] = useState("");
+  const [profilepic, setProfilepic] = useState("");
+  const [Loading, setLoading] = useState(false);
+
+  const [profilePicLoading, setProfilePicLoading] = useState(false);
+  const setImage = async (image) => {
+    await uploadImageToCloudinary(image).then((img) => {
+      setProfilepic(img);
+      setProfilePicLoading(false);
+    });
+  };
+
+  useEffect(() => {
+    setFname(user?.first_name);
+    setLname(user?.last_name);
+    setEmail(user?.email);
+    setPhone(user?.phone);
+    setAddress(user?.address);
+    setProfilepic(user?.photo);
+    
+  }, []);
+
+  async function UpdateProfile() {
+    setLoading(true);
+    mutate({
+      variables: {
+        updateUserInput: {
+          address: address,
+          first_name: fname,
+          last_name: lname,
+          notificationToken: user?.notificationToken,
+          photo: profilepic,
+        },
+      },
+    });
+  }
+
+  const ProfileHeader = () => {
+    return (
+      <View
+        style={[
+          styles().profileHeader,
+          styles().mt20,
+          styles().mb30,
+          styles().justifyCenter,
+          styles().alignCenter,
+        ]}
+      >
+        <View
+          style={[
+            styles().wh100px,
+            styles().mr15,
+            styles().br50,
+            styles().overflowH,
+            styles().borderW1,
+            styles().alignCenter,
+            styles().justifyCenter,
+            { borderColor: currentTheme.textColor, borderWidth: 1 },
+          ]}
+        >
+          {profilepic ? (
+            <>
+              <Image source={{ uri: profilepic }} style={styles().wh100} />
+              <ActivityIndicator
+                size={"small"}
+                color={currentTheme.themeBackground}
+                // animating={imageLoader}
+                style={{
+                  position: "absolute",
+                }}
+              />
+            </>
+          ) : (
+            <Text
+              style={{
+                fontSize: 35,
+                fontWeight: "bold",
+                color: currentTheme.themeBackground,
+              }}
+            >
+              {user?.first_name ? user?.first_name[0]?.toUpperCase() : null}
+            </Text>
+          )}
+        </View>
+        <CameraComponent
+          loading={(e) => setProfilePicLoading(e)}
+          update={(img) => {
+            setImage(img);
+          }}
+        >
+          <View
+            style={{
+              bottom: 20,
+              left: 15,
+              width: 25,
+              height: 25,
+              borderRadius: 20,
+              alignItems: "center",
+              backgroundColor: "white",
+              borderWidth: 1,
+              borderColor: currentTheme.themeBackground,
+              justifyContent: "center",
+            }}
+          >
+            <Ionicons
+              name="pencil"
+              size={13}
+              color={currentTheme.themeBackground}
+            />
+          </View>
+        </CameraComponent>
+      </View>
+    );
+  };
 
   return (
     <Layout
       navigation={props.navigation}
       LeftIcon={true}
       pagetitle={"Edit Profile"}
-    //   style={styles().ph20}
+      //   style={styles().ph20}
     >
-<View style={styles().flex}>
-      
-<KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "height" : "height"}
-        keyboardVerticalOffset={100}
+      <View style={styles().flex}>
+        <ProfileHeader />
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "height" : "height"}
+          keyboardVerticalOffset={100}
+        >
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <View style={styles().mb20}>
+              <TextField
+                keyboardType="default"
+                value={fname}
+                label="First Name"
+                errorText={fnameError}
+                autoCapitalize="none"
+                style
+                onChangeText={(text) => {
+                  setFnameError(false);
+                  setFname(text);
+                }}
+              />
+            </View>
 
-      >
-        <ScrollView showsVerticalScrollIndicator={false}>
-            
-        <View style={styles().mb20}>
-            <TextField
-            keyboardType="default"
-            value={fname}
-            label="First Name"
-            errorText={fnameError}
-            autoCapitalize="none"
-            style
-            onChangeText={(text) => {
-                setFnameError(false);
-                setFname(text);
-            }}
-            />
-        </View>
+            <View style={styles().mb20}>
+              <TextField
+                keyboardType="default"
+                value={lname}
+                label="Last Name"
+                errorText={lnameError}
+                autoCapitalize="none"
+                style
+                onChangeText={(text) => {
+                  setLnameError(false);
+                  setLname(text);
+                }}
+              />
+            </View>
 
-        <View style={styles().mb20}>
-            <TextField
-            keyboardType="default"
-            value={lname}
-            label="Last Name"
-            errorText={lnameError}
-            autoCapitalize="none"
-            style
-            onChangeText={(text) => {
-                setLnameError(false);
-                setLname(text);
-            }}
-            />
-        </View>
+            <View style={styles().mb20}>
+              <TextField
+                keyboardType="default"
+                value={email}
+                label="Email"
+                errorText={emailError}
+                autoCapitalize="none"
+                style
+                onChangeText={(text) => {
+                  setEmailError(false);
+                  setEmail(text);
+                }}
+              />
+            </View>
 
-        <View style={styles().mb20}>
-            <TextField
-            keyboardType="default"
-            value={email}
-            label="Email"
-            errorText={emailError}
-            autoCapitalize="none"
-            style
-            onChangeText={(text) => {
-                setEmailError(false);
-                setEmail(text);
-            }}
-            />
-        </View>
+            <View style={styles().mb20}>
+              <TextField
+                keyboardType="numeric"
+                value={phone}
+                label="Phone Number"
+                errorText={phoneError}
+                autoCapitalize="none"
+                style
+                onChangeText={(text) => {
+                  setPhoneError(false);
+                  setPhone(text);
+                }}
+              />
+            </View>
 
-        <View style={styles().mb20}>
-            <TextField
-            keyboardType="numeric"
-            value={phone}
-            label="Phone Number"
-            errorText={phoneError}
-            autoCapitalize="none"
-            style
-            onChangeText={(text) => {
-                setPhoneError(false);
-                setPhone(text);
-            }}
-            />
-        </View>
-
-        <View style={styles().mb20}>
-            <TextField
-            keyboardType="default"
-            value={address}
-            label="Address (optional)"
-           autoCapitalize="none"
-            style
-            stylesInput={styles().h100px}
-            onChangeText={(text) => {
-                
-                setAddress(text);
-            }}
-            />
-        </View>
-
-        </ScrollView>
+            <View style={styles().mb20}>
+              <TextField
+                keyboardType="default"
+                value={address}
+                label="Address (optional)"
+                autoCapitalize="none"
+                style
+                stylesInput={styles().h100px}
+                onChangeText={(text) => {
+                  setAddress(text);
+                }}
+              />
+            </View>
+          </ScrollView>
         </KeyboardAvoidingView>
-        
-        </View>
+      </View>
 
       <View>
-            <ThemeButton Title={'Save'} Style={styles().mb20} />
+        {Loading ? (
+          <Spinner />
+        ) : (
+          <ThemeButton
+            onPress={() => UpdateProfile()}
+            Title={"Save"}
+            Style={styles().mb20}
+          />
+        )}
       </View>
-      
     </Layout>
   );
 }

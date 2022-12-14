@@ -81,13 +81,29 @@ export default function Header(props) {
         onPress={() => {
           props.navigation.navigate("Profile");
         }}
-        style={[styles().wh30px, styles().br15]}
+        style={[
+          styles().wh30px,
+          styles().br15,
+          styles().alignCenter,
+          styles().justifyCenter,
+          {
+            borderColor: currentTheme.themeBackground,
+            borderWidth: 1,
+            overflow: "hidden",
+          },
+        ]}
       >
-        <Image
-          source={require("../../assets/images/user-img.png")}
-          resizeMode={"cover"}
-          style={styles().wh100}
-        />
+        {user?.photo ? (
+          <Image
+            source={{ uri: user?.photo }}
+            resizeMode={"cover"}
+            style={styles().wh100}
+          />
+        ) : (
+          <Text style={{ fontSize: 12, color: currentTheme.themeBackground }}>
+            {user?.first_name && user?.first_name[0]?.toUpperCase()}
+          </Text>
+        )}
       </TouchableOpacity>
     );
   }

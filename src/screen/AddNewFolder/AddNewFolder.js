@@ -21,6 +21,7 @@ import { addFolder } from "../../apollo/server";
 import * as DocumentPicker from "expo-document-picker";
 import { EvilIcons, Ionicons, AntDesign } from "@expo/vector-icons";
 import UserContext from "../../context/User/User";
+import { uploadToImageKit } from "../../Component/CameraComponent/CloudUpload";
 
 export default function DocumentEdit(props) {
   const ADD_FOLDER = gql`
@@ -174,7 +175,8 @@ export default function DocumentEdit(props) {
                   type: "*/*",
                 });
                 if (document.type === "success") {
-                  setDocumentfile((prevfiles) => [...prevfiles, document]);
+                  await uploadToImageKit(document).then((file) => {});
+                  setDocumentfile((prevfiles) => [...prevfiles, file]);
                 }
               }}
               style={[

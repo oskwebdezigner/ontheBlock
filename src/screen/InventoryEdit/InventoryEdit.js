@@ -36,7 +36,11 @@ import CameraComponent from "../../Component/CameraComponent/CameraComponent";
 import MultipleImagePicker from "../../Component/CameraComponent/MultipleImagePicker";
 import { ImageBackground } from "react-native-web";
 import { addFolder, categories, updateInventory } from "../../apollo/server";
-import { uploadImageToCloudinary } from "../../Component/CameraComponent/CloudUpload";
+import {
+  uploadImageToCloudinary,
+  uploadImageToImageKit,
+  uploadToImageKit,
+} from "../../Component/CameraComponent/CloudUpload";
 import FlashMessage from "../../Component/FlashMessage/FlashMessage";
 import * as DocumentPicker from "expo-document-picker";
 import { useIsFocused } from "@react-navigation/native";
@@ -151,8 +155,11 @@ export default function InventoryEdit(props) {
   // );
 
   const setImage = async (image) => {
-    await uploadImageToCloudinary(image).then((img) => {
-      setImages((previmgs) => [...previmgs, img]);
+    // await uploadImageToCloudinary(image).then((img) => {
+    //   setImages((previmgs) => [...previmgs, img]);
+    // });
+    await uploadImageToImageKit(image).then((img) => {
+      setImages((previmgs) => [...previmgs, img.url]);
     });
   };
 

@@ -24,6 +24,7 @@ export const UserProvider = (props) => {
     },
     onError: (err) => {
       console.log("user profile error :", err.message);
+      
     },
   });
 

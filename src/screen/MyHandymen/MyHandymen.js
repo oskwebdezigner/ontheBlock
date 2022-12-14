@@ -58,6 +58,14 @@ export default function HandymenEdit(props) {
 
   const { loading, error, data, refetch } = useQuery(HANDYMEN, {
     fetchPolicy: "cache-and-network",
+    variables: {
+      filters: {
+        property: property?._id,
+      },
+      options: {
+        limit: 1000,
+      },
+    },
     onCompleted: ({ handymen }) => {
       console.log("handymen res :", handymen.results);
     },

@@ -44,8 +44,8 @@ async function uploadToImageKit(file) {
   return new Promise((resolve, reject) => {
     imagekit.upload(
       {
-        file: file,
-        fileName: "abc.xyz",
+        file: file.uri,
+        fileName: file.name,
         //you can change this and generate your own name if required
         // tags: ["tag-1", "tag-2"], //change this or remove it if you want
       },
@@ -62,7 +62,7 @@ async function uploadToImageKit(file) {
         // transformation: [{ height: 300, width: 400 }],
       });
 
-      return url;
+      return newdata;
     })
     .catch((err) => {
       console.log("imageKit err:", err);
@@ -70,4 +70,34 @@ async function uploadToImageKit(file) {
     });
 }
 
-export { uploadImageToCloudinary, uploadToImageKit };
+async function uploadImageToImageKit(file) {
+  return new Promise((resolve, reject) => {
+    imagekit.upload(
+      {
+        file: file,
+        fileName: 'abc.jpeg',
+        //you can change this and generate your own name if required
+        // tags: ["tag-1", "tag-2"], //change this or remove it if you want
+      },
+      function(err, result) {
+        if (err) reject(err);
+        resolve(result);
+      }
+    );
+  })
+    .then(async (newdata) => {
+      console.log("imageKit result:", newdata);
+      const url = imagekit.url({
+        src: newdata.url,
+        // transformation: [{ height: 300, width: 400 }],
+      });
+
+      return newdata;
+    })
+    .catch((err) => {
+      console.log("imageKit err:", err);
+      return "";
+    });
+}
+
+export { uploadImageToCloudinary, uploadToImageKit, uploadImageToImageKit };

@@ -20,11 +20,11 @@ import DocumentComponent from "../../Component/DocumentPicker/DocumentPicker";
 import * as DocumentPicker from "expo-document-picker";
 import { useQuery, useMutation, useSubscription } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import { getImageKitToken } from "../../apollo/server";
+import { addFile, getImageKitToken } from "../../apollo/server";
 import { uploadToImageKit } from "../../Component/CameraComponent/CloudUpload";
 export default function DocumentEdit(props) {
-  const GET_IMAGEKIT_TOKEN = gql`
-    ${getImageKitToken}
+  const ADD_FILES = gql`
+    ${addFile}
   `;
 
   const themeContext = useContext(ThemeContext);
@@ -36,21 +36,58 @@ export default function DocumentEdit(props) {
   const [DocumentfileLoading, setDocumentfileLoading] = useState(false);
   const [Documentfile, setDocumentfile] = useState([]);
 
-  const { loading, error, data, refetch } = useQuery(GET_IMAGEKIT_TOKEN, {
-    fetchPolicy: "cache-and-network",
-    onCompleted: ({ getImageKitToken }) => {
-      console.log("getImageKitToken res :", getImageKitToken);
-    },
-    onError: (err) => {
-      console.log("error in getImageKitToken :", err);
-    },
+  // const { loading, error, data, refetch } = useQuery(GET_IMAGEKIT_TOKEN, {
+  //   fetchPolicy: "cache-and-network",
+  //   onCompleted: ({ getImageKitToken }) => {
+  //     console.log("getImageKitToken res :", getImageKitToken);
+  //   },
+  //   onError: (err) => {
+  //     console.log("error in getImageKitToken :", err);
+  //   },
+  // });
+
+  const [mutate, { client }] = useMutation(ADD_FILES, {
+    onCompleted,
+    onError,
   });
+
+  async function onCompleted(data) {
+    try {
+      FlashMessage({ msg: "File Added!", type: "success" });
+      console.log("addFile res :", data.addFile);
+      setLoading(false);
+    } catch (e) {
+      console.log(e);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function onError(error) {
+    FlashMessage({ msg: error?.message?.toString(), type: "danger" });
+    setLoading(false);
+    console.log("addFile error  :", error);
+  }
 
   useEffect(() => {
     setDocumentfile(docs?.files);
   }, []);
 
-  // console.log("docs=======>", docs);
+  console.log("docs=======>", Documentfile);
+
+  async function Addfiles() {
+    await mutate({
+      variables: {
+        folderId: docs?._id,
+        inputFile: {
+          mimetype: null,
+          name: null,
+          path: null,
+        },
+      },
+    });
+  }
 
   return (
     <Layout
@@ -176,9 +213,10 @@ export default function DocumentEdit(props) {
                 });
                 console.log(document);
                 if (document.type === "success") {
-                  await uploadToImageKit(document.uri).then((file) =>
-                    console.log("document here======>", file)
-                  );
+                  await uploadToImageKit(document).then((file) => {
+                    console.log("document here======>", file);
+                    setDocumentfile((prevfile) => [...prevfile, file]);
+                  });
 
                   // setDocumentfile((prevfiles) => [...prevfiles, document]);
                 }
