@@ -27,7 +27,10 @@ import UserContext from "../../context/User/User";
 import ThemeButton from "../../Component/ThemeButton/ThemeButton";
 import { ScrollView } from "react-native-gesture-handler";
 import CameraComponent from "../../Component/CameraComponent/CameraComponent";
-import { uploadImageToCloudinary } from "../../Component/CameraComponent/CloudUpload";
+import {
+  uploadImageToCloudinary,
+  uploadImageToImageKit,
+} from "../../Component/CameraComponent/CloudUpload";
 import { useQuery, useMutation, useSubscription } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import { updateUser } from "../../apollo/server";
@@ -64,9 +67,8 @@ export default function EditProfile(props) {
     setLoading(false);
     console.log("updateUser error  :", error);
   }
-
   const user = useContext(UserContext);
-  console.log("Profile user Context", user);
+  // console.log("Profile user Context", user);
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
 
@@ -87,9 +89,14 @@ export default function EditProfile(props) {
   const [Loading, setLoading] = useState(false);
 
   const [profilePicLoading, setProfilePicLoading] = useState(false);
+
   const setImage = async (image) => {
-    await uploadImageToCloudinary(image).then((img) => {
-      setProfilepic(img);
+    // await uploadImageToCloudinary(image).then((img) => {
+    //   setProfilepic(img);
+    //   setProfilePicLoading(false);
+    // });
+    await uploadImageToImageKit(image).then((img) => {
+      setProfilepic(img.url);
       setProfilePicLoading(false);
     });
   };
@@ -101,7 +108,6 @@ export default function EditProfile(props) {
     setPhone(user?.phone);
     setAddress(user?.address);
     setProfilepic(user?.photo);
-    
   }, []);
 
   async function UpdateProfile() {
@@ -148,7 +154,7 @@ export default function EditProfile(props) {
               <ActivityIndicator
                 size={"small"}
                 color={currentTheme.themeBackground}
-                // animating={imageLoader}
+                animating={profilePicLoading}
                 style={{
                   position: "absolute",
                 }}

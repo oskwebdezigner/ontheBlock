@@ -13,19 +13,27 @@ import styles from "../styles";
 import Layout from "../../Component/Layout/Layout";
 import TextField from "../../Component/FloatTextField/FloatTextField";
 import ThemeButton from "../../Component/ThemeButton/ThemeButton";
-import { EvilIcons, Ionicons, AntDesign } from "@expo/vector-icons";
+import { EvilIcons, Ionicons, AntDesign, Entypo } from "@expo/vector-icons";
 import Spinner from "../../Component/Spinner/Spinner";
 import CameraComponent from "../../Component/CameraComponent/CameraComponent";
 import DocumentComponent from "../../Component/DocumentPicker/DocumentPicker";
 import * as DocumentPicker from "expo-document-picker";
 import { useQuery, useMutation, useSubscription } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import { addFile, getImageKitToken } from "../../apollo/server";
+import {
+  addFile,
+  addMultipleFiles,
+  getImageKitToken,
+} from "../../apollo/server";
 import { uploadToImageKit } from "../../Component/CameraComponent/CloudUpload";
+import FlashMessage from "../../Component/FlashMessage/FlashMessage";
 export default function DocumentEdit(props) {
-  const ADD_FILES = gql`
-    ${addFile}
+  const ADD_MULTIPLE_FILES = gql`
+    ${addMultipleFiles}
   `;
+  // const ADD_FILES = gql`
+  //   ${addFile}
+  // `;
 
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
@@ -35,7 +43,8 @@ export default function DocumentEdit(props) {
 
   const [DocumentfileLoading, setDocumentfileLoading] = useState(false);
   const [Documentfile, setDocumentfile] = useState([]);
-
+  const [Loading, setLoading] = useState(false);
+  const [deletedFiles, setDeletedFiles] = useState("");
   // const { loading, error, data, refetch } = useQuery(GET_IMAGEKIT_TOKEN, {
   //   fetchPolicy: "cache-and-network",
   //   onCompleted: ({ getImageKitToken }) => {
@@ -46,14 +55,14 @@ export default function DocumentEdit(props) {
   //   },
   // });
 
-  const [mutate, { client }] = useMutation(ADD_FILES, {
+  const [mutate, { client }] = useMutation(ADD_MULTIPLE_FILES, {
     onCompleted,
     onError,
   });
 
   async function onCompleted(data) {
     try {
-      FlashMessage({ msg: "File Added!", type: "success" });
+      FlashMessage({ msg: "Files Added!", type: "success" });
       console.log("addFile res :", data.addFile);
       setLoading(false);
     } catch (e) {
@@ -74,19 +83,39 @@ export default function DocumentEdit(props) {
     setDocumentfile(docs?.files);
   }, []);
 
-  console.log("docs=======>", Documentfile);
+  const DeleteFile = (i) => {
+    let newArr = [...Documentfile];
+    let deleted = newArr.splice(i, 1);
+    setDocumentfile(() => [...newArr]);
+    setDeletedFiles((prevfile) => [...prevfile, deleted[0]]);
+  };
+
+  // console.log("upload docs=======>", Documentfile);
+  // console.log("deleted docs=======>", deletedFiles);
+  // console.log("docs=======>", docs);
 
   async function Addfiles() {
-    await mutate({
-      variables: {
-        folderId: docs?._id,
-        inputFile: {
-          mimetype: null,
-          name: null,
-          path: null,
-        },
-      },
+    let DEL = deletedFiles?.map((file) => {
+      return file._id;
     });
+    let arr = [];
+    let filter = Documentfile.map(({ _id, item }) => {
+      return item;
+    });
+    console.log("filter =========>", filter);
+
+    // let data = {
+    //   folderId: docs?._id,
+    //   inputMultipleFiles: {
+    //     deletedFiles: DEL ? DEL : [],
+    //     files: Documentfile,
+    //   },
+    // };
+    // console.log("file data :", data);
+    // setLoading(true);
+    // await mutate({
+    //   variables: data,
+    // });
   }
 
   return (
@@ -195,6 +224,24 @@ export default function DocumentEdit(props) {
                     },
                   ]}
                 >
+                  <TouchableOpacity
+                    onPress={() => DeleteFile(i)}
+                    activeOpacity={0.6}
+                    style={[
+                      styles().posAbs,
+                      styles().zIndex10,
+                      {
+                        right: -7,
+                        top: -5,
+                      },
+                    ]}
+                  >
+                    <Entypo
+                      color={"black"}
+                      size={20}
+                      name={"circle-with-cross"}
+                    />
+                  </TouchableOpacity>
                   <Ionicons
                     name="document-attach"
                     color={currentTheme.themeBackground}
@@ -211,11 +258,16 @@ export default function DocumentEdit(props) {
                 let document = await DocumentPicker.getDocumentAsync({
                   type: "*/*",
                 });
-                console.log(document);
                 if (document.type === "success") {
                   await uploadToImageKit(document).then((file) => {
-                    console.log("document here======>", file);
-                    setDocumentfile((prevfile) => [...prevfile, file]);
+                    setDocumentfile((prevfile) => [
+                      ...prevfile,
+                      {
+                        name: file.name,
+                        mimetype: document.mimeType,
+                        path: file.url,
+                      },
+                    ]);
                   });
 
                   // setDocumentfile((prevfiles) => [...prevfiles, document]);
@@ -259,7 +311,11 @@ export default function DocumentEdit(props) {
       </View>
 
       <View style={[styles().mt35, styles().mb20]}>
-        <ThemeButton Title={"Save"} />
+        {Loading ? (
+          <Spinner />
+        ) : (
+          <ThemeButton onPress={() => Addfiles()} Title={"Save"} />
+        )}
       </View>
     </Layout>
   );

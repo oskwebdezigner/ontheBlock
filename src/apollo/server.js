@@ -256,12 +256,6 @@ export const newPassword = `mutation newPassword($email :String! ,
     }
   }`;
 
-export const resetPassword = `mutation resetPassword($password:String!,$newPassword:String!,$email:String!){
-    resetPassword(password: $password,newPassword:$newPassword, email:$email ){
-      result
-    }
-  }`;
-
 //ontheblock
 
 export const goals = `query goals {
@@ -804,5 +798,28 @@ export const addFile = `mutation AddFile($folderId: ID!, $inputFile: InputFile) 
     mimetype
     name
     path
+  }
+}`;
+
+export const resetPassword = `mutation ResetPassword($password: String!, $newPassword: String!, $email: String!) {
+  resetPassword(password: $password, newPassword: $newPassword, email: $email) {
+    result
+  }
+}`;
+
+export const addMultipleFiles = `mutation AddMultipleFiles($folderId: ID!, $inputMultipleFiles: InputMultipleFiles) {
+  addMultipleFiles(folderId: $folderId, InputMultipleFiles: $inputMultipleFiles) {
+    _id
+    name
+    files {
+      _id
+      mimetype
+      name
+      path
+    }
+    inventory {
+      _id
+      name
+    }
   }
 }`;
