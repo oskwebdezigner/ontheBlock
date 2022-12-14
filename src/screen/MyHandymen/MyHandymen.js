@@ -108,7 +108,7 @@ export default function HandymenEdit(props) {
       LeftIcon={true}
       withoutScroll={true}
       pagetitle={"My Handymen"}
-      // loading={loading}
+      loading={loading}
       style={[styles().ph0]}
     >
       <View style={[styles().flex]}>

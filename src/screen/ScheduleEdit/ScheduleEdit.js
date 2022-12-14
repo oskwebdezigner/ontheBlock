@@ -1,4 +1,4 @@
-import React, { useContext, useState, useCallback } from "react";
+import React, { useContext, useState, useCallback, useEffect } from "react";
 import {
   Platform,
   Dimensions,
@@ -81,6 +81,7 @@ export default function ScheduleEdit(props) {
     try {
       FlashMessage({ msg: "Task Updated!", type: "success" });
       console.log("updateTask res :", data.updateTask);
+      props.navigation.navigate("Home");
       setLoading(false);
     } catch (e) {
       console.log(e);
@@ -143,25 +144,45 @@ export default function ScheduleEdit(props) {
   };
 
   async function UpdateTask() {
-    setLoading(true);
-    let data = {
-      updateTaskId: task?._id,
-      updateTaskInput: {
-        description: MaintenanceDesc,
-        get_notifications: NotificationCheck,
-        inventory: task?.inventory?._id,
-        property: task?.property?._id,
-        schedule_date: schedule_dates.selectedDate,
-        assign_to: AssignTask === "Yes" ? handyman : "",
-        added_by: user?._id,
-      },
-    };
-    console.log("update data :", data);
-    await mutate({
-      variables: data,
-    });
+    let status = true;
+    if (handyman === "") {
+      FlashMessage({
+        msg: "Select Your Handman to Assign Task",
+        type: "warning",
+      });
+      status = false;
+      return;
+    }
+
+    if (status) {
+      setLoading(true);
+      let data = {
+        updateTaskId: task?._id,
+        updateTaskInput: {
+          description: MaintenanceDesc,
+          get_notifications: NotificationCheck,
+          inventory: task?.inventory?._id,
+          property: task?.property?._id,
+          schedule_date: schedule_dates.selectedDate,
+          assign_to: handyman,
+          added_by: user?._id,
+        },
+      };
+      console.log("update data :", data);
+      await mutate({
+        variables: data,
+      });
+    }
   }
-  console.log(schedule_dates.selectedDate);
+
+  useEffect(() => {
+    setMaintenanceDesc(task?.description);
+    setHandyman(task?.assign_to?._id);
+    setNotificationCheck(task?.get_notifications);
+    getSelectedDayEvents(task?.schedule_date);
+  }, []);
+
+  console.log("handman", handyman);
   return (
     <Layout
       navigation={props.navigation}
@@ -176,6 +197,7 @@ export default function ScheduleEdit(props) {
               style={[styles().boxpeshadow, styles().pall10, styles().br10]}
             >
               <Calendar
+                date={task?.schedule_date}
                 markingType="custom"
                 onDayPress={(day) => {
                   getSelectedDayEvents(day.dateString);
@@ -359,35 +381,35 @@ export default function ScheduleEdit(props) {
                 </TouchableOpacity>
               </View>
             </View>
-            {AssignTask === "Yes" ? (
-              <View
+            {/* {AssignTask === "Yes" ? ( */}
+            <View
+              style={[
+                styles().mt30,
+                styles().h60px,
+                styles().br10,
+                styles().bw1,
+                { borderColor: currentTheme.cEFEFEF },
+              ]}
+            >
+              <Text
                 style={[
-                  styles().mt30,
-                  styles().h60px,
-                  styles().br10,
-                  styles().bw1,
-                  { borderColor: currentTheme.cEFEFEF },
+                  styles().ml15,
+                  styles().mt5,
+                  styles().fs12,
+                  styles().fw400,
+                  { color: currentTheme.textColor },
                 ]}
               >
-                <Text
-                  style={[
-                    styles().ml15,
-                    styles().mt5,
-                    styles().fs12,
-                    styles().fw400,
-                    { color: currentTheme.textColor },
-                  ]}
-                >
-                  Handymen's
-                </Text>
-                <Multiselect
-                  ListItems={data?.handymen?.results}
-                  SelectText={person?.name}
-                  value={handyman}
-                  setValue={(e) => setHandyman(e[0])}
-                />
-              </View>
-            ) : null}
+                Handymen's
+              </Text>
+              <Multiselect
+                ListItems={data?.handymen?.results}
+                SelectText={person?.name}
+                value={handyman}
+                setValue={(e) => setHandyman(e[0])}
+              />
+            </View>
+            {/* ) : null} */}
             {/* <View style={styles().mt15}>
               <TextField
                 keyboardType="default"

@@ -64,7 +64,7 @@ export default function Home(props) {
   const { loading, error, data, refetch } = useQuery(PROPERTIES, {
     fetchPolicy: "cache-and-network",
     onCompleted: ({ properties }) => {
-      console.log("properties res >>>>>>>>>>>>>>>>>", properties.results);
+      // console.log("properties res >>>>>>>>>>>>>>>>>", properties.results);
     },
     onError: (err) => {
       console.log("error in properties :", err);
@@ -77,20 +77,23 @@ export default function Home(props) {
     data: upcomingData,
     refetch: upcomingRefetch,
   } = useQuery(UPCOMING_TASK_LIST, {
-    // variables: {},
+    variables: {
+      options: {
+        limit: 1000,
+      },
+    },
     fetchPolicy: "cache-and-network",
     onCompleted: ({ upcommingTasksList }) => {
-      console.log(
-        "upcommingTasksList res ================>",
-        upcommingTasksList.results
-      );
+      // console.log(
+      //   "upcommingTasksList res ================>",
+      //   upcommingTasksList.results
+      // );
     },
     onError: (err) => {
       console.log("error in upcommingTasksList :", err);
     },
   });
 
-  //   if (loading) return <Loader />;
   return (
     <Layout
       navigation={props.navigation}
@@ -307,9 +310,9 @@ export default function Home(props) {
                           {item?.images?.length !== 0 ? (
                             <Image
                               source={{
-                                uri: item?.images[0],
+                                uri: item?.images ? item?.images[0] : "",
                               }}
-                              // source={{ uri: item.images[0] }}
+                              // source={{ uri: item?.images[0] }}
                               resizeMode="cover"
                               style={[styles().wh100, styles().br10]}
                             />
@@ -343,7 +346,6 @@ export default function Home(props) {
                               <Text
                                 style={{
                                   color: currentTheme.BCBCBC,
-                                  fontWeight: "bold",
                                   fontSize: 12,
                                 }}
                               >
@@ -473,13 +475,44 @@ export default function Home(props) {
                       styles().overflowH,
                     ]}
                   >
-                    {item?.property.images ? (
+                    {item?.property?.images?.length !== 0 ? (
                       <Image
-                        source={{ uri: item?.property.images[0] }}
+                        source={{
+                          uri: item?.property?.images
+                            ? item?.property?.images[0]
+                            : "",
+                        }}
                         resizeMode="cover"
                         style={styles().wh100}
                       />
-                    ) : null}
+                    ) : (
+                      <View
+                        style={[
+                          styles().wh100,
+                          {
+                            alignItems: "center",
+                            justifyContent: "center",
+                            borderWidth: 1,
+                            borderColor: currentTheme.themeBackground,
+                            borderRadius: 10,
+                          },
+                        ]}
+                      >
+                        <Ionicons
+                          name="image"
+                          size={50}
+                          color={currentTheme.BCBCBC}
+                        />
+                        <Text
+                          style={{
+                            color: currentTheme.BCBCBC,
+                            fontSize: 10,
+                          }}
+                        >
+                          No Image
+                        </Text>
+                      </View>
+                    )}
                   </View>
                   <View
                     style={[
@@ -519,7 +552,9 @@ export default function Home(props) {
                           { color: currentTheme.textColor },
                         ]}
                       >
-                        {item?.property?.address}
+                        {item?.property?.address
+                          ? item?.property?.address
+                          : "No Address"}
                       </Text>
                     </View>
                     <View style={[styles().flexRow, styles().alignCenter]}>
@@ -538,7 +573,9 @@ export default function Home(props) {
                           { color: currentTheme.textColor },
                         ]}
                       >
-                        {moment(item.schedule_date).format("LLL")}
+                        {item.schedule_date
+                          ? moment(item.schedule_date).format("LLL")
+                          : "No Schedule Date"}
                       </Text>
                     </View>
                     <ThemeButton

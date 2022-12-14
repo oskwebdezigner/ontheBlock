@@ -19,6 +19,7 @@ import setupApolloClient from "./src/apollo/index";
 import { AuthContext } from "./src/context/Auth/auth";
 import * as SplashScreen from "expo-splash-screen";
 import * as Notifications from "expo-notifications";
+import "react-native-url-polyfill/auto";
 
 const themeValue = "Yellow";
 const STATUSBAR_HEIGHT = StatusBar.currentHeight;

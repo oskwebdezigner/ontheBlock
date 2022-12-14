@@ -25,19 +25,19 @@ const MenuItems = [
     id: 1,
     name: "My Properties",
     Image: require("../../assets/images/my-properties.png"),
-    navigateTo: "SinglePropertyListing",
+    navigateTo: "MyProperties",
   },
   {
     id: 2,
     name: "My Stuff",
     Image: require("../../assets/images/my-stuff.png"),
-    navigateTo: "InventoryCategoryList",
+    navigateTo: "MyStuff",
   },
   {
     id: 3,
     name: "My Documents",
     Image: require("../../assets/images/my-documents.png"),
-    navigateTo: "DocumentListing",
+    navigateTo: "MyDocuments",
   },
   {
     id: 4,

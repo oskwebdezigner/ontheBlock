@@ -18,8 +18,15 @@ import Spinner from "../../Component/Spinner/Spinner";
 import CameraComponent from "../../Component/CameraComponent/CameraComponent";
 import DocumentComponent from "../../Component/DocumentPicker/DocumentPicker";
 import * as DocumentPicker from "expo-document-picker";
-
+import { useQuery, useMutation, useSubscription } from "@apollo/react-hooks";
+import gql from "graphql-tag";
+import { getImageKitToken } from "../../apollo/server";
+import { uploadToImageKit } from "../../Component/CameraComponent/CloudUpload";
 export default function DocumentEdit(props) {
+  const GET_IMAGEKIT_TOKEN = gql`
+    ${getImageKitToken}
+  `;
+
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
   let docs = props.route?.params?.docs;
@@ -29,11 +36,22 @@ export default function DocumentEdit(props) {
   const [DocumentfileLoading, setDocumentfileLoading] = useState(false);
   const [Documentfile, setDocumentfile] = useState([]);
 
+  const { loading, error, data, refetch } = useQuery(GET_IMAGEKIT_TOKEN, {
+    fetchPolicy: "cache-and-network",
+    onCompleted: ({ getImageKitToken }) => {
+      console.log("getImageKitToken res :", getImageKitToken);
+    },
+    onError: (err) => {
+      console.log("error in getImageKitToken :", err);
+    },
+  });
+
   useEffect(() => {
     setDocumentfile(docs?.files);
   }, []);
 
-  console.log("docs=======>", docs);
+  // console.log("docs=======>", docs);
+
   return (
     <Layout
       navigation={props.navigation}
@@ -156,8 +174,13 @@ export default function DocumentEdit(props) {
                 let document = await DocumentPicker.getDocumentAsync({
                   type: "*/*",
                 });
+                console.log(document);
                 if (document.type === "success") {
-                  setDocumentfile((prevfiles) => [...prevfiles, document]);
+                  await uploadToImageKit(document.uri).then((file) =>
+                    console.log("document here======>", file)
+                  );
+
+                  // setDocumentfile((prevfiles) => [...prevfiles, document]);
                 }
               }}
               style={[

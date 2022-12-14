@@ -44,7 +44,7 @@ export default function MaintenaceDetail(props) {
     },
     {
       id: 1,
-      name: "Schedule Task",
+      name: "Rechedule Task",
       onPress: () => props.navigation.navigate("ScheduleEdit", { task: item }),
     },
     {
@@ -129,13 +129,37 @@ export default function MaintenaceDetail(props) {
             styles().overflowH,
           ]}
         >
-          {item?.property?.images ? (
+          {item?.property?.images?.length !== 0 ? (
             <Image
               source={{ uri: item?.property?.images[0] }}
               resizeMode="cover"
               style={styles().wh100}
             />
-          ) : null}
+          ) : (
+            <View
+              style={[
+                styles().wh100,
+                {
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: 10,
+                  borderWidth: 1,
+                  borderColor: currentTheme.themeBackground,
+                },
+              ]}
+            >
+              <Ionicons name="image" size={80} color={currentTheme.BCBCBC} />
+              <Text
+                style={{
+                  color: currentTheme.BCBCBC,
+                  fontWeight: "bold",
+                  fontSize: 12,
+                }}
+              >
+                No Image
+              </Text>
+            </View>
+          )}
         </View>
 
         <View
@@ -182,7 +206,9 @@ export default function MaintenaceDetail(props) {
                     { color: currentTheme.textColor },
                   ]}
                 >
-                  {item?.property?.address}
+                  {item?.property?.address
+                    ? item?.property?.address
+                    : "No Address"}
                 </Text>
               </View>
               <View style={[styles().flexRow, styles().alignCenter]}>
@@ -201,7 +227,9 @@ export default function MaintenaceDetail(props) {
                     { color: currentTheme.textColor },
                   ]}
                 >
-                  {moment(item.schedule_date).format("LLL")}
+                  {item?.schedule_date
+                    ? moment(item?.schedule_date).format("LLL")
+                    : "No Schedule Date"}
                 </Text>
               </View>
             </View>
@@ -279,13 +307,13 @@ export default function MaintenaceDetail(props) {
         <View style={styles().zIndex1}>
           <Text
             style={[
-              styles().fs12,
+              styles().fs14,
               styles().fontRegular,
               styles().fw400,
               { color: currentTheme.textColor },
             ]}
           >
-            {item?.property?.description}
+            {item?.description}
           </Text>
         </View>
       </View>

@@ -721,9 +721,17 @@ export const inventories = `query Inventories($options: options, $filters: Inven
   inventories(options: $options, filters: $filters) {
     results {
       _id
+      images
       name
       is_active
+      brand
+      description
+      serail_no
     }
+     page
+    limit
+    totalPages
+    totalResults
   }
 }`;
 
@@ -766,5 +774,28 @@ export const updateHandyman = `mutation UpdateHandyman($updateHandymanId: ID!, $
       _id
       name
     }
+  }
+}`;
+
+export const getImageKitToken = `query GetImageKitToken {
+  getImageKitToken {
+    expire
+    signature
+    token
+  }
+}`;
+
+export const files = `query Files($options: options) {
+  files(options: $options) {
+    results {
+      _id
+      mimetype
+      name
+      path
+    }
+    page
+    limit
+    totalPages
+    totalResults
   }
 }`;

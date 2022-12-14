@@ -7,9 +7,9 @@ const CLOUDINARY_PRESET = "mnh4qyn1";
 const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
 
 var imagekit = new ImageKit({
-  publicKey: "public_lcWRjS1cr6PRFyBDhUN4CBcXNP4=",
-  urlEndpoint: "https://ik.imagekit.io/6itqidsrz",
-  authenticationEndpoint: `${SERVER_URL}data/getImageKitAuth`,
+  publicKey: "public_9oA6a9dbCTuAWI1qrlnQcdi2h/U=",
+  urlEndpoint: "https://ik.imagekit.io/ak4gva2wf",
+  authenticationEndpoint: `${SERVER_URL}`,
 });
 
 async function uploadImageToCloudinary(image) {
@@ -39,14 +39,14 @@ async function uploadImageToCloudinary(image) {
     console.log(e);
   }
 }
-async function uploadToImageKit(image) {
-  // ----- ImageKit -----
 
+async function uploadToImageKit(file) {
   return new Promise((resolve, reject) => {
     imagekit.upload(
       {
-        file: image,
-        fileName: "abc.jpg", //you can change this and generate your own name if required
+        file: file,
+        fileName: "abc.xyz",
+        //you can change this and generate your own name if required
         // tags: ["tag-1", "tag-2"], //change this or remove it if you want
       },
       function(err, result) {

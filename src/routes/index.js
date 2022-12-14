@@ -50,6 +50,9 @@ import Wallet from "../screen/Wallet/Wallet";
 import WalletTopup from "../screen/WalletTopup/WalletTopup";
 import ChangePassword from "../screen/ChangePassword/ChangePassword";
 import Faq from "../screen/Faq/Faq";
+import MyProperties from "../screen/MyProperties/MyProperties";
+import MyStuff from "../screen/MyStuff/MyStuff";
+import MyDocuments from "../screen/MyDocuments.js/MyDocuments";
 
 // Auth Stack
 import LandingScreen from "../screen/Landing/Landing";
@@ -159,9 +162,12 @@ function HomeNavigator() {
       <HomeStack.Screen name="PrizeDetail" component={PrizeDetail} />
       <HomeStack.Screen name="Profile" component={Profile} />
       <HomeStack.Screen name="AddNewFolder" component={AddNewFolder} />
+      <HomeStack.Screen name="MyDocuments" component={MyDocuments} />
       <HomeStack.Screen name="PersonalDetails" component={PersonalDetails} />
+      <HomeStack.Screen name="MyProperties" component={MyProperties} />
       <HomeStack.Screen name="Wishlist" component={Wishlist} />
       <HomeStack.Screen name="Wallet" component={Wallet} />
+      <HomeStack.Screen name="MyStuff" component={MyStuff} />
       <HomeStack.Screen name="WalletTopup" component={WalletTopup} />
       <HomeStack.Screen name="ChangePassword" component={ChangePassword} />
       <HomeStack.Screen name="Faq" component={Faq} />
