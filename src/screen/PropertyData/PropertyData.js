@@ -91,7 +91,7 @@ export default function PropertyData(props) {
   async function onCompleted(data) {
     try {
       FlashMessage({ msg: "Property Updated!", type: "success" });
-      props.navigation.navigate("Home");
+      props.navigation.navigate("SinglePropertyListing");
       console.log("updateProperty res :", data.updateProperty);
       setLoading(false);
     } catch (e) {

@@ -108,7 +108,7 @@ export default function HandymenEdit(props) {
       LeftIcon={true}
       withoutScroll={true}
       pagetitle={"My Handymen"}
-      loading={loading}
+      // loading={loading}
       style={[styles().ph0]}
     >
       <View style={[styles().flex]}>
@@ -119,7 +119,15 @@ export default function HandymenEdit(props) {
           bounces={false}
           renderItem={({ item, index }) => {
             return (
-              <View
+              <TouchableOpacity
+                onPress={() =>
+                  props.navigation.navigate("HandymenEdit", {
+                    property: property,
+                    isEdit: true,
+                    handymen: item,
+                  })
+                }
+                activeOpacity={0.5}
                 key={index}
                 style={{
                   padding: 10,
@@ -193,7 +201,7 @@ export default function HandymenEdit(props) {
                     {item.contact_no}
                   </Text>
                 </View>
-              </View>
+              </TouchableOpacity>
             );
           }}
           ListEmptyComponent={() => {

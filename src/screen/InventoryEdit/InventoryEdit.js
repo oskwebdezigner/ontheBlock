@@ -73,7 +73,7 @@ export default function InventoryEdit(props) {
   const [ItemSerial, setItemSerial] = useState("");
   const [ItemSerialError, setItemSerialError] = useState(false);
 
-  const [images, setImages] = useState('');
+  const [images, setImages] = useState("");
   //   const [ItemDocName, setItemDocName] = useState("");
   //   const [ItemDocNameError, setItemDocNameError] = useState(false);
 
@@ -503,8 +503,11 @@ export default function InventoryEdit(props) {
                 onPress={async () => {
                   let document = await DocumentPicker.getDocumentAsync({
                     type: "*/*",
+                    copyToCacheDirectory: false,
                   });
-                  setDocumentfile((prevfiles) => [...prevfiles, document]);
+                  if (document.type === "success") {
+                    setDocumentfile((prevfiles) => [...prevfiles, document]);
+                  }
                 }}
                 style={[
                   styles().mt10,

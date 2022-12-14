@@ -13,78 +13,95 @@ import styles from "../styles";
 import Layout from "../../Component/Layout/Layout";
 import TextField from "../../Component/FloatTextField/FloatTextField";
 import ThemeButton from "../../Component/ThemeButton/ThemeButton";
-import { EvilIcons, Ionicons, AntDesign } from "@expo/vector-icons";
 import Spinner from "../../Component/Spinner/Spinner";
-import CameraComponent from "../../Component/CameraComponent/CameraComponent";
-import DocumentComponent from "../../Component/DocumentPicker/DocumentPicker";
+import FlashMessage from "../../Component/FlashMessage/FlashMessage";
+import { useQuery, useMutation, useSubscription } from "@apollo/react-hooks";
+import gql from "graphql-tag";
+import { addFolder } from "../../apollo/server";
 import * as DocumentPicker from "expo-document-picker";
+import { EvilIcons, Ionicons, AntDesign } from "@expo/vector-icons";
+import UserContext from "../../context/User/User";
 
 export default function DocumentEdit(props) {
+  const ADD_FOLDER = gql`
+    ${addFolder}
+  `;
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
-  let docs = props.route?.params?.docs;
-  const [ItemDocName, setItemDocName] = useState("");
-  const [ItemDocNameError, setItemDocNameError] = useState(false);
-
-  const [DocumentfileLoading, setDocumentfileLoading] = useState(false);
+  //   let docs = props.route?.params?.docs;
+  const user = useContext(UserContext);
+  const [Loading, setLoading] = useState(false);
+  const [folderName, setFolderName] = useState("");
+  const [folderNameErr, setFolderNameErr] = useState(false);
   const [Documentfile, setDocumentfile] = useState([]);
 
-  useEffect(() => {
-    setDocumentfile(docs?.files);
-  }, []);
+  const [mutate, { client }] = useMutation(ADD_FOLDER, {
+    onCompleted,
+    onError,
+  });
 
-  console.log("docs=======>", docs);
+  async function onCompleted(data) {
+    try {
+      FlashMessage({ msg: "New Folder Added!", type: "success" });
+      console.log("addFolder res :", data.addFolder);
+      props.navigation.navigate("DocumentListing");
+      setLoading(false);
+    } catch (e) {
+      console.log(e);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function onError(error) {
+    FlashMessage({ msg: error?.message?.toString(), type: "danger" });
+    setLoading(false);
+    console.log("addFolder error  :", error);
+  }
+
+  async function Addfolder() {
+    let status = true;
+    if (folderName === "") {
+      FlashMessage({ msg: "Enter Folder Name!", type: "warning" });
+      status = false;
+      return;
+    }
+    if (status) {
+      setLoading(true);
+      let data = {
+        inputFolder: {
+          added_by: user?._id,
+          files: Documentfile ? Documentfile : null,
+          inventory: null,
+          name: folderName,
+        },
+      };
+      console.log("folder data :", data);
+      await mutate({
+        variables: data,
+      });
+    }
+  }
+
   return (
     <Layout
       navigation={props.navigation}
       LeftIcon={true}
       withoutScroll={true}
-      pagetitle={"Document Details"}
+      pagetitle={"Add Folder Details"}
     >
-      {/* <View style={[styles().h250px, styles().w100, styles().overflowH]}>
-            <View style={{ 
-                height: "100%",
-                width: "100%",
-                alignItems:'center',
-                transform: [{ scaleX:2 }],
-                borderBottomLeftRadius: width,
-                borderBottomRightRadius: width,
-                backgroundColor:'red',
-                overflow: "hidden",
-                }}>
-            <View style={{
-                
-                 transform: [{ scaleX: 0.5 }],
-                 backgroundColor: "yellow",
-                 justifyContent:'center',
-                 width:'100%',
-                 height:'100%'
-
-            }} >
-            <Image source={{uri:'https://www.w3schools.com/html/pic_trulli.jpg'}} style={{
-                
-                flex:1,
-                height:null,
-                width:null,
-                
-
-            }} />
-</View>
-                
-                </View>
-                </View> */}
-
       <View style={styles().flex}>
         <View style={styles().mt15}>
           <TextField
             keyboardType="default"
             onChangeText={(e) => {
-              setItemDocNameError(false);
-              setItemDocName(e);
+              setFolderNameErr(false);
+              setFolderName(e);
             }}
-            value={ItemDocName}
-            label="Documents Name"
-            errorText={ItemDocNameError}
+            value={folderName}
+            label="Folder Name"
+            errorText={folderNameErr}
             autoCapitalize="none"
             style
           />
@@ -196,9 +213,12 @@ export default function DocumentEdit(props) {
           </View>
         </View>
       </View>
-
       <View style={[styles().mt35, styles().mb20]}>
-        <ThemeButton Title={"Save"} />
+        {Loading ? (
+          <Spinner />
+        ) : (
+          <ThemeButton onPress={() => Addfolder()} Title={"Add"} />
+        )}
       </View>
     </Layout>
   );

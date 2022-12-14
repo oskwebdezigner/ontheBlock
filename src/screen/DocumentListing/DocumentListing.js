@@ -26,52 +26,31 @@ import {
 } from "@expo/vector-icons";
 import Layout from "../../Component/Layout/Layout";
 import ThemeButton from "../../Component/ThemeButton/ThemeButton";
+import { useQuery, useMutation, useSubscription } from "@apollo/react-hooks";
+import gql from "graphql-tag";
+import { folders } from "../../apollo/server";
 
 const { width, height } = Dimensions.get("window");
 
 export default function DocumentListing(props) {
-  const property = props.route.params.property;
+  const FOLDERS = gql`
+    ${folders}
+  `;
 
+  const property = props.route.params.property;
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
 
-  const DocumentList = [
-    {
-      id: 0,
-      DocumentName: "Electric Kettle Warranty",
-      DocumentImg: require("../../assets/images/documentListingImg1.png"),
+  const { loading, error, data, refetch } = useQuery(FOLDERS, {
+    fetchPolicy: "cache-and-network",
+    onCompleted: ({ folders }) => {
+      //   console.log("folders res :", folders.results);
     },
-    {
-      id: 1,
-      DocumentName: "AC Warranty Card",
-      DocumentImg: require("../../assets/images/documentListingImg2.png"),
+    onError: (err) => {
+      console.log("error in folders :", err);
     },
-    {
-      id: 2,
-      DocumentName: "Microwave Oven",
-      DocumentImg: require("../../assets/images/documentListingImg1.png"),
-    },
-    {
-      id: 3,
-      DocumentName: "Electric Kettle Warranty",
-      DocumentImg: require("../../assets/images/documentListingImg2.png"),
-    },
-    {
-      id: 4,
-      DocumentName: "Microwave Oven",
-      DocumentImg: require("../../assets/images/documentListingImg1.png"),
-    },
-    {
-      id: 5,
-      DocumentName: "AC Warranty Card",
-      DocumentImg: require("../../assets/images/documentListingImg2.png"),
-    },
-    {
-      id: 6,
-      DocumentName: "Electric Kettle Warranty",
-      DocumentImg: require("../../assets/images/documentListingImg1.png"),
-    },
-  ];
+  });
+  // console.log("folders =====>", data?.folders?.results);
 
   return (
     <Layout
@@ -83,7 +62,7 @@ export default function DocumentListing(props) {
     >
       <View style={[styles().flex, { marginHorizontal: width * 0.04 }]}>
         <FlatList
-          data={DocumentList}
+          data={data?.folders?.results}
           bounces={false}
           numColumns={2}
           ListHeaderComponent={<View style={styles().pt30} />}
@@ -91,8 +70,11 @@ export default function DocumentListing(props) {
           renderItem={({ item, index }) => {
             return (
               <TouchableOpacity
+                activeOpacity={0.5}
                 key={index}
-                onPress={() => props.navigation.navigate("DocumentEdit")}
+                onPress={() =>
+                  props.navigation.navigate("DocumentEdit", { docs: item })
+                }
                 style={[
                   styles().mb20,
                   {
@@ -113,12 +95,24 @@ export default function DocumentListing(props) {
                     styles().br5,
                   ]}
                 >
-                  <View style={[styles().wh100, styles().overflowH]}>
-                    <Image
+                  <View
+                    style={[
+                      styles().wh100,
+                      styles().overflowH,
+                      styles().alignCenter,
+                      styles().justifyCenter,
+                    ]}
+                  >
+                    <FontAwesome
+                      name="folder-open"
+                      size={65}
+                      color={currentTheme.themeBackground}
+                    />
+                    {/* <Image
                       source={item.DocumentImg}
                       resizeMode="cover"
                       style={[styles().wh100]}
-                    />
+                    /> */}
                     <TouchableOpacity
                       style={[
                         styles().top10,
@@ -129,6 +123,7 @@ export default function DocumentListing(props) {
                         styles().right10,
                         styles().posAbs,
                         styles().bgWhite,
+                        { right: 0 },
                       ]}
                     >
                       <MaterialIcons
@@ -140,13 +135,14 @@ export default function DocumentListing(props) {
                   </View>
                 </View>
                 <Text
+                  numberOfLines={2}
                   style={[
                     styles().fs12,
                     styles().fw400,
-                    { color: currentTheme.black },
+                    { color: currentTheme.black, marginLeft: 5 },
                   ]}
                 >
-                  {item.DocumentName}
+                  {item?.name?.toUpperCase()}
                 </Text>
               </TouchableOpacity>
             );
@@ -164,7 +160,12 @@ export default function DocumentListing(props) {
           styles().bottom20,
         ]}
       >
-        <ThemeButton Title={"Add New Document"} />
+        <ThemeButton
+          onPress={() => {
+            props.navigation.navigate("AddNewFolder");
+          }}
+          Title={"Add New Folder"}
+        />
       </View>
     </Layout>
   );

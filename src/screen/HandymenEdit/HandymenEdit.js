@@ -1,4 +1,4 @@
-import React, { useContext, useState, useCallback } from "react";
+import React, { useContext, useState, useCallback, useEffect } from "react";
 import {
   Platform,
   Dimensions,
@@ -36,14 +36,19 @@ import { ImageBackground } from "react-native-web";
 import FlashMessage from "../../Component/FlashMessage/FlashMessage";
 import { useQuery, useMutation, useSubscription } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import { addHandyman } from "../../apollo/server";
+import { addHandyman, updateHandyman } from "../../apollo/server";
 
 const { width, height } = Dimensions.get("window");
 export default function HandymenEdit(props) {
   let property = props?.route?.params?.property;
+  let isEdit = props?.route?.params?.isEdit;
+  let handymen = props?.route?.params?.handymen;
 
   const ADD_HANDYMAN = gql`
     ${addHandyman}
+  `;
+  const UPDATE_HANDYMAN = gql`
+    ${updateHandyman}
   `;
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
@@ -59,15 +64,21 @@ export default function HandymenEdit(props) {
 
   const [Loading, setLoading] = useState(false);
 
-  const [mutate, { client }] = useMutation(ADD_HANDYMAN, {
-    onCompleted,
-    onError,
-  });
+  const [mutate, { client }] = useMutation(
+    isEdit ? UPDATE_HANDYMAN : ADD_HANDYMAN,
+    {
+      onCompleted,
+      onError,
+    }
+  );
 
   async function onCompleted(data) {
     try {
-      FlashMessage({ msg: "New Handymen Added!", type: "success" });
-      console.log("addHandyman res :", data.addHandyman);
+      FlashMessage({
+        msg: isEdit ? "Handymen Updated!" : "New Handymen Added!",
+        type: "success",
+      });
+      console.log("Handyman res :", data);
       props.navigation.navigate("MyHandymen");
       setLoading(false);
     } catch (e) {
@@ -81,7 +92,7 @@ export default function HandymenEdit(props) {
   function onError(error) {
     FlashMessage({ msg: error?.message?.toString(), type: "danger" });
     setLoading(false);
-    console.log("addHandyman error  :", error);
+    console.log("Handyman error  :", error);
   }
 
   async function AddHandymen() {
@@ -104,25 +115,43 @@ export default function HandymenEdit(props) {
 
     if (status) {
       setLoading(true);
-      await mutate({
-        variables: {
-          inputHandyman: {
-            contact_no: PersonPhone,
-            name: PersonName,
-            occupation: Occupation,
-            property: property?._id,
-          },
+      let data = {
+        inputHandyman: {
+          contact_no: PersonPhone,
+          name: PersonName,
+          occupation: Occupation,
+          property: property?._id,
         },
+      };
+
+      let editData = {
+        updateHandymanId: handymen?._id,
+        updateHandymanInput: {
+          contact_no: PersonPhone,
+          name: PersonName,
+          occupation: Occupation,
+        },
+      };
+      await mutate({
+        variables: isEdit ? editData : data,
       });
     }
   }
+
+  useEffect(() => {
+    if (isEdit) {
+      setPersonPhone(handymen?.contact_no);
+      setPersonName(handymen?.name);
+      setOccupation(handymen?.occupation);
+    }
+  }, []);
 
   return (
     <Layout
       navigation={props.navigation}
       LeftIcon={true}
       withoutScroll={true}
-      pagetitle={"Handymen Details"}
+      pagetitle={isEdit ? "Update Handymen" : "Handymen Details"}
     >
       <View style={styles().flex}>
         {/* <View
@@ -223,7 +252,10 @@ export default function HandymenEdit(props) {
         {Loading ? (
           <Spinner />
         ) : (
-          <ThemeButton onPress={() => AddHandymen()} Title={"Add"} />
+          <ThemeButton
+            onPress={() => AddHandymen()}
+            Title={isEdit ? "Update" : "Add"}
+          />
         )}
       </View>
     </Layout>

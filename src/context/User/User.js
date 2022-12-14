@@ -19,6 +19,12 @@ export const UserProvider = (props) => {
 
   const { loading, data, error, refetch, client } = useQuery(PROFILE, {
     fetchPolicy: "no-cache",
+    onCompleted: (res) => {
+      // console.log("user profile res :", res);
+    },
+    onError: (err) => {
+      console.log("user profile error :", err.message);
+    },
   });
 
   console.log("UserProvider ==========>>>>>", data, token);

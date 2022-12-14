@@ -34,6 +34,7 @@ import HandymenEdit from "../screen/HandymenEdit/HandymenEdit";
 import MyHandymen from "../screen/MyHandymen/MyHandymen";
 import ScheduleEdit from "../screen/ScheduleEdit/ScheduleEdit";
 import AddTask from "../screen/AddTask/AddTask";
+import AddNewFolder from "../screen/AddNewFolder/AddNewFolder";
 import InventoryAddCategory from "../screen/InventoryAddCategory/InventoryAddCategory";
 import Draws from "../screen/Draws/Draws";
 import NotificationsScreen from "../screen/NotificationsScreen/NotificationsScreen";
@@ -157,6 +158,7 @@ function HomeNavigator() {
       <HomeStack.Screen name="AddTask" component={AddTask} />
       <HomeStack.Screen name="PrizeDetail" component={PrizeDetail} />
       <HomeStack.Screen name="Profile" component={Profile} />
+      <HomeStack.Screen name="AddNewFolder" component={AddNewFolder} />
       <HomeStack.Screen name="PersonalDetails" component={PersonalDetails} />
       <HomeStack.Screen name="Wishlist" component={Wishlist} />
       <HomeStack.Screen name="Wallet" component={Wallet} />

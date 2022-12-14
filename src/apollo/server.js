@@ -586,18 +586,21 @@ export const updateInventory = `mutation UpdateInventory($updateInventoryId: ID!
 
 export const addFolder = `mutation AddFolder($inputFolder: InputFolder) {
   addFolder(inputFolder: $inputFolder) {
-    name
+    _id
+    added_by {
+      _id
+      email
+      first_name
+    }
     inventory {
       _id
-      images
       name
-      serail_no
     }
-    _id
+    name
     files {
-      name
-      mimetype
       _id
+      mimetype
+      name
       path
     }
   }
@@ -720,6 +723,48 @@ export const inventories = `query Inventories($options: options, $filters: Inven
       _id
       name
       is_active
+    }
+  }
+}`;
+
+export const folders = `query Folders($options: options) {
+  folders(options: $options) {
+    limit
+    page
+    totalPages
+    totalResults
+    results {
+      _id
+      added_by {
+        _id
+        email
+        first_name
+      }
+      files {
+        _id
+        mimetype
+        name
+        path
+      }
+      name
+      inventory {
+        _id
+        name
+        description
+      }
+    }
+  }
+}`;
+
+export const updateHandyman = `mutation UpdateHandyman($updateHandymanId: ID!, $updateHandymanInput: InputHandyman) {
+  updateHandyman(id: $updateHandymanId, updateHandymanInput: $updateHandymanInput) {
+    _id
+    contact_no
+    name
+    occupation
+    property {
+      _id
+      name
     }
   }
 }`;

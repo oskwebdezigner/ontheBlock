@@ -162,6 +162,7 @@ export default function AddTask(props) {
   let inv = inventoryData?.inventories?.results?.find((item) => {
     return item._id === invenetory;
   });
+  
   return (
     <Layout
       navigation={props.navigation}
