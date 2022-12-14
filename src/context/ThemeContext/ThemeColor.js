@@ -15,6 +15,7 @@ export const theme = {
     EEEEEE: "#EEEEEE",
     c333333: "#333333",
     lightRed: "#E98282",
+    ECECEC:'#ECECEC',
 
     SliderDots: "#707070",
     bodyBg: "#F5F5F5",

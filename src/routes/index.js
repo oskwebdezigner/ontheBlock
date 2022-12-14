@@ -42,6 +42,7 @@ import PrizeDetail from "../screen/PrizeDetail/PrizeDetail";
 import Tickets from "../screen/Tickets/Tickets";
 import Cart from "../screen/Cart/Cart";
 import Profile from "../screen/Profile/Profile";
+import EditProfile from '../screen/EditProfile/EditProfile';
 import Wishlist from "../screen/Wishlist/Wishlist";
 import PersonalDetails from "../screen/PersonalDetails/PersonalDetails";
 import OurProducts from "../screen/OurProducts/OurProducts";
@@ -167,6 +168,7 @@ function HomeNavigator() {
       <HomeStack.Screen name="Faq" component={Faq} />
       <HomeStack.Screen name="OurProducts" component={OurProducts} />
       <HomeStack.Screen name="ProductDetail" component={ProductDetail} />
+      <HomeStack.Screen name="EditProfile" component={EditProfile} />
     </HomeStack.Navigator>
   );
 }
