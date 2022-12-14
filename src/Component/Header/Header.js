@@ -79,7 +79,7 @@ export default function Header(props) {
     return (
       <TouchableOpacity
         onPress={() => {
-        //   props.navigation.navigate("Profile");
+          props.navigation.navigate("Profile");
         }}
         style={[styles().wh30px, styles().br15]}
       >
