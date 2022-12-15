@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
   Image,
+  Linking,
 } from "react-native";
 import ThemeContext from "../../context/ThemeContext/ThemeContext";
 import { theme } from "../../context/ThemeContext/ThemeColor";
@@ -40,11 +41,11 @@ export default function DocumentEdit(props) {
   let docs = props.route?.params?.docs;
   const [ItemDocName, setItemDocName] = useState("");
   const [ItemDocNameError, setItemDocNameError] = useState(false);
-
   const [DocumentfileLoading, setDocumentfileLoading] = useState(false);
   const [Documentfile, setDocumentfile] = useState([]);
+  const [UploadNewDocs, setUploadNewDocs] = useState([]);
   const [Loading, setLoading] = useState(false);
-  const [deletedFiles, setDeletedFiles] = useState("");
+  const [deletedFiles, setDeletedFiles] = useState([]);
   // const { loading, error, data, refetch } = useQuery(GET_IMAGEKIT_TOKEN, {
   //   fetchPolicy: "cache-and-network",
   //   onCompleted: ({ getImageKitToken }) => {
@@ -62,7 +63,7 @@ export default function DocumentEdit(props) {
 
   async function onCompleted(data) {
     try {
-      FlashMessage({ msg: "Files Added!", type: "success" });
+      FlashMessage({ msg: "Folder Updated!", type: "success" });
       console.log("addFile res :", data.addFile);
       setLoading(false);
     } catch (e) {
@@ -90,32 +91,57 @@ export default function DocumentEdit(props) {
     setDeletedFiles((prevfile) => [...prevfile, deleted[0]]);
   };
 
-  // console.log("upload docs=======>", Documentfile);
-  // console.log("deleted docs=======>", deletedFiles);
-  // console.log("docs=======>", docs);
+  const DeleteFilePrev = (i) => {
+    let newArr = [...UploadNewDocs];
+    let deleted = newArr.splice(i, 1);
+    setUploadNewDocs(() => [...newArr]);
+    setDeletedFiles((prevfile) => [...prevfile, deleted[0]]);
+  };
+
+  const setFile = async () => {
+    setDocumentfileLoading(true);
+    let document = await DocumentPicker.getDocumentAsync({
+      type: "*/*",
+    });
+    if (document.type === "success") {
+      await uploadToImageKit(document).then((file) => {
+        setDocumentfileLoading(false);
+        setUploadNewDocs((prevfile) => [
+          ...prevfile,
+          {
+            name: file.name,
+            mimetype: document.mimeType,
+            path: file.url,
+          },
+        ]);
+      });
+    }
+    if (document.type === "cancel") {
+      setDocumentfileLoading(false);
+    }
+  };
+
+  console.log("upload docs=======>", UploadNewDocs);
+  console.log("del docs =======>", deletedFiles);
+  console.log("prev docs=======>", Documentfile);
 
   async function Addfiles() {
     let DEL = deletedFiles?.map((file) => {
       return file._id;
     });
-    let arr = [];
-    let filter = Documentfile.map(({ _id, item }) => {
-      return item;
+    console.log(DEL);
+    let data = {
+      folderId: docs?._id,
+      inputMultipleFiles: {
+        deletedFiles: DEL ? DEL : [],
+        files: UploadNewDocs,
+      },
+    };
+    console.log("file data :", data);
+    setLoading(true);
+    await mutate({
+      variables: data,
     });
-    console.log("filter =========>", filter);
-
-    // let data = {
-    //   folderId: docs?._id,
-    //   inputMultipleFiles: {
-    //     deletedFiles: DEL ? DEL : [],
-    //     files: Documentfile,
-    //   },
-    // };
-    // console.log("file data :", data);
-    // setLoading(true);
-    // await mutate({
-    //   variables: data,
-    // });
   }
 
   return (
@@ -166,7 +192,9 @@ export default function DocumentEdit(props) {
               setItemDocNameError(false);
               setItemDocName(e);
             }}
-            value={ItemDocName}
+            // value={ItemDocName}
+            value={docs?.name?.toUpperCase()}
+            editable={false}
             label="Documents Name"
             errorText={ItemDocNameError}
             autoCapitalize="none"
@@ -204,9 +232,136 @@ export default function DocumentEdit(props) {
               styles().alignCenter,
             ]}
           >
-            {Documentfile.map((file, i) => {
+            {UploadNewDocs.map((file, i) => {
               return (
                 <View
+                  key={i}
+                  style={[
+                    styles().mt10,
+                    styles().justifyCenter,
+                    styles().alignCenter,
+                    styles().br5,
+                    styles().bw1,
+                    styles().wh40px,
+
+                    {
+                      borderStyle: "dashed",
+                      borderColor: currentTheme.textColor,
+                      marginLeft: 10,
+                      padding: 5,
+                    },
+                  ]}
+                >
+                  <TouchableOpacity
+                    onPress={() => DeleteFilePrev(i)}
+                    activeOpacity={0.6}
+                    style={[
+                      styles().posAbs,
+                      styles().zIndex10,
+                      {
+                        right: -7,
+                        top: -5,
+                      },
+                    ]}
+                  >
+                    <Entypo
+                      color={"black"}
+                      size={15}
+                      name={"circle-with-cross"}
+                    />
+                  </TouchableOpacity>
+                  <Ionicons
+                    name="document-attach"
+                    color={currentTheme.themeBackground}
+                    size={20}
+                  />
+                  <Text style={{ fontSize: 7 }} numberOfLines={1}>
+                    {file.name}
+                  </Text>
+                </View>
+              );
+            })}
+            <TouchableOpacity
+              onPress={() => setFile()}
+              style={[
+                styles().mt10,
+                styles().justifyCenter,
+                styles().alignCenter,
+                styles().br5,
+                styles().bw1,
+                styles().wh40px,
+                {
+                  top: -3,
+                  borderStyle: "dashed",
+                  borderColor: currentTheme.textColor,
+                  marginLeft: 10,
+                },
+              ]}
+            >
+              {DocumentfileLoading ? (
+                <ActivityIndicator size={"small"} />
+              ) : (
+                <AntDesign
+                  name="addfile"
+                  color={currentTheme.c727477}
+                  size={20}
+                />
+              )}
+            </TouchableOpacity>
+          </View>
+
+          <View style={[styles().ml15, styles().mt10]}>
+            <Text
+              style={[
+                styles().fs11,
+                styles().fw300,
+                { color: currentTheme.lightRed },
+              ]}
+            >
+              You Can Upload Pdf, Word etc
+            </Text>
+          </View>
+        </View>
+
+        <View
+          style={[
+            styles().mt15,
+            styles().pb10,
+            styles().br10,
+            styles().bw1,
+            { borderColor: currentTheme.cEFEFEF },
+          ]}
+        >
+          <Text
+            style={[
+              styles().ml15,
+              styles().mt5,
+              styles().fs12,
+              styles().fw400,
+              { color: currentTheme.textColor },
+            ]}
+          >
+            Your Documents
+          </Text>
+
+          <View
+            style={[
+              styles().flexRow,
+              styles().ml10,
+              styles().mr15,
+              styles().flexWrap,
+              styles().alignCenter,
+            ]}
+          >
+            {Documentfile.map((file, i) => {
+              return (
+                <TouchableOpacity
+                  // activeOpacity={1}
+                  // onPress={() => {
+                  //   Linking.openURL(file.path).catch((err) =>
+                  //     console.error("Error in linking", err)
+                  //   );
+                  // }}
                   key={i}
                   style={[
                     styles().mt10,
@@ -238,7 +393,7 @@ export default function DocumentEdit(props) {
                   >
                     <Entypo
                       color={"black"}
-                      size={20}
+                      size={15}
                       name={"circle-with-cross"}
                     />
                   </TouchableOpacity>
@@ -250,62 +405,9 @@ export default function DocumentEdit(props) {
                   <Text style={{ fontSize: 7 }} numberOfLines={1}>
                     {file.name}
                   </Text>
-                </View>
+                </TouchableOpacity>
               );
             })}
-            <TouchableOpacity
-              onPress={async () => {
-                let document = await DocumentPicker.getDocumentAsync({
-                  type: "*/*",
-                });
-                if (document.type === "success") {
-                  await uploadToImageKit(document).then((file) => {
-                    setDocumentfile((prevfile) => [
-                      ...prevfile,
-                      {
-                        name: file.name,
-                        mimetype: document.mimeType,
-                        path: file.url,
-                      },
-                    ]);
-                  });
-
-                  // setDocumentfile((prevfiles) => [...prevfiles, document]);
-                }
-              }}
-              style={[
-                styles().mt10,
-                styles().justifyCenter,
-                styles().alignCenter,
-                styles().br5,
-                styles().bw1,
-                styles().wh40px,
-                {
-                  top: -3,
-                  borderStyle: "dashed",
-                  borderColor: currentTheme.textColor,
-                  marginLeft: 10,
-                },
-              ]}
-            >
-              <AntDesign
-                name="addfile"
-                color={currentTheme.c727477}
-                size={20}
-              />
-            </TouchableOpacity>
-          </View>
-
-          <View style={[styles().ml15, styles().mt10]}>
-            <Text
-              style={[
-                styles().fs11,
-                styles().fw300,
-                { color: currentTheme.lightRed },
-              ]}
-            >
-              You Can Upload Pdf, Word etc
-            </Text>
           </View>
         </View>
       </View>

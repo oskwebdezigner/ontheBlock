@@ -45,17 +45,14 @@ export default function MyProperties(props) {
       <View style={[styles().flex, { paddingLeft: width * 0.06 }]}>
         <View style={[styles().mb20, styles().mt5]}>
           <FlatList
+            numColumns={2}
             data={data?.properties?.results}
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{
-              flexDirection: "row",
-              flexWrap: "wrap",
-              justifyContent: "space-between",
-            }}
             renderItem={({ item, index }) => {
               return (
                 <TouchableOpacity
+                  activeOpacity={0.8}
                   key={index}
                   onPress={() =>
                     props.navigation.navigate("SinglePropertyListing", {
@@ -68,6 +65,10 @@ export default function MyProperties(props) {
                       width: width * 0.43,
                       marginBottom: 10,
                       marginRight: 15,
+                      // borderWidth: 0.5,
+                      // borderColor: currentTheme.textColor,
+                      borderRadius: 10,
+                      // padding: 10,
                     },
                   ]}
                 >
@@ -129,6 +130,7 @@ export default function MyProperties(props) {
                     )}
                   </View>
                   <Text
+                    numberOfLines={1}
                     style={[
                       styles().fs14,
                       styles().fontSemibold,
@@ -153,6 +155,7 @@ export default function MyProperties(props) {
                       style={styles().mr5}
                     />
                     <Text
+                      numberOfLines={1}
                       style={[
                         styles().fs10,
                         styles().fontRegular,

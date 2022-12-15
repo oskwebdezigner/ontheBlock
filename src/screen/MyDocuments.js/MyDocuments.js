@@ -32,7 +32,7 @@ export default function MyDocuments(props) {
       },
     },
     onCompleted: ({ files }) => {
-      console.log("files res >>>>>>>>>>>>>>>>>", files.results);
+      // console.log("files res >>>>>>>>>>>>>>>>>", files.results);
     },
     onError: (err) => {
       console.log("error in files :", err);
@@ -53,26 +53,27 @@ export default function MyDocuments(props) {
             data={data?.files?.results}
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{
-              flexDirection: "row",
-              flexWrap: "wrap",
-              justifyContent: "space-between",
-            }}
+            numColumns={2}
             renderItem={({ item, index }) => {
               return (
                 <TouchableOpacity
                   key={index}
-                  onPress={() =>
-                    props.navigation.navigate("SinglePropertyListing", {
-                      singleList: item,
-                    })
-                  }
+                  activeOpacity={1}
+                  // onPress={() =>
+                  //   props.navigation.navigate("SinglePropertyListing", {
+                  //     singleList: item,
+                  //   })
+                  // }
                   style={[
                     styles().justifyCenter,
                     {
                       width: width * 0.43,
                       marginBottom: 10,
                       marginRight: 15,
+                      borderRadius: 10,
+                      // borderWidth: 0.5,
+                      // borderColor: currentTheme.textColor,
+                      // padding: 10,
                     },
                   ]}
                 >
@@ -83,18 +84,30 @@ export default function MyDocuments(props) {
                       styles().overflowH,
                       styles().justifyCenter,
                       styles().mb10,
+                      styles().alignCenter,
+                      ,
+                      { backgroundColor: currentTheme.bodyBg },
                     ]}
                   >
-                    <Image
-                      source={{
-                        uri: item?.path,
-                      }}
-                      // source={{ uri: item.images[0] }}
-                      resizeMode="cover"
-                      style={[styles().wh100, styles().br10]}
-                    />
+                    {item.mimetype === "png" ? (
+                      <Image
+                        source={{
+                          uri: item?.path,
+                        }}
+                        // source={{ uri: item.images[0] }}
+                        resizeMode="contain"
+                        style={[styles().wh100, styles().br10]}
+                      />
+                    ) : (
+                      <Ionicons
+                        name="document-attach"
+                        color={currentTheme.themeBackground}
+                        size={50}
+                      />
+                    )}
                   </View>
                   <Text
+                    numberOfLines={2}
                     style={[
                       styles().fs14,
                       styles().fontSemibold,

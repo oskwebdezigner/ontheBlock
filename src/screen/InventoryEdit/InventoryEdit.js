@@ -35,7 +35,12 @@ import { ScrollView } from "react-native-gesture-handler";
 import CameraComponent from "../../Component/CameraComponent/CameraComponent";
 import MultipleImagePicker from "../../Component/CameraComponent/MultipleImagePicker";
 import { ImageBackground } from "react-native-web";
-import { addFolder, categories, updateInventory } from "../../apollo/server";
+import {
+  addFile,
+  addFolder,
+  categories,
+  updateInventory,
+} from "../../apollo/server";
 import {
   uploadImageToCloudinary,
   uploadImageToImageKit,
@@ -44,6 +49,7 @@ import {
 import FlashMessage from "../../Component/FlashMessage/FlashMessage";
 import * as DocumentPicker from "expo-document-picker";
 import { useIsFocused } from "@react-navigation/native";
+import UserContext from "../../context/User/User";
 
 const { width, height } = Dimensions.get("window");
 
@@ -57,10 +63,12 @@ export default function InventoryEdit(props) {
   const ADD_FOLDER = gql`
     ${addFolder}
   `;
+
   let inventory_item = props?.route?.params.inventory_item;
   let category = props?.route?.params.category;
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
+  const user = useContext(UserContext);
   const isFocused = useIsFocused();
   const [Loading, setLoading] = useState(false);
   const [ItemCat, setItemCat] = useState("");
@@ -106,6 +114,7 @@ export default function InventoryEdit(props) {
   async function onCompleted(data) {
     try {
       FlashMessage({ msg: "Inventory Updated!", type: "success" });
+      props.navigation.navigate("InventoryCategoryList");
       console.log("updateInventory res :", data.updateInventory);
       // props.navigation.navigate("InventoryCategoryList");
       setLoading(false);
@@ -169,6 +178,16 @@ export default function InventoryEdit(props) {
     setImages(() => [...newArr]);
   };
 
+  const addFile = async () => {
+    let document = await DocumentPicker.getDocumentAsync({
+      type: "*/*",
+      copyToCacheDirectory: false,
+    });
+    if (document.type === "success") {
+      setDocumentfile((prevfiles) => [...prevfiles, document]);
+    }
+  };
+
   useEffect(() => {
     setItemCat(category?._id);
     setItemName(inventory_item?.name);
@@ -189,6 +208,7 @@ export default function InventoryEdit(props) {
         model_no: ItemModel,
         images: images,
         brand: ItemBrand,
+        added_by: user?._id,
       },
     };
     let files = Documentfile.map((file) => {
@@ -199,25 +219,26 @@ export default function InventoryEdit(props) {
       variables: data,
     });
 
-    // if (Documentfile.length > 0 && ItemDocName === "") {
-    //   FlashMessage({ msg: "Enter Document Name to Upload", type: "warning" });
-    //   return;
-    // }
+    if (Documentfile.length > 0 && ItemDocName === "") {
+      FlashMessage({ msg: "Enter Document Name to Upload", type: "warning" });
+      return;
+    }
 
-    // if (Documentfile.length > 0 && ItemDocName !== "") {
-    //   await addFolder_mutate({
-    //     variables: {
-    //       inputFolder: {
-    //         files: files,
-    //         name: ItemDocName,
-    //         inventory: inventory_item?._id,
-    //       },
-    //     },
-    //   });
-    // }
+    if (Documentfile.length > 0 && ItemDocName !== "") {
+      await addFolder_mutate({
+        variables: {
+          inputFolder: {
+            files: files,
+            name: ItemDocName,
+            inventory: inventory_item?._id,
+          },
+        },
+      });
+    }
   }
-
-  console.log("=====", images);
+  let ctg = data?.categories?.results?.find((item) => {
+    return item._id === ItemCat;
+  });
 
   return (
     <Layout
@@ -250,7 +271,7 @@ export default function InventoryEdit(props) {
             </Text>
             <Multiselect
               ListItems={data?.categories?.results}
-              // SelectText={ItemCat.name}
+              SelectText={ctg?.name}
               value={ItemCat}
               setValue={(e) => setItemCat(e[0])}
             />
@@ -363,7 +384,7 @@ export default function InventoryEdit(props) {
                         >
                           <Entypo
                             color={"black"}
-                            size={20}
+                            size={15}
                             name={"circle-with-cross"}
                           />
                         </TouchableOpacity>
@@ -375,6 +396,7 @@ export default function InventoryEdit(props) {
                             styles().br5,
                             styles().bw1,
                             styles().wh40px,
+                            styles().overflowH,
                             {
                               borderStyle: "dashed",
                               borderColor: currentTheme.textColor,
@@ -431,7 +453,7 @@ export default function InventoryEdit(props) {
               </View>
             </View>
           </View>
-          <View style={styles().mt15}>
+          {/* <View style={styles().mt15}>
             <TextField
               keyboardType="default"
               onChangeText={(e) => {
@@ -501,21 +523,13 @@ export default function InventoryEdit(props) {
                       size={20}
                     />
                     <Text style={{ fontSize: 7 }} numberOfLines={1}>
-                      {file.name + "rishta hojaega naam brara hogea to"}
+                      {file.name}
                     </Text>
                   </View>
                 );
               })}
               <TouchableOpacity
-                onPress={async () => {
-                  let document = await DocumentPicker.getDocumentAsync({
-                    type: "*/*",
-                    copyToCacheDirectory: false,
-                  });
-                  if (document.type === "success") {
-                    setDocumentfile((prevfiles) => [...prevfiles, document]);
-                  }
-                }}
+                onPress={async () => addFile()}
                 style={[
                   styles().mt10,
                   styles().justifyCenter,
@@ -550,7 +564,7 @@ export default function InventoryEdit(props) {
                 You Can Upload Pdf, Word etc
               </Text>
             </View>
-          </View>
+          </View> */}
           <View style={[styles().mt35, styles().mb20]}>
             {Loading ? (
               <Spinner />

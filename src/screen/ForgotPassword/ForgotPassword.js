@@ -46,6 +46,7 @@ export default function ForgotPassword(props) {
   async function onCompleted(data) {
     try {
       console.log("forgotPassword res :", data);
+      // FlashMessage({ msg: "OTP sent!", type: "success" });
       props.navigation.navigate("Verification", {
         forgot_email: PhoneNumber.trim().toLowerCase(),
       });
@@ -60,6 +61,7 @@ export default function ForgotPassword(props) {
 
   function onError(error) {
     setLoading(false);
+     FlashMessage({ msg: error?.message?.toString(), type: "danger" });
     console.log("forgotPassword error :", error);
   }
 
@@ -143,7 +145,7 @@ export default function ForgotPassword(props) {
 
       <View style={styles().mt20}>
         {!loading ? (
-          <ThemeButton onPress={() => ForgotPassword()} Title={"Send"} />
+          <ThemeButton onPress={() => ForgotPassword()} Title={"Check"} />
         ) : (
           <Spinner />
         )}

@@ -184,7 +184,7 @@ export default function Verification(props) {
   useEffect(() => {
     setCounter(counts);
   }, [isFocused]);
-
+  console.log(user);
   return (
     <AuthLayout navigation={props.navigation}>
       <View style={styles().flex}>
@@ -225,7 +225,7 @@ export default function Verification(props) {
               styles().fs14,
             ]}
           >
-            Please enter 6 digit code send to your phone number +1 357 *****
+            {`Please enter 6 digit code send to your phone number ${user?.phone}`}
           </Text>
         </View>
 

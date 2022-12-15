@@ -19,6 +19,7 @@ import {
 import styles from "../../screen/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { CommonActions } from "@react-navigation/native";
 
 const MenuItems = [
   {
@@ -43,7 +44,7 @@ const MenuItems = [
     id: 4,
     name: "Schedule Task",
     Image: require("../../assets/images/schedule-task.png"),
-    navigateTo: "ScheduleEdit",
+    // navigateTo: "ScheduleEdit",
   },
   {
     id: 5,
@@ -60,7 +61,12 @@ export default function SideBar(props) {
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
   async function Logout() {
-    props.navigation.navigate("Auth", { screen: "Login" });
+    props.navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: "Auth" }],
+      })
+    );
     await AsyncStorage.clear().then(() => console.log("async clear - logout!"));
   }
 

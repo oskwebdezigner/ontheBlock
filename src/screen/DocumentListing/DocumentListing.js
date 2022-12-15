@@ -43,6 +43,11 @@ export default function DocumentListing(props) {
 
   const { loading, error, data, refetch } = useQuery(FOLDERS, {
     fetchPolicy: "cache-and-network",
+    variables: {
+      filters: {
+        property: property?._id,
+      },
+    },
     onCompleted: ({ folders }) => {
       //   console.log("folders res :", folders.results);
     },
@@ -51,6 +56,10 @@ export default function DocumentListing(props) {
     },
   });
   // console.log("folders =====>", data?.folders?.results);
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   return (
     <Layout
@@ -149,6 +158,26 @@ export default function DocumentListing(props) {
           }}
           keyExtractor={(item, index) => index.toString()}
           ListFooterComponent={<View style={styles().mb100} />}
+          ListEmptyComponent={() => {
+            return (
+              <View
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginTop: 20,
+                }}
+              >
+                <Text
+                  style={{
+                    color: currentTheme.textColor,
+                    fontSize: 14,
+                  }}
+                >
+                  No Documents
+                </Text>
+              </View>
+            );
+          }}
         />
       </View>
 
@@ -162,7 +191,7 @@ export default function DocumentListing(props) {
       >
         <ThemeButton
           onPress={() => {
-            props.navigation.navigate("AddNewFolder");
+            props.navigation.navigate("AddNewFolder", { property: property });
           }}
           Title={"Add New Folder"}
         />

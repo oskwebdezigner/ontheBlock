@@ -30,6 +30,7 @@ export default function DocumentEdit(props) {
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
   //   let docs = props.route?.params?.docs;
+  const property = props.route.params.property;
   const user = useContext(UserContext);
   const [Loading, setLoading] = useState(false);
   const [folderName, setFolderName] = useState("");
@@ -61,6 +62,16 @@ export default function DocumentEdit(props) {
     console.log("addFolder error  :", error);
   }
 
+  const setFile = async () => {
+    let document = await DocumentPicker.getDocumentAsync({
+      type: "*/*",
+    });
+    if (document.type === "success") {
+      await uploadToImageKit(document).then((file) => {});
+      setDocumentfile((prevfiles) => [...prevfiles, file]);
+    }
+  };
+
   async function Addfolder() {
     let status = true;
     if (folderName === "") {
@@ -73,9 +84,10 @@ export default function DocumentEdit(props) {
       let data = {
         inputFolder: {
           added_by: user?._id,
-          files: Documentfile ? Documentfile : null,
-          inventory: null,
+          // files: Documentfile ? Documentfile : null,
+          // inventory: null,
           name: folderName,
+          property: property?._id,
         },
       };
       console.log("folder data :", data);
@@ -108,7 +120,7 @@ export default function DocumentEdit(props) {
           />
         </View>
 
-        <View
+        {/* <View
           style={[
             styles().mt15,
             styles().pb10,
@@ -170,15 +182,7 @@ export default function DocumentEdit(props) {
               );
             })}
             <TouchableOpacity
-              onPress={async () => {
-                let document = await DocumentPicker.getDocumentAsync({
-                  type: "*/*",
-                });
-                if (document.type === "success") {
-                  await uploadToImageKit(document).then((file) => {});
-                  setDocumentfile((prevfiles) => [...prevfiles, file]);
-                }
-              }}
+              onPress={() => setFile()}
               style={[
                 styles().mt10,
                 styles().justifyCenter,
@@ -213,7 +217,7 @@ export default function DocumentEdit(props) {
               You Can Upload Pdf, Word etc
             </Text>
           </View>
-        </View>
+        </View> */}
       </View>
       <View style={[styles().mt35, styles().mb20]}>
         {Loading ? (

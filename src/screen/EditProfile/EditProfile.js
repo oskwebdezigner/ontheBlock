@@ -138,14 +138,14 @@ export default function EditProfile(props) {
       >
         <View
           style={[
-            styles().wh100px,
+            styles().wh130px,
             styles().mr15,
-            styles().br50,
+            styles().br100,
             styles().overflowH,
             styles().borderW1,
             styles().alignCenter,
             styles().justifyCenter,
-            { borderColor: currentTheme.textColor, borderWidth: 1 },
+            { borderColor: currentTheme.themeBackground, borderWidth: 1 },
           ]}
         >
           {profilepic ? (
@@ -180,8 +180,8 @@ export default function EditProfile(props) {
         >
           <View
             style={{
-              bottom: 20,
-              left: 15,
+              bottom: 25,
+              left: 25,
               width: 25,
               height: 25,
               borderRadius: 20,
@@ -209,91 +209,94 @@ export default function EditProfile(props) {
       LeftIcon={true}
       pagetitle={"Edit Profile"}
       //   style={styles().ph20}
+      withoutScroll
     >
-      <View style={styles().flex}>
-        <ProfileHeader />
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "height" : "height"}
-          keyboardVerticalOffset={100}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "height" : "height"}
+        keyboardVerticalOffset={100}
+        style={{ flex: 1 }}
+      >
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          showsVerticalScrollIndicator={false}
         >
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={styles().mb20}>
-              <TextField
-                keyboardType="default"
-                value={fname}
-                label="First Name"
-                errorText={fnameError}
-                autoCapitalize="none"
-                style
-                onChangeText={(text) => {
-                  setFnameError(false);
-                  setFname(text);
-                }}
-              />
-            </View>
+          <ProfileHeader />
+          <View style={styles().mb20}>
+            <TextField
+              keyboardType="default"
+              value={fname}
+              label="First Name"
+              errorText={fnameError}
+              autoCapitalize="none"
+              style
+              onChangeText={(text) => {
+                setFnameError(false);
+                setFname(text);
+              }}
+            />
+          </View>
 
-            <View style={styles().mb20}>
-              <TextField
-                keyboardType="default"
-                value={lname}
-                label="Last Name"
-                errorText={lnameError}
-                autoCapitalize="none"
-                style
-                onChangeText={(text) => {
-                  setLnameError(false);
-                  setLname(text);
-                }}
-              />
-            </View>
+          <View style={styles().mb20}>
+            <TextField
+              keyboardType="default"
+              value={lname}
+              label="Last Name"
+              errorText={lnameError}
+              autoCapitalize="none"
+              style
+              onChangeText={(text) => {
+                setLnameError(false);
+                setLname(text);
+              }}
+            />
+          </View>
 
-            <View style={styles().mb20}>
-              <TextField
-                keyboardType="default"
-                value={email}
-                label="Email"
-                errorText={emailError}
-                autoCapitalize="none"
-                style
-                onChangeText={(text) => {
-                  setEmailError(false);
-                  setEmail(text);
-                }}
-              />
-            </View>
+          <View style={styles().mb20}>
+            <TextField
+              keyboardType="default"
+              value={email}
+              label="Email"
+              errorText={emailError}
+              autoCapitalize="none"
+              editable={false}
+              style
+              onChangeText={(text) => {
+                setEmailError(false);
+                setEmail(text);
+              }}
+            />
+          </View>
 
-            <View style={styles().mb20}>
-              <TextField
-                keyboardType="numeric"
-                value={phone}
-                label="Phone Number"
-                errorText={phoneError}
-                autoCapitalize="none"
-                style
-                onChangeText={(text) => {
-                  setPhoneError(false);
-                  setPhone(text);
-                }}
-              />
-            </View>
+          <View style={styles().mb20}>
+            <TextField
+              keyboardType="numeric"
+              value={phone}
+              label="Phone Number"
+              errorText={phoneError}
+              autoCapitalize="none"
+              style
+              onChangeText={(text) => {
+                setPhoneError(false);
+                setPhone(text);
+              }}
+            />
+          </View>
 
-            <View style={styles().mb20}>
-              <TextField
-                keyboardType="default"
-                value={address}
-                label="Address (optional)"
-                autoCapitalize="none"
-                style
-                stylesInput={styles().h100px}
-                onChangeText={(text) => {
-                  setAddress(text);
-                }}
-              />
-            </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </View>
-
+          <View style={styles().mb20}>
+            <TextField
+              keyboardType="default"
+              value={address}
+              label="Address (optional)"
+              autoCapitalize="none"
+              style
+              stylesInput={styles().h100px}
+              onChangeText={(text) => {
+                setAddress(text);
+              }}
+            />
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
       <View>
         {Loading ? (
           <Spinner />

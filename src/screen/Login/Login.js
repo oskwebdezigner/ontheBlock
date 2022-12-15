@@ -88,12 +88,19 @@ export default function Login(props) {
     onCompleted,
     onError,
   });
+
   async function onCompleted(data) {
     try {
       console.log("login res :", data.login);
       FlashMessage({ msg: "Login Successfully", type: "success" });
       await AsyncStorage.setItem("token", data.login?.token?.toString());
-      props.navigation.navigate("noDrawer", { user: data });
+      // props.navigation.navigate("noDrawer", { user: data });
+      props.navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: "noDrawer" }],
+        })
+      );
       setLoading(false);
     } catch (e) {
       console.log(e);

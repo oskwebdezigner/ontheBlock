@@ -7,6 +7,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  ActivityIndicator,
   View,
   Image,
 } from "react-native";
@@ -17,7 +18,13 @@ import styles from "../styles";
 import Layout from "../../Component/Layout/Layout";
 import TextField from "../../Component/FloatTextField/FloatTextField";
 import ThemeButton from "../../Component/ThemeButton/ThemeButton";
-import { AntDesign, Ionicons, FontAwesome } from "@expo/vector-icons";
+import {
+  AntDesign,
+  Ionicons,
+  FontAwesome,
+  MaterialCommunityIcons,
+  Entypo,
+} from "@expo/vector-icons";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import Spinner from "../../Component/Spinner/Spinner";
@@ -27,6 +34,8 @@ import { ScrollView } from "react-native-gesture-handler";
 import { PropertyTypes, updateProperty } from "../../apollo/server";
 import Loader from "../../Component/Loader/Loader";
 import FlashMessage from "../../Component/FlashMessage/FlashMessage";
+import CameraComponent from "../../Component/CameraComponent/CameraComponent";
+import { uploadImageToImageKit } from "../../Component/CameraComponent/CloudUpload";
 
 export default function PropertyData(props) {
   const PROPERTY_TYPE = gql`
@@ -42,7 +51,8 @@ export default function PropertyData(props) {
 
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
-
+  const [profilePicLoading, setProfilePicLoading] = useState(false);
+  const [images, setImages] = useState([]);
   const [PropertyNick, setPropertyNick] = useState("");
   const [PropertyNickError, setPropertyNickError] = useState(false);
 
@@ -91,7 +101,7 @@ export default function PropertyData(props) {
   async function onCompleted(data) {
     try {
       FlashMessage({ msg: "Property Updated!", type: "success" });
-      props.navigation.navigate("SinglePropertyListing");
+      props.navigation.navigate("Home");
       console.log("updateProperty res :", data.updateProperty);
       setLoading(false);
     } catch (e) {
@@ -108,6 +118,18 @@ export default function PropertyData(props) {
     console.log("updateProperty error  :", error);
   }
 
+  const setImage = async (image) => {
+    await uploadImageToImageKit(image).then((img) => {
+      setImages((previmgs) => [...previmgs, img.url]);
+    });
+  };
+
+  const deleteImage = async (i) => {
+    let newArr = [...images];
+    newArr.splice(i, 1);
+    setImages(() => [...newArr]);
+  };
+
   async function UpdateProperty() {
     setLoading(true);
     await mutate({
@@ -120,6 +142,7 @@ export default function PropertyData(props) {
           city: City,
           country: State,
           address: Street,
+          images: images,
         },
       },
     });
@@ -131,6 +154,7 @@ export default function PropertyData(props) {
     setCity(property?.city);
     setState(property?.country);
     setZipcode(property?.zip_code);
+    setImages(property?.images);
     // setPropertyType(property?.type?._id);
     setPropertyType(
       property?.type?._id
@@ -144,7 +168,7 @@ export default function PropertyData(props) {
   let propt = data?.propertyTypes?.results?.find((item) => {
     return item._id === PropertyType;
   });
-  console.log("propertyType :", PropertyType, propt);
+  console.log("propertyType img :", images);
   return (
     <Layout
       navigation={props.navigation}
@@ -294,6 +318,128 @@ export default function PropertyData(props) {
             />
           </View>
 
+          <View
+            style={[
+              styles().mt15,
+              styles().pb10,
+              styles().br10,
+              styles().bw1,
+              { borderColor: currentTheme.cEFEFEF },
+            ]}
+          >
+            <Text
+              style={[
+                styles().ml15,
+                styles().mt5,
+                styles().fs12,
+                styles().fw400,
+                { color: currentTheme.textColor },
+              ]}
+            >
+              Property Pictures
+            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginTop: 10,
+                flexWrap: "wrap",
+                // backgroundColor: "red",
+              }}
+            >
+              {images
+                ? images?.map((img, i) => {
+                    return (
+                      <View key={i}>
+                        <TouchableOpacity
+                          onPress={() => deleteImage(i)}
+                          activeOpacity={0.6}
+                          style={[
+                            styles().posAbs,
+                            styles().zIndex10,
+                            {
+                              right: -7,
+                              top: -5,
+                            },
+                          ]}
+                        >
+                          <Entypo
+                            color={"black"}
+                            size={15}
+                            name={"circle-with-cross"}
+                          />
+                        </TouchableOpacity>
+                        <View
+                          // key={i}
+                          style={[
+                            styles().justifyCenter,
+                            styles().alignCenter,
+                            styles().br5,
+                            styles().bw1,
+                            styles().wh40px,
+                            styles().overflowH,
+                            {
+                              borderStyle: "dashed",
+                              borderColor: currentTheme.textColor,
+                              marginLeft: 10,
+                            },
+                          ]}
+                        >
+                          <Image source={{ uri: img }} style={styles().wh100} />
+                        </View>
+                      </View>
+                    );
+                  })
+                : null}
+              <View
+                style={[
+                  styles().flexRow,
+                  styles().ml5,
+                  styles().mr15,
+                  styles().flexWrap,
+                  styles().alignCenter,
+                ]}
+              >
+                {!profilePicLoading ? (
+                  <CameraComponent
+                    loading={(e) => setProfilePicLoading(e)}
+                    update={(img) => {
+                      setImage(img);
+                    }}
+                  >
+                    <View
+                      style={[
+                        // styles().mt10,
+                        styles().justifyCenter,
+                        styles().alignCenter,
+                        styles().br5,
+                        styles().bw1,
+                        styles().wh40px,
+                        {
+                          borderStyle: "dashed",
+                          borderColor: currentTheme.textColor,
+                        },
+                      ]}
+                    >
+                      {profilePicLoading ? (
+                        <ActivityIndicator
+                          color={currentTheme.themeBackground}
+                        />
+                      ) : (
+                        <MaterialCommunityIcons
+                          name="image-plus"
+                          size={20}
+                          color={currentTheme.textColor}
+                        />
+                      )}
+                    </View>
+                  </CameraComponent>
+                ) : (
+                  <ActivityIndicator color={currentTheme.themeBackground} />
+                )}
+              </View>
+            </View>
+          </View>
           <View style={[styles().mt35, styles().mb30]}>
             {Loading ? (
               <Spinner />

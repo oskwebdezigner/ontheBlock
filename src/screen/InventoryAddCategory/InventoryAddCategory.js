@@ -79,7 +79,7 @@ export default function InventoryAddCategory(props) {
   const [profilePic, setProfilePic] = useState("");
 
   const [Loading, setLoading] = useState(false);
-  const [images, setImages] = useState("");
+  const [images, setImages] = useState([]);
 
   const { loading, error, data, refetch } = useQuery(CATEGORIES, {
     variables: {
@@ -109,6 +109,7 @@ export default function InventoryAddCategory(props) {
     newArr.splice(i, 1);
     setImages(() => [...newArr]);
   };
+
   const ItemCategList = [
     {
       name: inventory_name,
@@ -124,6 +125,7 @@ export default function InventoryAddCategory(props) {
     try {
       FlashMessage({ msg: "Inventory Added!", type: "success" });
       console.log("addInventory res :", data.addInventory);
+      props.navigation.navigate("InventoryCategoryList");
       setLoading(false);
     } catch (e) {
       console.log(e);
@@ -168,6 +170,7 @@ export default function InventoryAddCategory(props) {
   });
 
   console.log(inventory_id, ItemCat, ctg?.name, property?._id);
+
   return (
     <Layout
       navigation={props.navigation}
@@ -331,6 +334,7 @@ export default function InventoryAddCategory(props) {
                             styles().br5,
                             styles().bw1,
                             styles().wh40px,
+                            styles().overflowH,
                             {
                               borderStyle: "dashed",
                               borderColor: currentTheme.textColor,
@@ -392,7 +396,7 @@ export default function InventoryAddCategory(props) {
             {Loading ? (
               <Spinner />
             ) : (
-              <ThemeButton onPress={() => AddNewInventory()} Title={"Save"} />
+              <ThemeButton onPress={() => AddNewInventory()} Title={"Add"} />
             )}
           </View>
         </ScrollView>

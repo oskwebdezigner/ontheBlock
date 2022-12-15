@@ -49,26 +49,27 @@ export default function MyStuff(props) {
             data={data?.inventories?.results}
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{
-              flexDirection: "row",
-              flexWrap: "wrap",
-              justifyContent: "space-between",
-            }}
+            numColumns={2}
             renderItem={({ item, index }) => {
               return (
                 <TouchableOpacity
                   key={index}
-                  onPress={() =>
-                    props.navigation.navigate("SinglePropertyListing", {
-                      singleList: item,
-                    })
-                  }
+                  // onPress={() =>
+                  //   props.navigation.navigate("SinglePropertyListing", {
+                  //     singleList: item,
+                  //   })
+                  // }
+                  activeOpacity={1}
                   style={[
                     styles().justifyCenter,
                     {
                       width: width * 0.43,
                       marginBottom: 10,
                       marginRight: 15,
+                      // borderWidth: 0.5,
+                      // borderColor: currentTheme.textColor,
+                      borderRadius: 10,
+                      // padding: 10,
                     },
                   ]}
                 >
@@ -87,7 +88,7 @@ export default function MyStuff(props) {
                           uri: item?.images[0],
                         }}
                         // source={{ uri: item.images[0] }}
-                        resizeMode="cover"
+                        resizeMode="contain"
                         style={[styles().wh100, styles().br10]}
                       />
                     ) : (
@@ -130,6 +131,7 @@ export default function MyStuff(props) {
                     )}
                   </View>
                   <Text
+                    numberOfLines={1}
                     style={[
                       styles().fs14,
                       styles().fontSemibold,
@@ -154,6 +156,7 @@ export default function MyStuff(props) {
                       style={styles().mr5}
                     />
                     <Text
+                      numberOfLines={1}
                       style={[
                         styles().fs10,
                         styles().fontRegular,

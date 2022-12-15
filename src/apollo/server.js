@@ -375,6 +375,7 @@ export const profile = `query Profile {
     notificationToken
     photo
     is_active
+    address
   }
 }`;
 
@@ -554,6 +555,11 @@ export const updateInventory = `mutation UpdateInventory($updateInventoryId: ID!
       description
       image
     }
+     added_by {
+      _id
+      email
+      first_name
+    }
     brand
     model_no
     serail_no
@@ -712,8 +718,8 @@ export const inventories = `query Inventories($options: options, $filters: Inven
   }
 }`;
 
-export const folders = `query Folders($options: options) {
-  folders(options: $options) {
+export const folders = `query Folders($filters: Folderfilters, $options: options) {
+  folders(filters: $filters, options: $options) {
     limit
     page
     totalPages

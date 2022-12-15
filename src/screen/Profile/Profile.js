@@ -37,6 +37,7 @@ export default function Profile(props) {
   function ProfileList(props) {
     return (
       <TouchableOpacity
+        activeOpacity={0.5}
         onPress={props.onPress}
         style={[
           styles().br5,

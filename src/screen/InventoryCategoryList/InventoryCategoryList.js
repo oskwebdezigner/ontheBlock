@@ -58,9 +58,7 @@ export default function InventoryCatList(props) {
     },
     {
       fetchPolicy: "cache-and-network",
-      onCompleted: ({ getInventoryByCategory }) => {
-        console.log("success getinventorybycategory");
-      },
+      onCompleted: ({ getInventoryByCategory }) => {},
       onError: (err) => {
         console.log("error in getInventoryByCategory :", err);
       },
@@ -281,12 +279,15 @@ export default function InventoryCatList(props) {
                           style={[
                             styles().w100,
                             styles().mb10,
-                            styles().overflowH,
+                            // styles().overflowH,
                             styles().h130px,
-                            styles().br5,
+                            styles().br10,
+                            styles().boxpeshadowCart,
+
+                            { backgroundColor: currentTheme.bodyBg },
                           ]}
                         >
-                          {InventoryCategoryTitle.images ? (
+                          {InventoryCategoryTitle.images.length !== 0 ? (
                             <Image
                               source={{
                                 uri: InventoryCategoryTitle.images[0],
@@ -303,7 +304,7 @@ export default function InventoryCatList(props) {
                                 {
                                   backgroundColor: currentTheme.white,
                                   borderWidth: 0.5,
-                                  borderColor: currentTheme.themeBackground,
+                                  borderColor: currentTheme.BCBCBC,
                                   alignItems: "center",
                                   justifyContent: "center",
                                   shadowColor: "#000",
@@ -341,11 +342,12 @@ export default function InventoryCatList(props) {
                               })
                             }
                             style={[
-                              styles().top10,
+                              styles().top5,
                               styles().alignCenter,
                               styles().justifyCenter,
-                              styles().wh20px,
+                              // styles().wh20px,
                               styles().br5,
+                              styles().pall5,
                               styles().right10,
                               styles().posAbs,
                               styles().bgWhite,
@@ -378,7 +380,10 @@ export default function InventoryCatList(props) {
                                 styles(currentTheme).bgTextWhite,
                               ]}
                             >
-                              {InventoryCategoryTitle?.images ? 1 : 0}/
+                              {InventoryCategoryTitle?.images.length !== 0
+                                ? 1
+                                : 0}
+                              /
                               {InventoryCategoryTitle?.images
                                 ? InventoryCategoryTitle?.images?.length
                                 : 0}
@@ -386,13 +391,14 @@ export default function InventoryCatList(props) {
                           </View>
                         </View>
                         <Text
+                          numberOfLines={2}
                           style={[
                             styles().fs12,
                             styles().fw400,
                             { color: currentTheme.black },
                           ]}
                         >
-                          {InventoryCategoryTitle.name}
+                          {InventoryCategoryTitle?.name?.toUpperCase()}
                         </Text>
                       </TouchableOpacity>
                     );

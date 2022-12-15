@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import {
   Platform,
   Animated,
@@ -22,7 +22,7 @@ import {
   AntDesign,
   FontAwesome,
 } from "@expo/vector-icons";
-
+import PhoneInput from "react-native-phone-input";
 // import TextField from '../../Component/TextField/TextField';
 import ThemeButton from "../../Component/ThemeButton/ThemeButton";
 import AuthLayout from "../../Component/AuthLayout/AuthLayout";
@@ -39,7 +39,7 @@ export default function TellAboutYourself(props) {
   const SEND_PHONE_CODE = gql`
     ${SendPhoneCode}
   `;
-
+  const { phone } = useRef();
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
 
@@ -68,14 +68,14 @@ export default function TellAboutYourself(props) {
   async function onCompleted(data) {
     try {
       console.log("SendPhoneCode res :", data);
-      // FlashMessage({ msg: "Phone Verified Successfully", type: "success" });
+      FlashMessage({ msg: "Success!", type: "success" });
       props.navigation.navigate("Verification", {
         user: {
           firstName: FirstName,
           lastName: LastName,
           email: Email.trim().toLowerCase(),
           address: Address,
-          phone: `+${PhoneNumber}`,
+          phone: PhoneNumber,
         },
         goal: goal,
       });
@@ -141,6 +141,7 @@ export default function TellAboutYourself(props) {
     }
 
     if (status) {
+      setLoading(true);
       mutate({
         variables: {
           phone: `+${PhoneNumber}`,
@@ -161,7 +162,7 @@ export default function TellAboutYourself(props) {
       // });
     }
   }
-
+  console.log(PhoneNumber);
   return (
     <AuthLayout navigation={props.navigation}>
       <View style={[styles().w150px, styles().h100px]}>
@@ -240,12 +241,12 @@ export default function TellAboutYourself(props) {
         />
       </View>
 
-      <View style={styles().mb20}>
+      {/* <View style={styles().mb20}>
         <TextField
           // keyboardType="phone-pad"
           keyboardType="numeric"
           value={PhoneNumber}
-          label="Phone Number"
+          label="Phone Number (USA)"
           errorText={PhoneNumberError}
           autoCapitalize="none"
           style
@@ -253,6 +254,31 @@ export default function TellAboutYourself(props) {
             SetPhoneNumberError(false);
             SetPhoneNumber(text);
           }}
+        />
+      </View> */}
+      <View style={[styles().mt5]}>
+        <PhoneInput
+          ref={phone}
+          onChangePhoneNumber={(text) => {
+            SetPhoneNumberError(false);
+            SetPhoneNumber(text);
+            console.log(text);
+          }}
+          initialCountry={"us"}
+          style={[
+            styles().h60px,
+            styles().pl15,
+            styles(currentTheme).bgWhite,
+            styles().br5,
+
+            {
+              color: currentTheme.borderColor,
+              backgroundColor: "transparent",
+              borderColor: currentTheme.cEFEFEF,
+              borderWidth: 1,
+              marginBottom: 20,
+            },
+          ]}
         />
       </View>
 

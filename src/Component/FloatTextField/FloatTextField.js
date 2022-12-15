@@ -21,6 +21,7 @@ const TextField = (props) => {
     onFocus,
     stylesInput,
     childrenPassword,
+    editable,
     ...restOfProps
   } = props;
   const [isFocused, setIsFocused] = useState(false);
@@ -47,6 +48,7 @@ const TextField = (props) => {
 
   return (
     <View style={[style]}>
+      {/* <Text style={{ position: "absolute", top: 20, left: 10 }}>+</Text> */}
       <TextInput
         returnKeyType="done"
         style={[
@@ -60,9 +62,11 @@ const TextField = (props) => {
           {
             borderColor: currentTheme.cEFEFEF,
             color: currentTheme.borderColor,
+            backgroundColor: editable === false && currentTheme.CACCD3,
           },
           stylesInput,
         ]}
+        editable={editable}
         placeholderTextColor={"black"}
         ref={inputRef}
         {...restOfProps}

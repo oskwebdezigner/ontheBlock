@@ -12,17 +12,7 @@ import {
 import ThemeContext from "../../context/ThemeContext/ThemeContext";
 import { theme } from "../../context/ThemeContext/ThemeColor";
 import styles from "../styles";
-import {
-  Ionicons,
-  Foundation,
-  FontAwesome5,
-  Feather,
-  Octicons,
-  AntDesign,
-  FontAwesome,
-  MaterialCommunityIcons,
-  Entypo,
-} from "@expo/vector-icons";
+import { Ionicons, FontAwesome, Entypo } from "@expo/vector-icons";
 import Layout from "../../Component/Layout/Layout";
 import ThemeButton from "../../Component/ThemeButton/ThemeButton";
 import UserContext from "../../context/User/User";
@@ -64,7 +54,7 @@ export default function Home(props) {
   const { loading, error, data, refetch } = useQuery(PROPERTIES, {
     fetchPolicy: "cache-and-network",
     onCompleted: ({ properties }) => {
-      console.log("properties res >>>>>>>>>>>>>>>>>", properties.results);
+      // console.log("properties res >>>>>>>>>>>>>>>>>", properties.results);
     },
     onError: (err) => {
       console.log("error in properties :", err);
@@ -186,7 +176,12 @@ export default function Home(props) {
                 >
                   Your Properties
                 </Text>
-                <TouchableOpacity onPress={() => SetGrid(!Grid)}>
+                <TouchableOpacity
+                  onPress={() => {
+                    // SetGrid(!Grid);
+                    props.navigation.navigate("MyProperties");
+                  }}
+                >
                   <Text
                     style={[
                       styles().fs14,
@@ -285,6 +280,7 @@ export default function Home(props) {
                   renderItem={({ item, index }) => {
                     return (
                       <TouchableOpacity
+                        activeOpacity={0.8}
                         onPress={() =>
                           props.navigation.navigate("SinglePropertyListing", {
                             singleList: item,
@@ -295,6 +291,7 @@ export default function Home(props) {
                           {
                             width: width * 0.43,
                             marginLeft: index === 0 ? 0 : width * 0.03,
+                            borderRadius: 10,
                           },
                         ]}
                       >
@@ -324,7 +321,7 @@ export default function Home(props) {
                                 {
                                   backgroundColor: currentTheme.white,
                                   borderWidth: 0.5,
-                                  borderColor: currentTheme.themeBackground,
+                                  borderColor: currentTheme.textColor,
                                   alignItems: "center",
                                   justifyContent: "center",
                                   shadowColor: "#000",
@@ -392,6 +389,26 @@ export default function Home(props) {
                     );
                   }}
                   keyExtractor={(item, index) => index.toString()}
+                  ListEmptyComponent={() => {
+                    return (
+                      <View
+                        style={{
+                          alignItems: "center",
+                          justifyContent: "center",
+                          marginTop: 20,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            color: currentTheme.textColor,
+                            fontSize: 14,
+                          }}
+                        >
+                          No Properties
+                        </Text>
+                      </View>
+                    );
+                  }}
                 />
               </View>
               {/* )} */}
@@ -492,7 +509,7 @@ export default function Home(props) {
                           {
                             alignItems: "center",
                             justifyContent: "center",
-                            borderWidth: 1,
+                            borderWidth: 0.5,
                             borderColor: currentTheme.themeBackground,
                             borderRadius: 10,
                           },
