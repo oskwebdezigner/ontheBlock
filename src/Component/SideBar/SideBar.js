@@ -118,7 +118,13 @@ export default function SideBar(props) {
                   <View style={[styles().mr20, styles().wh20px]}>
                     <Image
                       source={item.Image}
-                      style={styles().wh100}
+                      style={[
+                        styles().wh100,
+                        {
+                          tintColor:
+                            item.name === "Finance" && currentTheme.BCBCBC,
+                        },
+                      ]}
                       resizeMode={"contain"}
                     />
                   </View>
@@ -126,7 +132,12 @@ export default function SideBar(props) {
                     style={[
                       styles().fs13,
                       styles().fw600,
-                      { color: currentTheme.black },
+                      {
+                        color:
+                          item.name === "Finance"
+                            ? currentTheme.BCBCBC
+                            : currentTheme.black,
+                      },
                     ]}
                   >
                     {item.name}

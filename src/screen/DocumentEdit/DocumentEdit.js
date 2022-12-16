@@ -65,7 +65,8 @@ export default function DocumentEdit(props) {
     try {
       FlashMessage({ msg: "Folder Updated!", type: "success" });
       console.log("addFile res :", data.addFile);
-      props.navigation.navigate("DocumentListing");
+      // props.navigation.navigate("SinglePropertyListing");
+
       setLoading(false);
     } catch (e) {
       console.log(e);

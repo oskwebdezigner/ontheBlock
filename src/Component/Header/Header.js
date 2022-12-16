@@ -130,6 +130,7 @@ export default function Header(props) {
       {props.LeftIcon ? <Back /> : <Menu />}
 
       <Text
+        numberOfLines={1}
         style={[
           styles().fs20,
           styles().fw700,

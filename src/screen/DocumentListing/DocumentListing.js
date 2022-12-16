@@ -38,7 +38,7 @@ export default function DocumentListing(props) {
     ${folders}
   `;
 
-  const property = props.route.params.property;
+  const property = props?.route?.params?.property;
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
 
