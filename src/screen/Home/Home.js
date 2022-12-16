@@ -298,7 +298,7 @@ export default function Home(props) {
                           styles().justifyCenter,
                           {
                             width: width * 0.43,
-                            marginRight: index === 0 ? 0 : width * 0.03,
+                            marginLeft: index === 0 ? 0 : width * 0.03,
                             borderRadius: 10,
                           },
                         ]}

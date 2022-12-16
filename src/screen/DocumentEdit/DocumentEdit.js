@@ -65,6 +65,7 @@ export default function DocumentEdit(props) {
     try {
       FlashMessage({ msg: "Folder Updated!", type: "success" });
       console.log("addFile res :", data.addFile);
+      props.navigation.navigate("DocumentListing");
       setLoading(false);
     } catch (e) {
       console.log(e);
@@ -353,61 +354,73 @@ export default function DocumentEdit(props) {
               styles().alignCenter,
             ]}
           >
-            {Documentfile.map((file, i) => {
-              return (
-                <TouchableOpacity
-                  // activeOpacity={1}
-                  // onPress={() => {
-                  //   Linking.openURL(file.path).catch((err) =>
-                  //     console.error("Error in linking", err)
-                  //   );
-                  // }}
-                  key={i}
-                  style={[
-                    styles().mt10,
-                    styles().justifyCenter,
-                    styles().alignCenter,
-                    styles().br5,
-                    styles().bw1,
-                    styles().wh40px,
-
-                    {
-                      borderStyle: "dashed",
-                      borderColor: currentTheme.textColor,
-                      marginLeft: 10,
-                      padding: 5,
-                    },
-                  ]}
-                >
+            {Documentfile.length !== 0 ? (
+              Documentfile.map((file, i) => {
+                return (
                   <TouchableOpacity
-                    onPress={() => DeleteFile(i)}
-                    activeOpacity={0.6}
+                    // activeOpacity={1}
+                    // onPress={() => {
+                    //   Linking.openURL(file.path).catch((err) =>
+                    //     console.error("Error in linking", err)
+                    //   );
+                    // }}
+                    key={i}
                     style={[
-                      styles().posAbs,
-                      styles().zIndex10,
+                      styles().mt10,
+                      styles().justifyCenter,
+                      styles().alignCenter,
+                      styles().br5,
+                      styles().bw1,
+                      styles().wh40px,
+
                       {
-                        right: -7,
-                        top: -5,
+                        borderStyle: "dashed",
+                        borderColor: currentTheme.textColor,
+                        marginLeft: 10,
+                        padding: 5,
                       },
                     ]}
                   >
-                    <Entypo
-                      color={"black"}
-                      size={15}
-                      name={"circle-with-cross"}
+                    <TouchableOpacity
+                      onPress={() => DeleteFile(i)}
+                      activeOpacity={0.6}
+                      style={[
+                        styles().posAbs,
+                        styles().zIndex10,
+                        {
+                          right: -7,
+                          top: -5,
+                        },
+                      ]}
+                    >
+                      <Entypo
+                        color={"black"}
+                        size={15}
+                        name={"circle-with-cross"}
+                      />
+                    </TouchableOpacity>
+                    <Ionicons
+                      name="document-attach"
+                      color={currentTheme.themeBackground}
+                      size={20}
                     />
+                    <Text style={{ fontSize: 7 }} numberOfLines={1}>
+                      {file.name}
+                    </Text>
                   </TouchableOpacity>
-                  <Ionicons
-                    name="document-attach"
-                    color={currentTheme.themeBackground}
-                    size={20}
-                  />
-                  <Text style={{ fontSize: 7 }} numberOfLines={1}>
-                    {file.name}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
+                );
+              })
+            ) : (
+              <Text
+                style={[
+                  styles().fs11,
+                  styles().fw300,
+                  { color: currentTheme.lightRed, marginLeft: 5 },
+                ]}
+              >
+                No Docs
+              </Text>
+            )}
           </View>
         </View>
       </View>
