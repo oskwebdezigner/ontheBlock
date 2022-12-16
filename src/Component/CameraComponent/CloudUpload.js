@@ -71,11 +71,12 @@ async function uploadToImageKit(file) {
 }
 
 async function uploadImageToImageKit(file) {
+  console.log("file data :", file);
   return new Promise((resolve, reject) => {
     imagekit.upload(
       {
         file: file,
-        fileName: 'abc.jpeg',
+        fileName: "abc.jpeg",
         //you can change this and generate your own name if required
         // tags: ["tag-1", "tag-2"], //change this or remove it if you want
       },

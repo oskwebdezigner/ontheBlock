@@ -195,7 +195,7 @@ export default function App() {
 
             {Platform.OS === "ios" && (
               <StatusBar
-                style="light"
+                style="dark"
                 backgroundColor="transparent"
                 translucent={true}
               />

@@ -27,7 +27,7 @@ import Layout from "../../Component/Layout/Layout";
 import moment from "moment";
 import { useQuery, useMutation, useSubscription } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import { deleteTask } from "../../apollo/server";
+import { deleteTask, updateTask } from "../../apollo/server";
 import FlashMessage from "../../Component/FlashMessage/FlashMessage";
 
 const { width, height } = Dimensions.get("window");
@@ -36,8 +36,11 @@ export default function MaintenaceDetail(props) {
   const DELETE_TASK = gql`
     ${deleteTask}
   `;
+  const UPDATE_TASK = gql`
+    ${updateTask}
+  `;
   const item = props.route.params.maintenance;
-  // console.log("task >>>>>>", item);
+  console.log("task >>>>>>", item);
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
 
@@ -45,7 +48,8 @@ export default function MaintenaceDetail(props) {
     {
       id: 0,
       name: "Mark as Completed",
-      onPress: () => SetmodalVisible(!modalVisible),
+      // onPress: () => SetmodalVisible(!modalVisible),
+      onPress: () => is_Completed(),
     },
     {
       id: 1,
@@ -92,6 +96,30 @@ export default function MaintenaceDetail(props) {
     console.log("deleteTask error  :", error);
   }
 
+  const [update_mutate] = useMutation(UPDATE_TASK, {
+    onCompleted: onCompleted_isComplete,
+    onError: onError_isComplete,
+  });
+
+  async function onCompleted_isComplete(data) {
+    try {
+      SetmodalVisible(true);
+      console.log("is_comepleted res :", data.updateTask);
+      setLoading(false);
+      Setpopmenu(false);
+    } catch (e) {
+      setLoading(false);
+      console.log(e);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function onError_isComplete(error) {
+    FlashMessage({ msg: error?.message?.toString(), type: "danger" });
+    console.log("is_comepleted error :", error);
+  }
+
   async function DeleteTask() {
     setLoading(true);
     console.log(item._id);
@@ -102,15 +130,30 @@ export default function MaintenaceDetail(props) {
     });
   }
 
+  async function is_Completed() {
+    setLoading(true);
+    await update_mutate({
+      variables: {
+        updateTaskId: item?._id,
+        updateTaskInput: {
+          is_completed: true,
+        },
+      },
+    });
+  }
+
   function MarkCompletedModal() {
     return (
-      <Modal animationType="slide" transparent={true} visible={modalVisible}>
+      <Modal animationType="fade" transparent={true} visible={modalVisible}>
         <View
           style={[styles().flex, styles().alignCenter, styles().justifyCenter]}
         >
           <TouchableOpacity
             activeOpacity={1}
-            onPress={() => SetmodalVisible(!modalVisible)}
+            onPress={() => {
+              SetmodalVisible(false);
+              props.navigation.navigate("Home");
+            }}
             style={[
               styles().posAbs,
               styles().top0,
@@ -148,7 +191,8 @@ export default function MaintenaceDetail(props) {
                   { color: currentTheme.black },
                 ]}
               >
-                The Floor Maintenance has been completed
+                {/* {`The ${item?.description} has been completed`} */}
+                {`The Task Has Been Completed!`}
               </Text>
             </View>
           </View>
@@ -353,6 +397,21 @@ export default function MaintenaceDetail(props) {
         </View>
 
         <View style={styles().zIndex1}>
+          <View style={[styles().flexRow, styles().alignCenter, styles().mb5]}>
+            <Text
+              style={{ fontSize: 12, color: "black", fontWeight: "bold" }}
+            >{`Status : `}</Text>
+            <Text
+              style={{
+                color: item?.is_completed
+                  ? currentTheme.yellow
+                  : currentTheme.lightRed,
+                fontSize: 12,
+              }}
+            >
+              {item?.is_completed ? "Completed" : "Not Completed"}
+            </Text>
+          </View>
           <Text
             style={[
               styles().fs14,

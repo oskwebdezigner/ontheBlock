@@ -12,7 +12,8 @@ const ENV = {
     GRAPHQL_URL: "https://node.hostingladz.com:3011/graphql",
     MEDIA_URL: "https://3.139.132.193/images/", // put / at the end of server url
     WS_GRAPHQL_URL: "https://node.hostingladz.com:3011/graphql",
-    SERVER_URL: "http://3.209.162.153:8080/v1/user/getToken", // put / at the end of server url
+    // SERVER_URL: "http://3.209.162.153:8080/v1/user/getToken", // put / at the end of server url
+    SERVER_URL: "https://node.hostingladz.com:3022/v1/user/getToken", // put / at the end of server url
     IOS_CLIENT_ID_GOOGLE:
       "610317069220-b4a6kojq20ju7u9gj7mpn1suno0rf61v.apps.googleusercontent.com",
     ANDROID_CLIENT_ID_GOOGLE:

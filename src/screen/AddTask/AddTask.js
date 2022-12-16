@@ -100,6 +100,7 @@ export default function AddTask(props) {
   async function onCompleted(data) {
     try {
       FlashMessage({ msg: "Task Added!", type: "success" });
+      props.navigation.navigate("SinglePropertyListing");
       console.log("addTask res :", data.addTask);
       setLoading(false);
     } catch (e) {
@@ -173,14 +174,24 @@ export default function AddTask(props) {
           assign_to: handyman,
           description: MaintenanceDesc,
           get_notifications: NotificationCheck,
-          inventory: invenetory ? invenetory : "Todo",
+          inventory: invenetory,
+          property: task._id,
+          schedule_date: schedule_dates.selectedDate,
+        },
+      };
+      let todo = {
+        inputTask: {
+          added_by: user._id,
+          assign_to: handyman,
+          description: MaintenanceDesc,
+          get_notifications: NotificationCheck,
           property: task._id,
           schedule_date: schedule_dates.selectedDate,
         },
       };
       console.log("add data :", data);
       await mutate({
-        variables: data,
+        variables: invenetory ? data : todo,
       });
     }
   }
@@ -193,7 +204,7 @@ export default function AddTask(props) {
     return item._id === invenetory;
   });
 
-  console.log(invData);
+  // console.log(invData);
   return (
     <Layout
       navigation={props.navigation}
@@ -201,7 +212,11 @@ export default function AddTask(props) {
       withoutScroll={true}
       pagetitle={"Add Task"}
     >
-      <KeyboardAvoidingView style={styles().flex}>
+      <KeyboardAvoidingView
+        style={styles().flex}
+        behavior={Platform.OS == "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={70}
+      >
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={[styles().flex, styles().mt30, styles().pall5]}>
             <View
@@ -276,7 +291,8 @@ export default function AddTask(props) {
                   { color: currentTheme.textColor },
                 ]}
               >
-                What type of maintenance
+                {/* What type of maintenance */}
+                Maintenance Item
               </Text>
               <Multiselect
                 ListItems={invData}

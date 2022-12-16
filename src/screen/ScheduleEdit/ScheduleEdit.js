@@ -235,7 +235,8 @@ export default function ScheduleEdit(props) {
                   { color: currentTheme.textColor },
                 ]}
               >
-                What type of maintenance
+                {/* What type of maintenance */}
+                Maintenance Item
               </Text>
               <Text
                 style={{
@@ -245,7 +246,7 @@ export default function ScheduleEdit(props) {
                   marginTop: 5,
                 }}
               >
-                {task?.inventory?.name}
+                {task?.inventory?.name ? task?.inventory?.name : "TODO"}
               </Text>
             </View>
             {/* <View

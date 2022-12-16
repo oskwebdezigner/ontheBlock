@@ -82,8 +82,8 @@ export default function Header(props) {
           props.navigation.navigate("Profile");
         }}
         style={[
-          styles().wh30px,
-          styles().br15,
+          styles().wh40px,
+          styles().br20,
           styles().alignCenter,
           styles().justifyCenter,
           {

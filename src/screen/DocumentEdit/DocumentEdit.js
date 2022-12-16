@@ -359,11 +359,11 @@ export default function DocumentEdit(props) {
                 return (
                   <TouchableOpacity
                     // activeOpacity={1}
-                    // onPress={() => {
-                    //   Linking.openURL(file.path).catch((err) =>
-                    //     console.error("Error in linking", err)
-                    //   );
-                    // }}
+                    onPress={() => {
+                      Linking.openURL(file.path).catch((err) =>
+                        console.error("Error in linking", err)
+                      );
+                    }}
                     key={i}
                     style={[
                       styles().mt10,

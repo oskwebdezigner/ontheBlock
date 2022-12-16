@@ -848,3 +848,42 @@ export const deleteTask = `mutation DeleteTask($deleteTaskInput: DeleteTaskInput
     schedule_date
   }
 }`;
+
+export const createProperty = `mutation CreateProperty($inputProperty: InputProperty) {
+  createProperty(inputProperty: $inputProperty) {
+    zip_code
+    type {
+      _id
+      name
+    }
+    images
+    description
+    _id
+    address
+    bathrooms
+    bedrooms
+    added_by {
+      _id
+      email
+    }
+    name
+    owned_years
+    country
+    city
+  }
+}`;
+
+export const deleteProperty = `mutation DeleteProperty($deletePropertyInput: DeletePropertyInput) {
+  deleteProperty(deletePropertyInput: $deletePropertyInput) {
+    _id
+    name
+    type {
+      _id
+      name
+    }
+    added_by {
+      _id
+      email
+    }
+  }
+}`;

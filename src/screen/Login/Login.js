@@ -156,7 +156,7 @@ export default function Login(props) {
       <View style={[styles().w150px, styles().h100px]}>
         <Image
           source={require("../../assets/images/logo.png")}
-          resizeMode="cover"
+          resizeMode="contain"
           style={styles().wh100}
         />
       </View>
@@ -180,7 +180,7 @@ export default function Login(props) {
             { color: currentTheme.black },
           ]}
         >
-          Welcome
+          Welcome Home
         </Text>
       </View>
 
@@ -188,7 +188,7 @@ export default function Login(props) {
         <TextField
           keyboardType="default"
           value={UserName}
-          label="Email/ Phone number"
+          label="Email"
           errorText={UserError}
           autoCapitalize="none"
           style
@@ -238,7 +238,7 @@ export default function Login(props) {
             { color: currentTheme.textColor },
           ]}
         >
-          Forget Password
+          {"Forget Password?"}
         </Text>
       </TouchableOpacity>
 

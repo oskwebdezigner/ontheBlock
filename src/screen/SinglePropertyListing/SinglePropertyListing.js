@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import ThemeContext from "../../context/ThemeContext/ThemeContext";
 import { theme } from "../../context/ThemeContext/ThemeColor";
@@ -24,15 +25,49 @@ import {
   FontAwesome,
 } from "@expo/vector-icons";
 import Layout from "../../Component/Layout/Layout";
-
+import ThemeButton from "../../Component/ThemeButton/ThemeButton";
+import { deleteProperty } from "../../apollo/server";
+import FlashMessage from "../../Component/FlashMessage/FlashMessage";
+import Spinner from "../../Component/Spinner/Spinner";
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import gql from "graphql-tag";
 const { width, height } = Dimensions.get("window");
 
 export default function SinglePropertyListing(props) {
+  const DELETE_PROPERTY = gql`
+    ${deleteProperty}
+  `;
   const property = props?.route?.params?.singleList;
   // const propertyID = props?.route?.params?.propertyID;
   console.log("single Property Listing :", property);
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
+  const [Loading, setLoading] = useState(false);
+
+  const [mutate, { client }] = useMutation(DELETE_PROPERTY, {
+    onCompleted,
+    onError,
+  });
+  async function onCompleted(data) {
+    try {
+      console.log("deleteProperty res :", data.deleteProperty);
+      FlashMessage({ msg: "Property Created!", type: "success" });
+      SetmodalVisible(false);
+      props.navigation.navigate("Home");
+      setLoading(false);
+    } catch (e) {
+      console.log(e);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function onError(error) {
+    FlashMessage({ msg: error.message.toString(), type: "danger" });
+    setLoading(false);
+    console.log("deleteProperty error  :", error);
+  }
 
   const SinglePropertyList = [
     {
@@ -50,7 +85,8 @@ export default function SinglePropertyListing(props) {
     {
       id: 2,
       SingleListIcon: require("../../assets/images/SinglePropertyList-img3.png"),
-      SingleListName: "Document",
+      SingleListName: "Add New Documents",
+      // SingleListName: "Document",
       navigateTo: "DocumentListing",
     },
     {
@@ -62,7 +98,8 @@ export default function SinglePropertyListing(props) {
     {
       id: 4,
       SingleListIcon: require("../../assets/images/SinglePropertyList-img5.png"),
-      SingleListName: "My Handymen",
+      SingleListName: "My Handypersons",
+      // SingleListName: "My Handymen",
       navigateTo: "MyHandymen",
     },
     {
@@ -71,6 +108,106 @@ export default function SinglePropertyListing(props) {
       SingleListName: "Finance",
     },
   ];
+  const [modalVisible, SetmodalVisible] = useState(false);
+
+  function DeletePropertyModal() {
+    return (
+      <Modal animationType="fade" transparent={true} visible={modalVisible}>
+        <View
+          style={[styles().flex, styles().alignCenter, styles().justifyCenter]}
+        >
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => SetmodalVisible(false)}
+            style={[
+              styles().posAbs,
+              styles().top0,
+              styles().bottom0,
+              styles().left0,
+              styles().right0,
+              { backgroundColor: currentTheme.modalShadow },
+            ]}
+          />
+          <View style={[styles().alignCenter, styles().justifyCenter]}>
+            <View
+              style={[
+                styles().bgWhite,
+                styles().pt25,
+                // styles().alignCenter,
+                styles().justifyCenter,
+                styles().br10,
+                styles().pb25,
+                styles().ph15,
+                { width: width * 0.8 },
+              ]}
+            >
+              <View style={[styles().alignCenter]}>
+                <AntDesign
+                  name="warning"
+                  size={40}
+                  color={currentTheme.dangerRed}
+                />
+                <Text
+                  style={[
+                    styles().fs16,
+                    styles().fontSemibold,
+                    styles().textCenter,
+                    styles().mt15,
+                    {
+                      color: currentTheme.black,
+                      // marginBottom: 20,
+                    },
+                  ]}
+                >
+                  Are you sure you want to delete this property
+                </Text>
+              </View>
+
+              {Loading ? (
+                <ActivityIndicator
+                  size={"small"}
+                  color={currentTheme.themeBackground}
+                />
+              ) : (
+                <ThemeButton
+                  onPress={() => DeleteProperty()}
+                  Title={"Delete Property"}
+                  StyleText={{ color: currentTheme.white, fontSize: 14 }}
+                  Style={[
+                    styles().mt15,
+                    styles().mb15,
+                    styles().h45px,
+                    {
+                      backgroundColor: currentTheme.dangerRed,
+                      borderWidth: 0,
+                    },
+                  ]}
+                />
+              )}
+              <ThemeButton
+                Style={[styles().h45px]}
+                StyleText={{ fontSize: 14 }}
+                onPress={() => SetmodalVisible(false)}
+                Title={"Back"}
+                withoutBg={true}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
+    );
+  }
+
+  async function DeleteProperty() {
+    setLoading(true);
+    await mutate({
+      variables: {
+        deletePropertyInput: {
+          id: property?._id,
+        },
+      },
+    });
+  }
 
   return (
     <Layout
@@ -119,7 +256,10 @@ export default function SinglePropertyListing(props) {
                     <Image
                       source={item.SingleListIcon}
                       resizeMode="contain"
-                      style={styles().wh100}
+                      style={[
+                        styles().wh100,
+                        { tintColor: index === 5 && currentTheme.BCBCBC },
+                      ]}
                     />
                   </View>
                   <View>
@@ -181,6 +321,18 @@ export default function SinglePropertyListing(props) {
           }}
           keyExtractor={(item, index) => index.toString()}
         />
+
+        {/* <ThemeButton
+          Style={{
+            backgroundColor: currentTheme.dangerRed,
+            borderWidth: 0,
+            height: 50,
+          }}
+          StyleText={{ color: currentTheme.white }}
+          onPress={() => SetmodalVisible(true)}
+          Title={"Delete Property"}
+        /> */}
+        <DeletePropertyModal />
       </View>
     </Layout>
   );

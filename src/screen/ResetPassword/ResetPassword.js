@@ -145,7 +145,7 @@ export default function ResetPassword(props) {
         <View style={[styles().w150px, styles().h100px]}>
           <Image
             source={require("../../assets/images/logo.png")}
-            resizeMode="cover"
+            resizeMode="contain"
             style={styles().wh100}
           />
         </View>

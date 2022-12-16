@@ -24,21 +24,6 @@ import moment from "moment";
 import { useIsFocused } from "@react-navigation/native";
 const { width, height } = Dimensions.get("window");
 
-const HomeTopList = [
-  {
-    Image: require("../../assets/images/home-top-img1.png"),
-    title: "Add Document",
-  },
-  {
-    Image: require("../../assets/images/home-top-img2.png"),
-    title: "Add Item",
-  },
-  {
-    Image: require("../../assets/images/home-top-img3.png"),
-    title: "More",
-  },
-];
-
 export default function Home(props) {
   const PROPERTIES = gql`
     ${properties}
@@ -46,17 +31,42 @@ export default function Home(props) {
   const UPCOMING_TASK_LIST = gql`
     ${upcommingTasksList}
   `;
+  const HomeTopList = [
+    {
+      Image: require("../../assets/images/home-top-img1.png"),
+      title: "Add Document",
+      onPress: () => props.navigation.navigate("MyDocuments"),
+    },
+    {
+      Image: require("../../assets/images/home-top-img2.png"),
+      title: "Add Item",
+      onPress: () =>
+        props.navigation.navigate("SinglePropertyListing", {
+          singleList: singleProperty,
+        }),
+    },
+    {
+      Image: require("../../assets/images/home-top-img3.png"),
+      title: "More",
+      onPress: () => {
+        console.log("more");
+      },
+    },
+  ];
+
   const themeContext = useContext(ThemeContext);
   const user = useContext(UserContext);
   const currentTheme = theme[themeContext.ThemeValue];
   const [prpperties, setPrpperties] = useState([]);
   const [Grid, SetGrid] = useState(false);
   const isFocused = useIsFocused();
+  const [singleProperty, setSingleProperty] = useState("");
 
   const { loading, error, data, refetch } = useQuery(PROPERTIES, {
     fetchPolicy: "cache-and-network",
     onCompleted: ({ properties }) => {
-      // console.log("properties res >>>>>>>>>>>>>>>>>", properties.results);
+      // console.log("properties res ============>", properties.results);
+      setSingleProperty(properties.results[0]);
     },
     onError: (err) => {
       console.log("error in properties :", err);
@@ -76,10 +86,10 @@ export default function Home(props) {
     },
     fetchPolicy: "cache-and-network",
     onCompleted: ({ upcommingTasksList }) => {
-      console.log(
-        "upcommingTasksList res ================>",
-        upcommingTasksList.results
-      );
+      // console.log(
+      //   "upcommingTasksList res ================>",
+      //   upcommingTasksList.results
+      // );
     },
     onError: (err) => {
       console.log("error in upcommingTasksList :", err);
@@ -133,7 +143,9 @@ export default function Home(props) {
                     showsHorizontalScrollIndicator={false}
                     renderItem={({ item, index }) => {
                       return (
-                        <View
+                        <TouchableOpacity
+                          activeOpacity={0.5}
+                          onPress={() => item.onPress()}
                           style={[
                             styles().justifyCenter,
                             index === 0 ? null : styles().alignCenter,
@@ -158,7 +170,7 @@ export default function Home(props) {
                             />
                           </View>
                           <Text>{item.title}</Text>
-                        </View>
+                        </TouchableOpacity>
                       );
                     }}
                     keyExtractor={(item, index) => index.toString()}
@@ -202,15 +214,16 @@ export default function Home(props) {
                 </TouchableOpacity>
               </View>
 
-              {/* {Grid && data?.properties?.results?.length < 1 ? (
+              {data?.properties?.results[0] ? (
                 <View style={[styles().mb20, styles().mt5]}>
                   <FlatList
-                    data={data?.properties?.results[0]}
+                    data={data?.properties?.results}
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     renderItem={({ item, index }) => {
                       return (
                         <TouchableOpacity
+                          activeOpacity={0.5}
                           onPress={() =>
                             props.navigation.navigate("SinglePropertyListing", {
                               singleList: item,
@@ -233,11 +246,47 @@ export default function Home(props) {
                               styles().mb10,
                             ]}
                           >
-                            <Image
-                              source={item.GridImage}
-                              resizeMode="contain"
-                              style={styles().wh100}
-                            />
+                            {item?.images?.length !== 0 ? (
+                              <Image
+                                source={{ uri: item.images[0] }}
+                                resizeMode="cover"
+                                style={styles().wh100}
+                              />
+                            ) : (
+                              <View
+                                style={[
+                                  styles().h150px,
+                                  styles().br10,
+                                  styles().overflowH,
+                                  styles().justifyCenter,
+                                  styles().mb10,
+                                  styles().alignCenter,
+                                  styles().justifyCenter,
+                                  // styles().boxpeshadowCart,
+                                  {
+                                    marginTop: 10,
+                                    backgroundColor: currentTheme.white,
+                                    borderWidth: 0.5,
+                                    borderColor: currentTheme.BCBCBC,
+                                  },
+                                  ,
+                                ]}
+                              >
+                                <Ionicons
+                                  name="image"
+                                  size={50}
+                                  color={currentTheme.BCBCBC}
+                                />
+                                <Text
+                                  style={{
+                                    color: currentTheme.BCBCBC,
+                                    fontSize: 12,
+                                  }}
+                                >
+                                  No Image
+                                </Text>
+                              </View>
+                            )}
                           </View>
                           <Text
                             style={[
@@ -246,7 +295,7 @@ export default function Home(props) {
                               { color: currentTheme.black },
                             ]}
                           >
-                            {item.title}
+                            {item.name.toUpperCase()}
                           </Text>
                           <View
                             style={[
@@ -270,7 +319,7 @@ export default function Home(props) {
                                 { color: currentTheme.textColor },
                               ]}
                             >
-                              {item.address}
+                              {item.address ? item.address : "No Address"}
                             </Text>
                           </View>
                         </TouchableOpacity>
@@ -279,12 +328,65 @@ export default function Home(props) {
                     keyExtractor={(item, index) => index.toString()}
                   />
                 </View>
-              ) : ( */}
-              <View style={[styles().mb20, styles().mt5]}>
+              ) : (
+                <Text>hello</Text>
+              )}
+
+              {/* <View
+                style={[
+                  styles().mb20,
+                  styles().mt5,
+                  {
+                    flexDirection: "row-reverse",
+                    justifyContent: "center",
+                  },
+                ]}
+              >
                 <FlatList
                   data={data?.properties?.results}
                   horizontal
                   showsHorizontalScrollIndicator={false}
+                  // ListHeaderComponent={() => {
+                  //   return (
+                  //     <TouchableOpacity
+                  //       activeOpacity={0.5}
+                  //       onPress={() =>
+                  //         props.navigation.navigate("CreateProperty")
+                  //       }
+                  //     >
+                  //       <View
+                  //         style={[
+                  //           styles().wh150px,
+                  //           styles().br10,
+                  //           styles().overflowH,
+                  //           styles().justifyCenter,
+                  //           styles().alignCenter,
+                  //           styles().justifyCenter,
+                  //           styles().mb10,
+                  //           {
+                  //             backgroundColor: currentTheme.bodyBg,
+                  //           },
+                  //         ]}
+                  //       >
+                  //         <FontAwesome
+                  //           name="plus-circle"
+                  //           color={currentTheme.textColor}
+                  //           size={40}
+                  //         />
+                  //       </View>
+                  //       <Text
+                  //         numberOfLines={1}
+                  //         style={[
+                  //           styles().fs12,
+                  //           styles().fontSemibold,
+                  //           { color: currentTheme.textColor },
+                  //         ]}
+                  //       >
+                  //         Add New Property
+                  //       </Text>
+                  //     </TouchableOpacity>
+                  //   );
+                  // }}
                   renderItem={({ item, index }) => {
                     return (
                       <TouchableOpacity
@@ -297,8 +399,9 @@ export default function Home(props) {
                         style={[
                           styles().justifyCenter,
                           {
-                            width: width * 0.43,
-                            marginLeft: index === 0 ? 0 : width * 0.03,
+                            width: width * 0.4,
+                            marginRight: index === 0 ? 0 : width * 0.03,
+                            // marginLeft: width * 0.03,
                             borderRadius: 10,
                           },
                         ]}
@@ -419,6 +522,7 @@ export default function Home(props) {
                   }}
                 />
               </View>
+               */}
               {/* )} */}
               {/* <View style={[styles().mb20, styles().mt5]}>
                         <FlatList
@@ -546,15 +650,28 @@ export default function Home(props) {
                       styles().ml10,
                     ]}
                   >
-                    <Text
+                    <View
                       style={[
-                        styles().fs14,
-                        styles().fontSemibold,
-                        { color: currentTheme.black },
+                        styles().flexRow,
+                        styles().alignCenter,
+                        styles().justifyStart,
                       ]}
                     >
-                      {item?.property?.name?.toUpperCase()}
-                    </Text>
+                      <Text
+                        style={[
+                          styles().fs14,
+                          styles().fontSemibold,
+                          { color: currentTheme.black },
+                        ]}
+                      >
+                        {item?.property?.name?.toUpperCase()}
+                      </Text>
+                      {/* <Text>
+                        {item.property.is_completed
+                          ? "Complete"
+                          : "Not Complete"}
+                      </Text> */}
+                    </View>
                     <View
                       style={[
                         styles().flexRow,

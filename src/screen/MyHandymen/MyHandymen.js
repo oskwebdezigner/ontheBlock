@@ -119,7 +119,7 @@ export default function HandymenEdit(props) {
       navigation={props.navigation}
       LeftIcon={true}
       withoutScroll={true}
-      pagetitle={"My Handymen"}
+      pagetitle={"My Handypersons"}
       loading={Loading}
       style={[styles().ph0]}
     >
