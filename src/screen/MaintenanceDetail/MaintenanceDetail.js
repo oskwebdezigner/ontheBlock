@@ -25,16 +25,21 @@ import {
 } from "@expo/vector-icons";
 import Layout from "../../Component/Layout/Layout";
 import moment from "moment";
+import { useQuery, useMutation, useSubscription } from "@apollo/react-hooks";
+import gql from "graphql-tag";
+import { deleteTask } from "../../apollo/server";
+import FlashMessage from "../../Component/FlashMessage/FlashMessage";
 
 const { width, height } = Dimensions.get("window");
 
 export default function MaintenaceDetail(props) {
+  const DELETE_TASK = gql`
+    ${deleteTask}
+  `;
   const item = props.route.params.maintenance;
-  console.log("task >>>>>>", item);
+  // console.log("task >>>>>>", item);
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
-
-  const [popmenu, Setpopmenu] = useState(false);
 
   const popItems = [
     {
@@ -54,10 +59,48 @@ export default function MaintenaceDetail(props) {
     {
       id: 3,
       name: "Delete",
+      onPress: () => DeleteTask(),
     },
   ];
 
   const [modalVisible, SetmodalVisible] = useState(false);
+  const [Loading, setLoading] = useState(false);
+  const [popmenu, Setpopmenu] = useState(false);
+
+  const [mutate, { client }] = useMutation(DELETE_TASK, {
+    onCompleted,
+    onError,
+  });
+
+  async function onCompleted(data) {
+    try {
+      FlashMessage({ msg: "Task Deleted!", type: "success" });
+      console.log("deleteTask res :", data.deleteTask);
+      props.navigation.navigate("Home");
+      setLoading(false);
+    } catch (e) {
+      console.log(e);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function onError(error) {
+    FlashMessage({ msg: error?.message?.toString(), type: "danger" });
+    setLoading(false);
+    console.log("deleteTask error  :", error);
+  }
+
+  async function DeleteTask() {
+    setLoading(true);
+    console.log(item._id);
+    await mutate({
+      variables: {
+        deleteTaskInput: { id: item?._id },
+      },
+    });
+  }
 
   function MarkCompletedModal() {
     return (
@@ -118,9 +161,14 @@ export default function MaintenaceDetail(props) {
     <Layout
       navigation={props.navigation}
       LeftIcon={true}
+      loading={Loading}
       pagetitle={item?.property?.name?.toUpperCase()}
     >
-      <View style={[styles().flex, styles().pt30, styles().pb20]}>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={() => Setpopmenu(false)}
+        style={[styles().flex, styles().pt30, styles().pb20]}
+      >
         <View
           style={[
             styles().h200px,
@@ -316,7 +364,7 @@ export default function MaintenaceDetail(props) {
             {item?.description}
           </Text>
         </View>
-      </View>
+      </TouchableOpacity>
 
       <MarkCompletedModal />
     </Layout>

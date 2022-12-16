@@ -170,6 +170,26 @@ export default function MyStuff(props) {
               );
             }}
             keyExtractor={(item, index) => index.toString()}
+            ListEmptyComponent={() => {
+              return (
+                <View
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginTop: 20,
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: currentTheme.textColor,
+                      fontSize: 14,
+                    }}
+                  >
+                    No Stuffs
+                  </Text>
+                </View>
+              );
+            }}
           />
         </View>
       </View>

@@ -21,6 +21,7 @@ import gql from "graphql-tag";
 import { properties, upcommingTasksList } from "../../apollo/server";
 import Loader from "../../Component/Loader/Loader";
 import moment from "moment";
+import { useIsFocused } from "@react-navigation/native";
 const { width, height } = Dimensions.get("window");
 
 const HomeTopList = [
@@ -50,6 +51,7 @@ export default function Home(props) {
   const currentTheme = theme[themeContext.ThemeValue];
   const [prpperties, setPrpperties] = useState([]);
   const [Grid, SetGrid] = useState(false);
+  const isFocused = useIsFocused();
 
   const { loading, error, data, refetch } = useQuery(PROPERTIES, {
     fetchPolicy: "cache-and-network",
@@ -74,20 +76,26 @@ export default function Home(props) {
     },
     fetchPolicy: "cache-and-network",
     onCompleted: ({ upcommingTasksList }) => {
-      // console.log(
-      //   "upcommingTasksList res ================>",
-      //   upcommingTasksList.results
-      // );
+      console.log(
+        "upcommingTasksList res ================>",
+        upcommingTasksList.results
+      );
     },
     onError: (err) => {
       console.log("error in upcommingTasksList :", err);
     },
   });
 
+  useEffect(() => {
+    refetch();
+    upcomingRefetch();
+    console.log("refetched!");
+  }, [isFocused]);
+
   return (
     <Layout
       navigation={props.navigation}
-      loading={loading}
+      // loading={loading}
       NotiIcon={true}
       withoutScroll={true}
       ProfileImg={true}
@@ -290,7 +298,7 @@ export default function Home(props) {
                           styles().justifyCenter,
                           {
                             width: width * 0.43,
-                            marginLeft: index === 0 ? 0 : width * 0.03,
+                            marginRight: index === 0 ? 0 : width * 0.03,
                             borderRadius: 10,
                           },
                         ]}

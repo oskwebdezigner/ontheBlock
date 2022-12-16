@@ -83,11 +83,14 @@ export default function HandymenEdit(props) {
   async function onCompleted(data) {
     try {
       FlashMessage({ msg: "Handmen Deleted!", type: "success" });
+      setLoading(false);
       console.log("deleteHandyman res :", data.deleteHandyman);
       refetch();
     } catch (e) {
       console.log(e);
+      setLoading(false);
     } finally {
+      setLoading(false);
     }
   }
 
@@ -97,6 +100,7 @@ export default function HandymenEdit(props) {
   }
 
   async function DeleteHandyman(id) {
+    setLoading(true);
     await mutate({
       variables: {
         deleteHandymanInput: {
@@ -116,7 +120,7 @@ export default function HandymenEdit(props) {
       LeftIcon={true}
       withoutScroll={true}
       pagetitle={"My Handymen"}
-      loading={loading}
+      loading={Loading}
       style={[styles().ph0]}
     >
       <View style={[styles().flex]}>
@@ -234,18 +238,14 @@ export default function HandymenEdit(props) {
           }}
         />
         <View style={[styles().mt35, styles().mb20, styles().ph20]}>
-          {Loading ? (
-            <Spinner />
-          ) : (
-            <ThemeButton
-              onPress={() =>
-                props.navigation.navigate("HandymenEdit", {
-                  property: property,
-                })
-              }
-              Title={"Add New Handymen"}
-            />
-          )}
+          <ThemeButton
+            onPress={() =>
+              props.navigation.navigate("HandymenEdit", {
+                property: property,
+              })
+            }
+            Title={"Add New Handymen"}
+          />
         </View>
       </View>
     </Layout>

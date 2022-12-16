@@ -120,7 +120,6 @@ export default function CreatePassword(props) {
                 { color: currentTheme.themeBackground },
               ]}
             >
-              {" "}
               New {"\n"} Password
             </Text>
           </Text>

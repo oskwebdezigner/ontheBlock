@@ -7,6 +7,7 @@ import {
   View,
   SafeAreaView,
   Image,
+  LogBox,
 } from "react-native";
 import ThemeReducer from "./src/context/ThemeContext/ThemeReducer";
 import ThemeContext from "./src/context/ThemeContext/ThemeContext";
@@ -25,6 +26,7 @@ const themeValue = "Yellow";
 const STATUSBAR_HEIGHT = StatusBar.currentHeight;
 
 export default function App() {
+  LogBox.ignoreAllLogs(); //Ignore all log warnings
   const [theme, themeSetter] = useReducer(ThemeReducer, themeValue);
   const [fontLoaded, setFontLoaded] = useState(false);
   const [client, setupClient] = useState(null);

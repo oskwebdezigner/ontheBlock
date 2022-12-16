@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
   Image,
+  Linking,
 } from "react-native";
 import styles from "../styles";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
@@ -32,7 +33,7 @@ export default function MyDocuments(props) {
       },
     },
     onCompleted: ({ files }) => {
-      // console.log("files res >>>>>>>>>>>>>>>>>", files.results);
+      console.log("files res >>>>>>>>>>>>>>>>>", files.results);
     },
     onError: (err) => {
       console.log("error in files :", err);
@@ -64,6 +65,12 @@ export default function MyDocuments(props) {
                   //     singleList: item,
                   //   })
                   // }
+
+                  onPress={() => {
+                    Linking.openURL(item.path).catch((err) =>
+                      console.error("Error in linking", err)
+                    );
+                  }}
                   style={[
                     styles().justifyCenter,
                     {
@@ -89,7 +96,9 @@ export default function MyDocuments(props) {
                       { backgroundColor: currentTheme.bodyBg },
                     ]}
                   >
-                    {item.mimetype === "png" ? (
+                    {item.mimetype === "png" ||
+                    item.mimetype === "image/png" ||
+                    item.mimetype === "image/jpeg" ? (
                       <Image
                         source={{
                           uri: item?.path,
@@ -109,8 +118,8 @@ export default function MyDocuments(props) {
                   <Text
                     numberOfLines={2}
                     style={[
-                      styles().fs14,
-                      styles().fontSemibold,
+                      styles().fs12,
+                      // styles().fontSemibold,
                       { color: currentTheme.black },
                     ]}
                   >
@@ -120,6 +129,26 @@ export default function MyDocuments(props) {
               );
             }}
             keyExtractor={(item, index) => index.toString()}
+            ListEmptyComponent={() => {
+              return (
+                <View
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginTop: 20,
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: currentTheme.textColor,
+                      fontSize: 14,
+                    }}
+                  >
+                    No Documents
+                  </Text>
+                </View>
+              );
+            }}
           />
         </View>
       </View>

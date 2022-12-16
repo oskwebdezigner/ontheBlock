@@ -457,6 +457,7 @@ export const upcommingTasksList = `query UpcommingTasksList {
       description
       schedule_date
       inventory {
+        images
         _id
         name
         type {
@@ -827,5 +828,23 @@ export const addMultipleFiles = `mutation AddMultipleFiles($folderId: ID!, $inpu
       _id
       name
     }
+  }
+}`;
+
+export const deleteTask = `mutation DeleteTask($deleteTaskInput: DeleteTaskInput) {
+  deleteTask(deleteTaskInput: $deleteTaskInput) {
+    _id
+    assign_to {
+      name
+      _id
+      occupation
+    }
+    is_completed
+    property {
+      _id
+      name
+    }
+    description
+    schedule_date
   }
 }`;

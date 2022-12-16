@@ -83,7 +83,14 @@ export default function Login(props) {
       });
     }
   }
-
+  const [ConfirmiconEye, setConfirmIconEye] = useState("eye-slash");
+  function onChangeIconConfirm() {
+    if (ConfirmiconEye === "eye") {
+      setConfirmIconEye("eye-slash");
+    } else {
+      setConfirmIconEye("eye");
+    }
+  }
   const [mutate, { client }] = useMutation(LOGIN, {
     onCompleted,
     onError,
@@ -194,6 +201,19 @@ export default function Login(props) {
 
       <View style={[styles().mb25]}>
         <TextField
+          secureTextEntry={ConfirmiconEye === "eye" ? false : true}
+          childrenPassword={
+            <TouchableOpacity
+              onPress={onChangeIconConfirm.bind()}
+              style={[styles().passEye]}
+            >
+              <FontAwesome
+                name={ConfirmiconEye}
+                size={16}
+                color={currentTheme.textColor}
+              />
+            </TouchableOpacity>
+          }
           keyboardType="default"
           onChangeText={(e) => {
             setPasswordError(false);

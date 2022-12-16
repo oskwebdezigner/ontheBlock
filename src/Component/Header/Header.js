@@ -100,7 +100,13 @@ export default function Header(props) {
             style={styles().wh100}
           />
         ) : (
-          <Text style={{ fontSize: 12, color: currentTheme.themeBackground }}>
+          <Text
+            style={{
+              fontSize: 14,
+              color: currentTheme.themeBackground,
+              fontWeight: "bold",
+            }}
+          >
             {user?.first_name && user?.first_name[0]?.toUpperCase()}
           </Text>
         )}
