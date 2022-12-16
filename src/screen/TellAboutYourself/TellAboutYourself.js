@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   View,
   Image,
+  KeyboardAvoidingView,
+  ScrollView,
 } from "react-native";
 import ThemeContext from "../../context/ThemeContext/ThemeContext";
 import { theme } from "../../context/ThemeContext/ThemeColor";
@@ -164,84 +166,86 @@ export default function TellAboutYourself(props) {
   }
   console.log(PhoneNumber);
   return (
-    <AuthLayout navigation={props.navigation}>
-      <View style={[styles().w150px, styles().h100px]}>
-        <Image
-          source={require("../../assets/images/logo.png")}
-          resizeMode="cover"
-          style={styles().wh100}
-        />
-      </View>
+    <AuthLayout withoutScroll={true} navigation={props.navigation}>
+      <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={50}>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View style={[styles().w150px, styles().h100px]}>
+            <Image
+              source={require("../../assets/images/logo.png")}
+              resizeMode="contain"
+              style={styles().wh100}
+            />
+          </View>
 
-      <View style={[styles().mt25, styles().mb15]}>
-        <Text
-          style={[
-            styles().fs24,
-            styles().fontRegular,
-            { color: currentTheme.black },
-          ]}
-        >
-          Tell us About
-        </Text>
-        <Text
-          style={[
-            styles().fs24,
-            styles().fontSemibold,
-            styles().lh30,
-            styles().fw600,
-            { color: currentTheme.themeBackground },
-          ]}
-        >
-          Yourself
-        </Text>
-      </View>
+          <View style={[styles().mt25, styles().mb15]}>
+            <Text
+              style={[
+                styles().fs24,
+                styles().fontRegular,
+                { color: currentTheme.black },
+              ]}
+            >
+              Tell us About
+            </Text>
+            <Text
+              style={[
+                styles().fs24,
+                styles().fontSemibold,
+                styles().lh30,
+                styles().fw600,
+                { color: currentTheme.themeBackground },
+              ]}
+            >
+              Yourself
+            </Text>
+          </View>
 
-      <View style={styles().mb20}>
-        <TextField
-          keyboardType="default"
-          value={FirstName}
-          label="First Name"
-          errorText={FirstNameError}
-          autoCapitalize="none"
-          style
-          onChangeText={(text) => {
-            SetFirstNameError(false);
-            SetFirstName(text);
-          }}
-        />
-      </View>
+          <View style={styles().mb20}>
+            <TextField
+              keyboardType="default"
+              value={FirstName}
+              label="First Name"
+              errorText={FirstNameError}
+              autoCapitalize="none"
+              style
+              onChangeText={(text) => {
+                SetFirstNameError(false);
+                SetFirstName(text);
+              }}
+            />
+          </View>
 
-      <View style={styles().mb20}>
-        <TextField
-          keyboardType="default"
-          value={LastName}
-          label="Last Name"
-          errorText={LastNameError}
-          autoCapitalize="none"
-          style
-          onChangeText={(text) => {
-            SetLastNameError(false);
-            SetLastName(text);
-          }}
-        />
-      </View>
+          <View style={styles().mb20}>
+            <TextField
+              keyboardType="default"
+              value={LastName}
+              label="Last Name"
+              errorText={LastNameError}
+              autoCapitalize="none"
+              style
+              onChangeText={(text) => {
+                SetLastNameError(false);
+                SetLastName(text);
+              }}
+            />
+          </View>
 
-      <View style={styles().mb20}>
-        <TextField
-          keyboardType="default"
-          value={Email}
-          label="Email"
-          errorText={EmailError}
-          autoCapitalize="none"
-          style
-          onChangeText={(text) => {
-            SetEmailError(false);
-            SetEmail(text);
-          }}
-        />
-      </View>
+          <View style={styles().mb20}>
+            <TextField
+              keyboardType="default"
+              value={Email}
+              label="Email"
+              errorText={EmailError}
+              autoCapitalize="none"
+              style
+              onChangeText={(text) => {
+                SetEmailError(false);
+                SetEmail(text);
+              }}
+            />
+          </View>
 
-      {/* <View style={styles().mb20}>
+          {/* <View style={styles().mb20}>
         <TextField
           // keyboardType="phone-pad"
           keyboardType="numeric"
@@ -256,60 +260,62 @@ export default function TellAboutYourself(props) {
           }}
         />
       </View> */}
-      <View style={[styles().mt5]}>
-        <PhoneInput
-          ref={phone}
-          onChangePhoneNumber={(text) => {
-            SetPhoneNumberError(false);
-            SetPhoneNumber(text);
-            console.log(text);
-          }}
-          initialCountry={"us"}
-          style={[
-            styles().h60px,
-            styles().pl15,
-            styles(currentTheme).bgWhite,
-            styles().br5,
+          <View style={[styles().mt5]}>
+            <PhoneInput
+              ref={phone}
+              onChangePhoneNumber={(text) => {
+                SetPhoneNumberError(false);
+                SetPhoneNumber(text);
+                console.log(text);
+              }}
+              initialCountry={"us"}
+              style={[
+                styles().h60px,
+                styles().pl15,
+                styles(currentTheme).bgWhite,
+                styles().br5,
 
-            {
-              color: currentTheme.borderColor,
-              backgroundColor: "transparent",
-              borderColor: currentTheme.cEFEFEF,
-              borderWidth: 1,
-              marginBottom: 20,
-            },
-          ]}
-        />
-      </View>
+                {
+                  color: currentTheme.borderColor,
+                  backgroundColor: "transparent",
+                  borderColor: currentTheme.cEFEFEF,
+                  borderWidth: 1,
+                  marginBottom: 20,
+                },
+              ]}
+            />
+          </View>
 
-      <View style={styles().mb20}>
-        <TextField
-          keyboardType="default"
-          value={Address}
-          label="Address (optional)"
-          // errorText={UserError}
-          autoCapitalize="none"
-          style
-          onChangeText={(text) => {
-            //   setUserError(false)
-            setAddress(text);
-          }}
-        />
-      </View>
+          <View style={styles().mb20}>
+            <TextField
+              keyboardType="default"
+              value={Address}
+              label="Address (optional)"
+              // errorText={UserError}
+              autoCapitalize="none"
+              style
+              onChangeText={(text) => {
+                //   setUserError(false)
+                setAddress(text);
+              }}
+            />
+          </View>
 
-      <View style={styles().mt10}>
-        {loading ? (
-          <Spinner />
-        ) : (
-          <ThemeButton Title={"Next"} onPress={() => GetInfo()} />
-        )}
-        <ThemeButton
-          Title={"Back"}
-          withoutBg={true}
-          Style={styles().mt20}
-          onPress={() => props.navigation.goBack()}
-        />
-      </View>
+          <View style={styles().mt10}>
+            {loading ? (
+              <Spinner />
+            ) : (
+              <ThemeButton Title={"Next"} onPress={() => GetInfo()} />
+            )}
+            <ThemeButton
+              Title={"Back"}
+              withoutBg={true}
+              Style={styles().mt20}
+              onPress={() => props.navigation.goBack()}
+            />
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </AuthLayout>
   );
 }

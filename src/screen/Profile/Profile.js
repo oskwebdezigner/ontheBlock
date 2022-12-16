@@ -177,13 +177,13 @@ export default function Profile(props) {
             value={notifi}
             // onPress={() => props.navigation.navigate("PersonalDetails")}
           />
-          <ProfileList
+          {/* <ProfileList
             ListName={"App Notifications"}
             NotiSwitch={true}
             onValueChange={toggleAppNotifi}
             value={appNotifi}
             // onPress={() => props.navigation.navigate("PersonalDetails")}
-          />
+          /> */}
         </View>
         <View style={styles().mb30}>
           <ProfileListHead

@@ -6,36 +6,40 @@ import {
   TouchableOpacity,
   View,
   Image,
+  Linking,
 } from "react-native";
 import styles from "../styles";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import Layout from "../../Component/Layout/Layout";
 import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import { files } from "../../apollo/server";
+import { folders } from "../../apollo/server";
 import { theme } from "../../context/ThemeContext/ThemeColor";
 import UserContext from "../../context/User/User";
 import ThemeContext from "../../context/ThemeContext/ThemeContext";
 const { width, height } = Dimensions.get("window");
 export default function MyDocuments(props) {
-  const FILES = gql`
-    ${files}
+  const FOLDERS = gql`
+    ${folders}
   `;
   const user = useContext(UserContext);
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
-  const { loading, error, data, refetch } = useQuery(FILES, {
+  const { loading, error, data, refetch } = useQuery(FOLDERS, {
     fetchPolicy: "cache-and-network",
     variables: {
       options: {
         limit: 1000,
       },
+      filters: {
+        added_by: user?._id,
+      },
     },
     onCompleted: ({ files }) => {
-      // console.log("files res >>>>>>>>>>>>>>>>>", files.results);
+      console.log("folders res >>>>>>>>>>>>>>>>>", files.folders);
     },
     onError: (err) => {
-      console.log("error in files :", err);
+      console.log("error in folders :", err);
     },
   });
   return (
@@ -50,7 +54,7 @@ export default function MyDocuments(props) {
       <View style={[styles().flex, { paddingLeft: width * 0.06 }]}>
         <View style={[styles().mb20, styles().mt5]}>
           <FlatList
-            data={data?.files?.results}
+            data={data?.folders?.results}
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
             numColumns={2}
@@ -64,6 +68,10 @@ export default function MyDocuments(props) {
                   //     singleList: item,
                   //   })
                   // }
+
+                  onPress={() =>
+                    props.navigation.navigate("DocumentEdit", { docs: item })
+                  }
                   style={[
                     styles().justifyCenter,
                     {
@@ -89,7 +97,9 @@ export default function MyDocuments(props) {
                       { backgroundColor: currentTheme.bodyBg },
                     ]}
                   >
-                    {item.mimetype === "png" ? (
+                    {item.mimetype === "png" ||
+                    item.mimetype === "image/png" ||
+                    item.mimetype === "image/jpeg" ? (
                       <Image
                         source={{
                           uri: item?.path,
@@ -109,8 +119,8 @@ export default function MyDocuments(props) {
                   <Text
                     numberOfLines={2}
                     style={[
-                      styles().fs14,
-                      styles().fontSemibold,
+                      styles().fs12,
+                      // styles().fontSemibold,
                       { color: currentTheme.black },
                     ]}
                   >
@@ -120,6 +130,26 @@ export default function MyDocuments(props) {
               );
             }}
             keyExtractor={(item, index) => index.toString()}
+            ListEmptyComponent={() => {
+              return (
+                <View
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginTop: 20,
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: currentTheme.textColor,
+                      fontSize: 14,
+                    }}
+                  >
+                    No Documents
+                  </Text>
+                </View>
+              );
+            }}
           />
         </View>
       </View>

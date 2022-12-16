@@ -29,6 +29,7 @@ import ThemeButton from "../../Component/ThemeButton/ThemeButton";
 import { useQuery, useMutation, useSubscription } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import { folders } from "../../apollo/server";
+import { useIsFocused } from "@react-navigation/native";
 
 const { width, height } = Dimensions.get("window");
 
@@ -56,10 +57,11 @@ export default function DocumentListing(props) {
     },
   });
   // console.log("folders =====>", data?.folders?.results);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     refetch();
-  }, []);
+  }, [isFocused]);
 
   return (
     <Layout

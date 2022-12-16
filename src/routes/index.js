@@ -42,7 +42,7 @@ import PrizeDetail from "../screen/PrizeDetail/PrizeDetail";
 import Tickets from "../screen/Tickets/Tickets";
 import Cart from "../screen/Cart/Cart";
 import Profile from "../screen/Profile/Profile";
-import EditProfile from '../screen/EditProfile/EditProfile';
+import EditProfile from "../screen/EditProfile/EditProfile";
 import Wishlist from "../screen/Wishlist/Wishlist";
 import PersonalDetails from "../screen/PersonalDetails/PersonalDetails";
 import OurProducts from "../screen/OurProducts/OurProducts";
@@ -54,6 +54,7 @@ import Faq from "../screen/Faq/Faq";
 import MyProperties from "../screen/MyProperties/MyProperties";
 import MyStuff from "../screen/MyStuff/MyStuff";
 import MyDocuments from "../screen/MyDocuments.js/MyDocuments";
+import CreateProperty from "../screen/CreateProperty/CreateProperty";
 
 // Auth Stack
 import LandingScreen from "../screen/Landing/Landing";
@@ -175,6 +176,7 @@ function HomeNavigator() {
       <HomeStack.Screen name="OurProducts" component={OurProducts} />
       <HomeStack.Screen name="ProductDetail" component={ProductDetail} />
       <HomeStack.Screen name="EditProfile" component={EditProfile} />
+      <HomeStack.Screen name="CreateProperty" component={CreateProperty} />
     </HomeStack.Navigator>
   );
 }

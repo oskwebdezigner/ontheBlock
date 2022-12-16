@@ -672,6 +672,9 @@ const styles = (props = null) =>
     h40px:{
       height:40
     },
+    h45px:{
+      height:45
+    },
 
     h50px: {
       height: 50,

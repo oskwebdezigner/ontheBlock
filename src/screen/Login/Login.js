@@ -83,7 +83,14 @@ export default function Login(props) {
       });
     }
   }
-
+  const [ConfirmiconEye, setConfirmIconEye] = useState("eye-slash");
+  function onChangeIconConfirm() {
+    if (ConfirmiconEye === "eye") {
+      setConfirmIconEye("eye-slash");
+    } else {
+      setConfirmIconEye("eye");
+    }
+  }
   const [mutate, { client }] = useMutation(LOGIN, {
     onCompleted,
     onError,
@@ -149,7 +156,7 @@ export default function Login(props) {
       <View style={[styles().w150px, styles().h100px]}>
         <Image
           source={require("../../assets/images/logo.png")}
-          resizeMode="cover"
+          resizeMode="contain"
           style={styles().wh100}
         />
       </View>
@@ -173,7 +180,7 @@ export default function Login(props) {
             { color: currentTheme.black },
           ]}
         >
-          Welcome
+          Welcome Home
         </Text>
       </View>
 
@@ -181,7 +188,7 @@ export default function Login(props) {
         <TextField
           keyboardType="default"
           value={UserName}
-          label="Email/ Phone number"
+          label="Email"
           errorText={UserError}
           autoCapitalize="none"
           style
@@ -194,6 +201,19 @@ export default function Login(props) {
 
       <View style={[styles().mb25]}>
         <TextField
+          secureTextEntry={ConfirmiconEye === "eye" ? false : true}
+          childrenPassword={
+            <TouchableOpacity
+              onPress={onChangeIconConfirm.bind()}
+              style={[styles().passEye]}
+            >
+              <FontAwesome
+                name={ConfirmiconEye}
+                size={16}
+                color={currentTheme.textColor}
+              />
+            </TouchableOpacity>
+          }
           keyboardType="default"
           onChangeText={(e) => {
             setPasswordError(false);
@@ -218,7 +238,7 @@ export default function Login(props) {
             { color: currentTheme.textColor },
           ]}
         >
-          Forget Password
+          {"Forget Password?"}
         </Text>
       </TouchableOpacity>
 

@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { gql, useQuery } from "@apollo/client";
 import { profile } from "../../apollo/server";
 import { AuthContext } from "../Auth/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const PROFILE = gql`
   ${profile}
@@ -12,6 +13,14 @@ const UserContext = React.createContext({});
 
 export const UserProvider = (props) => {
   const { token } = useContext(AuthContext);
+
+  // useEffect(() => {
+  //   if (data == undefined) {
+  //     AsyncStorage.clear().then(() => {
+  //       console.log("async clear from user context");
+  //     });
+  //   }
+  // }, [token]);
 
   useEffect(() => {
     refetch();
@@ -24,7 +33,9 @@ export const UserProvider = (props) => {
     },
     onError: (err) => {
       console.log("user profile error :", err.message);
-      
+      // AsyncStorage.clear().then(() => {
+      //   console.log("async clear from user context");
+      // });
     },
   });
 

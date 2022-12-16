@@ -75,8 +75,8 @@ export default function ChooseGoals(props) {
               { color: currentTheme.themeBackground },
             ]}
           >
-            Top {"\n"} Goals
-          </Text>{" "}
+            Top {"\n"}Goals
+          </Text>
         </Text>
       </View>
 
@@ -133,8 +133,9 @@ export default function ChooseGoals(props) {
                   />
                 </View>
                 <Text
+                  numberOfLines={2}
                   style={[
-                    styles().fs14,
+                    styles().fs12,
                     styles().mt10,
                     styles().fontSemibold,
                     styles().fw600,
@@ -144,6 +145,7 @@ export default function ChooseGoals(props) {
                   {item.name?.toUpperCase()}
                 </Text>
                 <Text
+                  numberOfLines={2}
                   style={[
                     styles().fs11,
                     styles().fontRegular,

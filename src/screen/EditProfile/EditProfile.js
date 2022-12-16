@@ -163,7 +163,7 @@ export default function EditProfile(props) {
           ) : (
             <Text
               style={{
-                fontSize: 35,
+                fontSize: 50,
                 fontWeight: "bold",
                 color: currentTheme.themeBackground,
               }}

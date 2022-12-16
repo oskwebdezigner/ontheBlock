@@ -44,7 +44,7 @@ export default function AddTask(props) {
   const INVENTORIES = gql`
     ${inventories}
   `;
-  //   console.log("schedule task ====>", task);
+  // console.log("schedule task ====>", task);
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
   const [invenetory, setInvenetory] = useState("");
@@ -75,6 +75,14 @@ export default function AddTask(props) {
 
   const { loading, error, data, refetch } = useQuery(HANDYMEN, {
     fetchPolicy: "cache-and-network",
+    variables: {
+      filters: {
+        property: task?._id,
+      },
+      options: {
+        limit: 1000,
+      },
+    },
     onCompleted: ({ handymen }) => {
       // console.log("handymen res :", handymen.results);
     },
@@ -92,6 +100,7 @@ export default function AddTask(props) {
   async function onCompleted(data) {
     try {
       FlashMessage({ msg: "Task Added!", type: "success" });
+      props.navigation.navigate("SinglePropertyListing");
       console.log("addTask res :", data.addTask);
       setLoading(false);
     } catch (e) {
@@ -116,7 +125,6 @@ export default function AddTask(props) {
   let person = data?.handymen?.results?.find((item) => {
     return item._id === handyman;
   });
-
   const getSelectedDayEvents = (date) => {
     let markedDates = {};
     markedDates[date] = {
@@ -142,27 +150,61 @@ export default function AddTask(props) {
   };
 
   async function Addtask() {
-    setLoading(true);
-    let data = {
-      inputTask: {
-        added_by: user._id,
-        assign_to: handyman,
-        description: MaintenanceDesc,
-        get_notifications: NotificationCheck,
-        inventory: invenetory,
-        property: task._id,
-        schedule_date: schedule_dates.selectedDate,
-      },
-    };
-    console.log("add data :", data);
-    await mutate({
-      variables: data,
-    });
+    let status = true;
+    if (handyman === "") {
+      FlashMessage({ msg: "Select Handmen!", type: "warning" });
+      status = false;
+      return;
+    }
+    if (MaintenanceDesc === "") {
+      FlashMessage({ msg: "Enter Task Description!", type: "warning" });
+      status = false;
+      return;
+    }
+    if (schedule_dates.selectedDate === "") {
+      FlashMessage({ msg: "Select Task Date!", type: "warning" });
+      status = false;
+      return;
+    }
+    if (status) {
+      setLoading(true);
+      let data = {
+        inputTask: {
+          added_by: user._id,
+          assign_to: handyman,
+          description: MaintenanceDesc,
+          get_notifications: NotificationCheck,
+          inventory: invenetory,
+          property: task._id,
+          schedule_date: schedule_dates.selectedDate,
+        },
+      };
+      let todo = {
+        inputTask: {
+          added_by: user._id,
+          assign_to: handyman,
+          description: MaintenanceDesc,
+          get_notifications: NotificationCheck,
+          property: task._id,
+          schedule_date: schedule_dates.selectedDate,
+        },
+      };
+      console.log("add data :", data);
+      await mutate({
+        variables: invenetory ? data : todo,
+      });
+    }
   }
-  let inv = inventoryData?.inventories?.results?.find((item) => {
+  let invData = [
+    ...inventoryData?.inventories?.results,
+    { name: "Todo", _id: "" },
+  ];
+
+  let inv = invData?.find((item) => {
     return item._id === invenetory;
   });
-  
+
+  // console.log(invData);
   return (
     <Layout
       navigation={props.navigation}
@@ -170,7 +212,11 @@ export default function AddTask(props) {
       withoutScroll={true}
       pagetitle={"Add Task"}
     >
-      <KeyboardAvoidingView style={styles().flex}>
+      <KeyboardAvoidingView
+        style={styles().flex}
+        behavior={Platform.OS == "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={70}
+      >
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={[styles().flex, styles().mt30, styles().pall5]}>
             <View
@@ -245,10 +291,11 @@ export default function AddTask(props) {
                   { color: currentTheme.textColor },
                 ]}
               >
-                What type of maintenance
+                {/* What type of maintenance */}
+                Maintenance Item
               </Text>
               <Multiselect
-                ListItems={inventoryData?.inventories?.results}
+                ListItems={invData}
                 SelectText={inv?.name}
                 value={invenetory}
                 setValue={(e) => setInvenetory(e[0])}
@@ -360,35 +407,35 @@ export default function AddTask(props) {
                 </TouchableOpacity>
               </View>
             </View>
-            {AssignTask === "Yes" ? (
-              <View
+            {/* {AssignTask === "Yes" ? ( */}
+            <View
+              style={[
+                styles().mt30,
+                styles().h60px,
+                styles().br10,
+                styles().bw1,
+                { borderColor: currentTheme.cEFEFEF },
+              ]}
+            >
+              <Text
                 style={[
-                  styles().mt30,
-                  styles().h60px,
-                  styles().br10,
-                  styles().bw1,
-                  { borderColor: currentTheme.cEFEFEF },
+                  styles().ml15,
+                  styles().mt5,
+                  styles().fs12,
+                  styles().fw400,
+                  { color: currentTheme.textColor },
                 ]}
               >
-                <Text
-                  style={[
-                    styles().ml15,
-                    styles().mt5,
-                    styles().fs12,
-                    styles().fw400,
-                    { color: currentTheme.textColor },
-                  ]}
-                >
-                  Handymen's
-                </Text>
-                <Multiselect
-                  ListItems={data?.handymen?.results}
-                  SelectText={person?.name}
-                  value={handyman}
-                  setValue={(e) => setHandyman(e[0])}
-                />
-              </View>
-            ) : null}
+                Handymen's
+              </Text>
+              <Multiselect
+                ListItems={data?.handymen?.results}
+                SelectText={person?.name}
+                value={handyman}
+                setValue={(e) => setHandyman(e[0])}
+              />
+            </View>
+            {/* ) : null} */}
             {/* <View style={styles().mt15}>
               <TextField
                 keyboardType="default"

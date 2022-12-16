@@ -214,7 +214,7 @@ export default function HandymenEdit(props) {
 
         <View style={styles().mt15}>
           <TextField
-            keyboardType="default"
+            keyboardType="numeric"
             onChangeText={(e) => {
               setPersonPhoneError(false);
               setPersonPhone(e);

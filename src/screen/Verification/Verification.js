@@ -42,7 +42,7 @@ const SEND_PHONE_CODE_RESEND = gql`
 
 const CELL_COUNT = 6;
 export default function Verification(props) {
-  let { user, goal, forgot_email } = props?.route?.params;
+  let { user, goal, forgot_email, email } = props?.route?.params;
   //   console.log(props.route.params);
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
@@ -191,7 +191,7 @@ export default function Verification(props) {
         <View style={[styles().w150px, styles().h100px]}>
           <Image
             source={require("../../assets/images/logo.png")}
-            resizeMode="cover"
+            resizeMode="contain"
             style={styles().wh100}
           />
         </View>
@@ -214,7 +214,6 @@ export default function Verification(props) {
                 { color: currentTheme.themeBackground },
               ]}
             >
-              {" "}
               Verification
             </Text>
           </Text>
@@ -225,7 +224,9 @@ export default function Verification(props) {
               styles().fs14,
             ]}
           >
-            {`Please enter 6 digit code send to your phone number ${user?.phone}`}
+            {`Please enter 6 digit code send to your ${
+              forgot_email ? "Email" : "phone number"
+            } ${forgot_email ? email : user?.phone}`}
           </Text>
         </View>
 

@@ -49,6 +49,7 @@ export default function ForgotPassword(props) {
       // FlashMessage({ msg: "OTP sent!", type: "success" });
       props.navigation.navigate("Verification", {
         forgot_email: PhoneNumber.trim().toLowerCase(),
+        email: PhoneNumber.toLowerCase().trim(),
       });
       setLoading(false);
     } catch (e) {
@@ -61,7 +62,7 @@ export default function ForgotPassword(props) {
 
   function onError(error) {
     setLoading(false);
-     FlashMessage({ msg: error?.message?.toString(), type: "danger" });
+    FlashMessage({ msg: error?.message?.toString(), type: "danger" });
     console.log("forgotPassword error :", error);
   }
 
@@ -98,7 +99,7 @@ export default function ForgotPassword(props) {
         <View style={[styles().w150px, styles().h100px]}>
           <Image
             source={require("../../assets/images/logo.png")}
-            resizeMode="cover"
+            resizeMode="contain"
             style={styles().wh100}
           />
         </View>
