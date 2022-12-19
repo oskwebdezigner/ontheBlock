@@ -295,7 +295,7 @@ export default function Home(props) {
                               { color: currentTheme.black },
                             ]}
                           >
-                            {item.name.toUpperCase()}
+                            {item?.name?.toUpperCase()}
                           </Text>
                           <View
                             style={[
@@ -327,10 +327,8 @@ export default function Home(props) {
                     }}
                     keyExtractor={(item, index) => index.toString()}
                   />
-                </View>
-              ) : (
-                <Text>hello</Text>
-              )}
+                </View> 
+              ) : null}
 
               {/* <View
                 style={[

@@ -40,7 +40,7 @@ export default function MaintenaceDetail(props) {
     ${updateTask}
   `;
   const item = props.route.params.maintenance;
-  console.log("task >>>>>>", item);
+  console.log("task >>>>>>", item.get_notifications);
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
 
@@ -330,7 +330,7 @@ export default function MaintenaceDetail(props) {
           <View style={[styles().flexRow, styles().justifyBetween]}>
             <View style={[styles().mr10, styles().wh25px, styles().overflowH]}>
               <Feather
-                name="bell-off"
+                name={item?.get_notifications ? "bell" : "bell-off"}
                 size={20}
                 color={currentTheme.SliderDots}
               />
@@ -404,12 +404,12 @@ export default function MaintenaceDetail(props) {
             <Text
               style={{
                 color: item?.is_completed
-                  ? currentTheme.yellow
-                  : currentTheme.lightRed,
+                  ? currentTheme.green
+                  : currentTheme.yellow,
                 fontSize: 12,
               }}
             >
-              {item?.is_completed ? "Completed" : "Not Completed"}
+              {item?.is_completed ? "Completed" : "Pending"}
             </Text>
           </View>
           <Text

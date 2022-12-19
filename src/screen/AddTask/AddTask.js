@@ -167,6 +167,7 @@ export default function AddTask(props) {
       return;
     }
     if (status) {
+      console.log("isInventory:", invenetory);
       setLoading(true);
       let data = {
         inputTask: {
@@ -195,15 +196,15 @@ export default function AddTask(props) {
       });
     }
   }
-  let invData = [
-    ...inventoryData?.inventories?.results,
-    { name: "Todo", _id: "" },
-  ];
+  // let invData = [
+  //   ...inventoryData?.inventories?.results,
+  //   { name: "Todo", _id: "" },
+  // ];
 
-  let inv = invData?.find((item) => {
+  let todo = [{ name: "Todo", _id: "" }];
+  let inv = inventoryData?.inventories?.results?.concat(todo)?.find((item) => {
     return item._id === invenetory;
   });
-
   // console.log(invData);
   return (
     <Layout
@@ -295,10 +296,11 @@ export default function AddTask(props) {
                 Maintenance Item
               </Text>
               <Multiselect
-                ListItems={[
-                  ...inventoryData?.inventories?.results,
-                  { name: "Todo", _id: "" },
-                ]}
+                ListItems={inventoryData?.inventories?.results.concat(todo)}
+                // ListItems={[
+                //   ...inventoryData?.inventories?.results,
+                //   { name: "Todo", _id: "" },
+                // ]}
                 SelectText={inv?.name}
                 value={invenetory}
                 setValue={(e) => setInvenetory(e[0])}

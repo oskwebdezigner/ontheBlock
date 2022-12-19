@@ -102,7 +102,7 @@ export default function Header(props) {
         ) : (
           <Text
             style={{
-              fontSize: 14,
+              fontSize: 20,
               color: currentTheme.themeBackground,
               fontWeight: "bold",
             }}

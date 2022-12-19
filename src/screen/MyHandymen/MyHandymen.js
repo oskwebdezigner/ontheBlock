@@ -231,7 +231,7 @@ export default function HandymenEdit(props) {
                     fontSize: 14,
                   }}
                 >
-                  No Handmens
+                  No Handypersons
                 </Text>
               </View>
             );
