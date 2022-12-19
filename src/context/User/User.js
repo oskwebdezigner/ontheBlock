@@ -4,6 +4,7 @@ import { gql, useQuery } from "@apollo/client";
 import { profile } from "../../apollo/server";
 import { AuthContext } from "../Auth/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ErrorHandler } from "../../Component/ErrorHandler/ErrorHandler";
 
 const PROFILE = gql`
   ${profile}
@@ -31,11 +32,9 @@ export const UserProvider = (props) => {
     onCompleted: (res) => {
       // console.log("user profile res :", res);
     },
-    onError: (err) => {
+    onError: async (err) => {
       console.log("user profile error :", err.message);
-      // AsyncStorage.clear().then(() => {
-      //   console.log("async clear from user context");
-      // });
+      await ErrorHandler(err.message);
     },
   });
 

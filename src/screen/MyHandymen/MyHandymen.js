@@ -244,7 +244,7 @@ export default function HandymenEdit(props) {
                 property: property,
               })
             }
-            Title={"Add New Handymen"}
+            Title={"Add New Handyperson"}
           />
         </View>
       </View>

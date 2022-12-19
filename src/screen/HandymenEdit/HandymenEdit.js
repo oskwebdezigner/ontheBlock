@@ -151,7 +151,7 @@ export default function HandymenEdit(props) {
       navigation={props.navigation}
       LeftIcon={true}
       withoutScroll={true}
-      pagetitle={isEdit ? "Update Handymen" : "Handymen Details"}
+      pagetitle={isEdit ? "Update Handyperson" : "Handyperson Details"}
     >
       <View style={styles().flex}>
         {/* <View

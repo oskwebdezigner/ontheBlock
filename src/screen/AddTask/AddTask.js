@@ -295,7 +295,10 @@ export default function AddTask(props) {
                 Maintenance Item
               </Text>
               <Multiselect
-                ListItems={invData}
+                ListItems={[
+                  ...inventoryData?.inventories?.results,
+                  { name: "Todo", _id: "" },
+                ]}
                 SelectText={inv?.name}
                 value={invenetory}
                 setValue={(e) => setInvenetory(e[0])}
