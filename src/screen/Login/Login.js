@@ -153,10 +153,10 @@ export default function Login(props) {
 
   return (
     <AuthLayout navigation={props.navigation}>
-      <View style={[styles().w150px, styles().h100px]}>
+      <View style={[styles().w150px, styles().h110px]}>
         <Image
           source={require("../../assets/images/logo.png")}
-          resizeMode="contain"
+          resizeMode="cover"
           style={styles().wh100}
         />
       </View>

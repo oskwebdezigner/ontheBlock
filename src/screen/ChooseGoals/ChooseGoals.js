@@ -48,7 +48,7 @@ export default function ChooseGoals(props) {
   // if (error) return alert("Something Went Wrong While Choosing Goals!");
   return (
     <AuthLayout navigation={props.navigation} withoutScroll={true}>
-      <View style={[styles().w150px, styles().h100px]}>
+      <View style={[styles().w150px, styles().h110px]}>
         <Image
           source={require("../../assets/images/logo.png")}
           resizeMode="cover"

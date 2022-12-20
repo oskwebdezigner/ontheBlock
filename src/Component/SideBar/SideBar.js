@@ -128,6 +128,7 @@ export default function SideBar(props) {
                       resizeMode={"contain"}
                     />
                   </View>
+                  <View>
                   <Text
                     style={[
                       styles().fs13,
@@ -142,6 +143,10 @@ export default function SideBar(props) {
                   >
                     {item.name}
                   </Text>
+                  {item.name === "Finance" && (
+                    <Text style={[styles().fs10, styles().fw400, {color:currentTheme.BCBCBC}]}>Feature coming soon</Text>
+                  )}
+                  </View>
                   {item.name === "Notifications" && (
                     <View style={[styles().flex, styles().alignEnd]}>
                       <Switch

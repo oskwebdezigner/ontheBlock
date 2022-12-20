@@ -167,15 +167,15 @@ export default function TellAboutYourself(props) {
   console.log(PhoneNumber);
   return (
     <AuthLayout withoutScroll={true} navigation={props.navigation}>
-      <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={50}>
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={50}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={[styles().w150px, styles().h100px]}>
+          <View style={[styles().w150px, styles().h110px]}>
             <Image
               source={require("../../assets/images/logo.png")}
-              resizeMode="contain"
+              resizeMode="cover"
               style={styles().wh100}
             />
-          </View>
+        </View>
 
           <View style={[styles().mt25, styles().mb15]}>
             <Text

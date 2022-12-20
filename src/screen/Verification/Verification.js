@@ -188,12 +188,12 @@ export default function Verification(props) {
   return (
     <AuthLayout navigation={props.navigation}>
       <View style={styles().flex}>
-        <View style={[styles().w150px, styles().h100px]}>
-          <Image
-            source={require("../../assets/images/logo.png")}
-            resizeMode="contain"
-            style={styles().wh100}
-          />
+        <View style={[styles().w150px, styles().h110px]}>
+            <Image
+              source={require("../../assets/images/logo.png")}
+              resizeMode="cover"
+              style={styles().wh100}
+            />
         </View>
 
         <View style={[styles().mt25]}>
