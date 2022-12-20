@@ -223,7 +223,7 @@ export default function Login(props) {
             <TextField
               keyboardType="default"
               value={UserName}
-              label="Email"
+              label="Email/Phone"
               errorText={UserError}
               autoCapitalize="none"
               style
