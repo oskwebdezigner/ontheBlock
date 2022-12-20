@@ -94,10 +94,10 @@ export default function CreatePassword(props) {
   return (
     <AuthLayout navigation={props.navigation}>
       <View style={styles().flex}>
-        <View style={[styles().w150px, styles().h100px]}>
+        <View style={[styles().w150px, styles().h110px]}>
           <Image
             source={require("../../assets/images/logo.png")}
-            resizeMode="contain"
+            resizeMode="cover"
             style={styles().wh100}
           />
         </View>
@@ -110,7 +110,7 @@ export default function CreatePassword(props) {
               { color: currentTheme.black },
             ]}
           >
-            Create Your
+            Create Your{" "}
             <Text
               style={[
                 styles().fs24,

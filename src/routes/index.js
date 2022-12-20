@@ -55,6 +55,8 @@ import MyProperties from "../screen/MyProperties/MyProperties";
 import MyStuff from "../screen/MyStuff/MyStuff";
 import MyDocuments from "../screen/MyDocuments.js/MyDocuments";
 import CreateProperty from "../screen/CreateProperty/CreateProperty";
+import UpcommingMaintenance from "../screen/UpcommingMaintenance/UpcommingMaintenance";
+import MyNotifications from "../screen/Notifications/Notifications";
 
 // Auth Stack
 import LandingScreen from "../screen/Landing/Landing";
@@ -177,6 +179,11 @@ function HomeNavigator() {
       <HomeStack.Screen name="ProductDetail" component={ProductDetail} />
       <HomeStack.Screen name="EditProfile" component={EditProfile} />
       <HomeStack.Screen name="CreateProperty" component={CreateProperty} />
+      <HomeStack.Screen name="MyNotifications" component={MyNotifications} />
+      <HomeStack.Screen
+        name="UpcommingMaintenance"
+        component={UpcommingMaintenance}
+      />
     </HomeStack.Navigator>
   );
 }

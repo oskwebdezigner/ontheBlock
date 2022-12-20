@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   View,
   Image,
+  KeyboardAvoidingView,
+  ScrollView,
 } from "react-native";
 import ThemeContext from "../../context/ThemeContext/ThemeContext";
 import { theme } from "../../context/ThemeContext/ThemeColor";
@@ -34,9 +36,12 @@ import FlashMessage from "../../Component/FlashMessage/FlashMessage";
 import Spinner from "../../Component/Spinner/Spinner";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Notifications from "expo-notifications";
+import getEnvVars from "../../../environment";
+import * as Google from "expo-google-app-auth";
 
 const { width, height } = Dimensions.get("window");
 
+const { ANDROID_CLIENT_ID_GOOGLE, IOS_CLIENT_ID_GOOGLE } = getEnvVars();
 export default function Login(props) {
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
@@ -147,206 +152,243 @@ export default function Login(props) {
     }
   }
 
+  async function GoogleSignup() {
+    try {
+      console.log("ANDROID_CLIENT_ID_GOOGLE", ANDROID_CLIENT_ID_GOOGLE);
+      console.log("IOS_CLIENT_ID_GOOGLE", IOS_CLIENT_ID_GOOGLE);
+      const { type, accessToken, user } = await Google.logInAsync({
+        iosClientId: IOS_CLIENT_ID_GOOGLE,
+        androidClientId: ANDROID_CLIENT_ID_GOOGLE,
+        iosStandaloneAppClientId: IOS_CLIENT_ID_GOOGLE,
+        androidStandaloneAppClientId: ANDROID_CLIENT_ID_GOOGLE,
+      });
+      // console.log("accessToken",accessToken);
+      console.log("user", user);
+
+      if (type === "success") {
+        console.log("TYPE:", type, "ACCESS_TOKEN:", accessToken, "USER:", user);
+        // / `accessToken` is now valid and can be used to get data from the Google API with HTTP requests /;
+        return user;
+      } else {
+        return false;
+      }
+    } catch (err) {
+      console.log("error arha", err);
+    }
+  }
+
   useEffect(() => {
     permissionForPushNotificationsAsync();
   }, []);
 
   return (
-    <AuthLayout navigation={props.navigation}>
-      <View style={[styles().w150px, styles().h110px]}>
-        <Image
-          source={require("../../assets/images/logo.png")}
-          resizeMode="cover"
-          style={styles().wh100}
-        />
-      </View>
+    <AuthLayout withoutScroll={true} navigation={props.navigation}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={50}
+      >
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View style={[styles().w150px, styles().h110px]}>
+            <Image
+              source={require("../../assets/images/logo.png")}
+              resizeMode="cover"
+              style={styles().wh100}
+            />
+          </View>
 
-      <View style={[styles().mt25, styles().mb35]}>
-        <Text
-          style={[
-            styles().fs20,
-            styles().fontSemibold,
-            styles().lh30,
-            styles().fw600,
-            { color: currentTheme.themeBackground },
-          ]}
-        >
-          Howdy,
-        </Text>
-        <Text
-          style={[
-            styles().fs20,
-            styles().fontRegular,
-            { color: currentTheme.black },
-          ]}
-        >
-          Welcome Home
-        </Text>
-      </View>
-
-      <View style={styles().mb20}>
-        <TextField
-          keyboardType="default"
-          value={UserName}
-          label="Email"
-          errorText={UserError}
-          autoCapitalize="none"
-          style
-          onChangeText={(text) => {
-            setUserError(false);
-            SetUserName(text);
-          }}
-        />
-      </View>
-
-      <View style={[styles().mb25]}>
-        <TextField
-          secureTextEntry={ConfirmiconEye === "eye" ? false : true}
-          childrenPassword={
-            <TouchableOpacity
-              onPress={onChangeIconConfirm.bind()}
-              style={[styles().passEye]}
+          <View style={[styles().mt25, styles().mb35]}>
+            <Text
+              style={[
+                styles().fs20,
+                styles().fontSemibold,
+                styles().lh30,
+                styles().fw600,
+                { color: currentTheme.themeBackground },
+              ]}
             >
-              <FontAwesome
-                name={ConfirmiconEye}
-                size={16}
-                color={currentTheme.textColor}
+              Howdy,
+            </Text>
+            <Text
+              style={[
+                styles().fs20,
+                styles().fontRegular,
+                { color: currentTheme.black },
+              ]}
+            >
+              Welcome Home
+            </Text>
+          </View>
+
+          <View style={styles().mb20}>
+            <TextField
+              keyboardType="default"
+              value={UserName}
+              label="Email"
+              errorText={UserError}
+              autoCapitalize="none"
+              style
+              onChangeText={(text) => {
+                setUserError(false);
+                SetUserName(text);
+              }}
+            />
+          </View>
+
+          <View style={[styles().mb25]}>
+            <TextField
+              secureTextEntry={ConfirmiconEye === "eye" ? false : true}
+              childrenPassword={
+                <TouchableOpacity
+                  onPress={onChangeIconConfirm.bind()}
+                  style={[styles().passEye]}
+                >
+                  <FontAwesome
+                    name={ConfirmiconEye}
+                    size={16}
+                    color={currentTheme.textColor}
+                  />
+                </TouchableOpacity>
+              }
+              keyboardType="default"
+              onChangeText={(e) => {
+                setPasswordError(false);
+                SetPassword(e);
+              }}
+              value={Password}
+              label="Password"
+              errorText={passError}
+              autoCapitalize="none"
+              style
+            />
+          </View>
+          <TouchableOpacity
+            onPress={() => props.navigation.navigate("ForgotPassword")}
+            style={[styles().alignEnd]}
+          >
+            <Text
+              style={[
+                styles().fs13,
+                styles().fontRegular,
+                styles().textDecorationUnderline,
+                { color: currentTheme.textColor },
+              ]}
+            >
+              {"Forget Password?"}
+            </Text>
+          </TouchableOpacity>
+
+          <View style={[styles().mt20]}>
+            {Loading ? (
+              <Spinner />
+            ) : (
+              <ThemeButton
+                Title={"Sign in"}
+                // onPress={()=>
+                //   {
+                //     if(validate()){
+                //       // console.log('asd')
+                //       props.navigation.dispatch(
+                //         CommonActions.reset({
+                //           index:0, routes:[{name:'Home'}]
+                //         })
+                //         )
+                //     }
+                //   }
+                // }
+                onPress={() => Login()}
               />
+            )}
+          </View>
+
+          <View
+            style={[
+              styles().flexRow,
+              styles().mv25,
+              styles().justifyBetween,
+              styles().alignCenter,
+            ]}
+          >
+            <View
+              style={[
+                styles().flex,
+                { height: 2, backgroundColor: currentTheme.cEFEFEF },
+              ]}
+            />
+            <Text
+              style={[
+                styles().fs12,
+                styles().mh20,
+                styles().fontRegular,
+                { color: currentTheme.textColor },
+              ]}
+            >
+              Or Sign in with
+            </Text>
+            <View
+              style={[
+                styles().flex,
+                { height: 2, backgroundColor: currentTheme.cEFEFEF },
+              ]}
+            />
+          </View>
+
+          <View style={styles().mb25}>
+            <TouchableOpacity
+              onPress={() => GoogleSignup()}
+              style={[
+                styles().bw1,
+                styles().br50,
+                styles().h50px,
+                styles().alignCenter,
+                styles().justifyCenter,
+              ]}
+            >
+              <Text
+                style={[
+                  styles().fs14,
+                  styles().fontRegular,
+                  styles().lh30,
+                  { color: currentTheme.black },
+                ]}
+              >
+                Sign in with Google
+              </Text>
             </TouchableOpacity>
-          }
-          keyboardType="default"
-          onChangeText={(e) => {
-            setPasswordError(false);
-            SetPassword(e);
-          }}
-          value={Password}
-          label="Password"
-          errorText={passError}
-          autoCapitalize="none"
-          style
-        />
-      </View>
-      <TouchableOpacity
-        onPress={() => props.navigation.navigate("ForgotPassword")}
-        style={[styles().alignEnd]}
-      >
-        <Text
-          style={[
-            styles().fs13,
-            styles().fontRegular,
-            styles().textDecorationUnderline,
-            { color: currentTheme.textColor },
-          ]}
-        >
-          {"Forget Password?"}
-        </Text>
-      </TouchableOpacity>
+          </View>
 
-      <View style={[styles().mt20]}>
-        {Loading ? (
-          <Spinner />
-        ) : (
-          <ThemeButton
-            Title={"Sign in"}
-            // onPress={()=>
-            //   {
-            //     if(validate()){
-            //       // console.log('asd')
-            //       props.navigation.dispatch(
-            //         CommonActions.reset({
-            //           index:0, routes:[{name:'Home'}]
-            //         })
-            //         )
-            //     }
-            //   }
-            // }
-            onPress={() => Login()}
-          />
-        )}
-      </View>
-
-      <View
-        style={[
-          styles().flexRow,
-          styles().mv25,
-          styles().justifyBetween,
-          styles().alignCenter,
-        ]}
-      >
-        <View
-          style={[
-            styles().flex,
-            { height: 2, backgroundColor: currentTheme.cEFEFEF },
-          ]}
-        />
-        <Text
-          style={[
-            styles().fs12,
-            styles().mh20,
-            styles().fontRegular,
-            { color: currentTheme.textColor },
-          ]}
-        >
-          Or Sign in with
-        </Text>
-        <View
-          style={[
-            styles().flex,
-            { height: 2, backgroundColor: currentTheme.cEFEFEF },
-          ]}
-        />
-      </View>
-
-      <View style={styles().mb25}>
-        <TouchableOpacity
-          style={[
-            styles().bw1,
-            styles().br50,
-            styles().h50px,
-            styles().alignCenter,
-            styles().justifyCenter,
-          ]}
-        >
-          <Text
+          <View
             style={[
-              styles().fs14,
-              styles().fontRegular,
-              styles().lh30,
-              { color: currentTheme.black },
+              styles().flexRow,
+              styles().justifyCenter,
+              styles().alignCenter,
             ]}
           >
-            Sign in with Google
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      <View
-        style={[styles().flexRow, styles().justifyCenter, styles().alignCenter]}
-      >
-        <Text
-          style={[
-            styles().fs12,
-            styles().fontRegular,
-            { color: currentTheme.lightBlue },
-          ]}
-        >
-          Dont Have an account ?{" "}
-        </Text>
-        <TouchableOpacity
-          onPress={() => props.navigation.navigate("LetsBegin")}
-        >
-          <Text
-            style={[
-              styles().fs12,
-              styles().fontSemibold,
-              styles().fw600,
-              { color: currentTheme.themeBackground },
-            ]}
-          >
-            Sign up
-          </Text>
-        </TouchableOpacity>
-      </View>
+            <Text
+              style={[
+                styles().fs12,
+                styles().fontRegular,
+                { color: currentTheme.lightBlue },
+              ]}
+            >
+              Dont Have an account ?{" "}
+            </Text>
+            <TouchableOpacity
+              onPress={() => props.navigation.navigate("LetsBegin")}
+            >
+              <Text
+                style={[
+                  styles().fs12,
+                  styles().fontSemibold,
+                  styles().fw600,
+                  { color: currentTheme.themeBackground },
+                ]}
+              >
+                Sign up
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </AuthLayout>
   );
 }

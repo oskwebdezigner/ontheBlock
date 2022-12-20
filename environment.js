@@ -15,9 +15,9 @@ const ENV = {
     // SERVER_URL: "http://3.209.162.153:8080/v1/user/getToken", // put / at the end of server url
     SERVER_URL: "https://node.hostingladz.com:3022/v1/user/getToken", // put / at the end of server url
     IOS_CLIENT_ID_GOOGLE:
-      "610317069220-b4a6kojq20ju7u9gj7mpn1suno0rf61v.apps.googleusercontent.com",
+      "759165704704-qc5hfbe54r5mupj4018qnec7p99bb610.apps.googleusercontent.com",
     ANDROID_CLIENT_ID_GOOGLE:
-      "610317069220-2uu46c87tsot7281185koto46gqjhalm.apps.googleusercontent.com",
+      "759165704704-gfu1bq2eh3da1kvqjb8eq751h810mmt5.apps.googleusercontent.com",
     FACEBOOK_APP_ID:
       "610317069220-2uu46c87tsot7281185koto46gqjhalm.apps.googleusercontent.com",
   },

@@ -65,13 +65,18 @@ export default function Header(props) {
 
   function NotiIcon() {
     return (
-      <View style={[styles().mr10, styles().wh25px, styles().overflowH]}>
+      <TouchableOpacity
+        onPress={() => {
+          props.navigation.navigate("MyNotifications");
+        }}
+        style={[styles().mr10, styles().wh25px, styles().overflowH]}
+      >
         <Image
           source={require("../../assets/images/bell-icon.png")}
           style={styles().wh100}
           resizeMode="contain"
         />
-      </View>
+      </TouchableOpacity>
     );
   }
 

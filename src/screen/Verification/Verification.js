@@ -189,11 +189,11 @@ export default function Verification(props) {
     <AuthLayout navigation={props.navigation}>
       <View style={styles().flex}>
         <View style={[styles().w150px, styles().h110px]}>
-            <Image
-              source={require("../../assets/images/logo.png")}
-              resizeMode="cover"
-              style={styles().wh100}
-            />
+          <Image
+            source={require("../../assets/images/logo.png")}
+            resizeMode="cover"
+            style={styles().wh100}
+          />
         </View>
 
         <View style={[styles().mt25]}>
@@ -204,7 +204,7 @@ export default function Verification(props) {
               { color: currentTheme.black },
             ]}
           >
-            Phone
+            Phone{" "}
             <Text
               style={[
                 styles().fs24,

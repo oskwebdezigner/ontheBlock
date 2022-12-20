@@ -81,7 +81,7 @@ export default function Home(props) {
   } = useQuery(UPCOMING_TASK_LIST, {
     variables: {
       options: {
-        limit: 1000,
+        limit: 10,
       },
     },
     fetchPolicy: "cache-and-network",
@@ -327,7 +327,7 @@ export default function Home(props) {
                     }}
                     keyExtractor={(item, index) => index.toString()}
                   />
-                </View> 
+                </View>
               ) : null}
 
               {/* <View
@@ -564,7 +564,11 @@ export default function Home(props) {
                 >
                   Upcoming Maintenance
                 </Text>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    props.navigation.navigate("UpcommingMaintenance");
+                  }}
+                >
                   <Text
                     style={[
                       styles().fs14,

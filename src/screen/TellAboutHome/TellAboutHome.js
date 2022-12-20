@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
   Image,
+  ScrollView,
 } from "react-native";
 import ThemeContext from "../../context/ThemeContext/ThemeContext";
 import { theme } from "../../context/ThemeContext/ThemeColor";
@@ -160,182 +161,204 @@ export default function TellAboutHome(props) {
     }
   }
   return (
-    <AuthLayout navigation={props.navigation}>
-      <View style={styles().flex}>
-        <View style={[styles().w150px, styles().h110px]}>
-            <Image
-              source={require("../../assets/images/logo.png")}
-              resizeMode="cover"
-              style={styles().wh100}
-            />
-        </View>
+    <AuthLayout withoutScroll={true} navigation={props.navigation}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={50}
+      >
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View style={styles().flex}>
+            <View style={[styles().w150px, styles().h110px]}>
+              <Image
+                source={require("../../assets/images/logo.png")}
+                resizeMode="cover"
+                style={styles().wh100}
+              />
+            </View>
+            <View style={[styles().mt25]}>
+              <Text
+                style={[
+                  styles().fs24,
+                  styles().fontRegular,
+                  { color: currentTheme.black },
+                ]}
+              >
+                Tell Me About
+              </Text>
+              <Text
+                style={[
+                  styles().fs24,
+                  styles().fontSemibold,
+                  styles().lh30,
+                  styles().fw600,
+                  { color: currentTheme.themeBackground },
+                ]}
+              >
+                {" "}
+                Your Home
+              </Text>
+            </View>
 
-        <View style={[styles().mt25]}>
-          <Text
-            style={[
-              styles().fs24,
-              styles().fontRegular,
-              { color: currentTheme.black },
-            ]}
-          >
-            Tell Me About
-          </Text>
-          <Text
-            style={[
-              styles().fs24,
-              styles().fontSemibold,
-              styles().lh30,
-              styles().fw600,
-              { color: currentTheme.themeBackground },
-            ]}
-          >
-            {" "}
-            Your Home
-          </Text>
-        </View>
+            <View style={styles().mt15}>
+              <TextField
+                keyboardType="default"
+                onChangeText={(e) => {
+                  setPropertyNickError(false);
+                  setPropertyNick(e);
+                }}
+                value={PropertyNick}
+                label="Property Nickname"
+                errorText={PropertyNickError}
+                autoCapitalize="none"
+                style
+              />
+            </View>
 
-        <View style={styles().mt15}>
-          <TextField
-            keyboardType="default"
-            onChangeText={(e) => {
-              setPropertyNickError(false);
-              setPropertyNick(e);
-            }}
-            value={PropertyNick}
-            label="Property Nickname"
-            errorText={PropertyNickError}
-            autoCapitalize="none"
-            style
-          />
-        </View>
-
-        <View
-          style={[
-            styles().mt15,
-            styles().h60px,
-            styles().br10,
-            styles().bw1,
-            { borderColor: currentTheme.cEFEFEF },
-          ]}
-        >
-          <Text
-            style={[
-              styles().ml15,
-              styles().mt5,
-              styles().fs12,
-              styles().fw400,
-              { color: currentTheme.textColor },
-            ]}
-          >
-            Property type
-          </Text>
-          <Multiselect
-            ListItems={property}
-            SelectText={property[0]?.name}
-            value={PropertyType}
-            setValue={setPropertyType}
-          />
-        </View>
-
-        <View style={styles().mt15}>
-          <TextField
-            keyboardType="numeric"
-            onChangeText={(e) => {
-              setBedroomsError(false);
-              setBedrooms(e);
-            }}
-            value={Bedrooms}
-            label="Bedroom(s)"
-            errorText={BedroomsError}
-            autoCapitalize="none"
-            style
-          />
-        </View>
-
-        <View style={styles().mt15}>
-          <TextField
-            keyboardType="numeric"
-            onChangeText={(e) => {
-              setBathroomError(false);
-              setBathroom(e);
-            }}
-            value={Bathroom}
-            label="Bathroom(s)"
-            errorText={BathroomError}
-            autoCapitalize="none"
-            style
-          />
-        </View>
-
-        <View
-          style={[
-            styles().mt15,
-            styles().h70px,
-            styles().br10,
-            styles().bw1,
-            { borderColor: currentTheme.cEFEFEF },
-          ]}
-        >
-          <Text
-            style={[
-              styles().ml15,
-              styles().mt5,
-              styles().mb5,
-              styles().fs12,
-              styles().fw400,
-              { color: currentTheme.textColor },
-            ]}
-          >
-            How long have you owned your home?
-          </Text>
-          <View
-            style={[
-              styles().flexRow,
-              styles().justifyCenter,
-              styles().overflowH,
-              styles().h40px,
-              styles().alignCenter,
-            ]}
-          >
-            <Slider
-              min={0}
-              max={10}
-              step={1}
-              valueOnChange={(value) => setValue(value)}
-              showValueLabels={false}
-              showRangeLabels={false}
-              knobColor={currentTheme.themeBackground}
-              knobSize={12}
-              styleSize={"small"}
-              inRangeBarColor={currentTheme.EEEEEE}
-              outOfRangeBarColor={currentTheme.EEEEEE}
-              barHeight={40}
-              containerStyle={{
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            />
-            <Text
+            <View
               style={[
-                styles().fs13,
-                styles().fontRegular,
-                styles().mr15,
-                { color: currentTheme.black },
+                styles().mt15,
+                styles().h60px,
+                styles().br10,
+                styles().bw1,
+                { borderColor: currentTheme.cEFEFEF },
               ]}
             >
-              {value}
-            </Text>
-          </View>
-        </View>
+              <Text
+                style={[
+                  styles().ml15,
+                  styles().mt5,
+                  styles().fs12,
+                  styles().fw400,
+                  { color: currentTheme.textColor },
+                ]}
+              >
+                Property type
+              </Text>
+              <Multiselect
+                ListItems={property}
+                SelectText={property[0]?.name}
+                value={PropertyType}
+                setValue={setPropertyType}
+              />
+            </View>
 
-        <View style={styles().mt15}>
-          {Loading ? (
-            <Spinner />
-          ) : (
-            <ThemeButton Title={"Create"} onPress={() => Register()} />
-          )}
-        </View>
-      </View>
+            <View style={styles().mt15}>
+              <TextField
+                keyboardType="numeric"
+                maxLength={3}
+                onChangeText={(e) => {
+                  if (e % 1 != 0) {
+                    FlashMessage({
+                      msg: "Enter a Valid Number",
+                      type: "warning",
+                    });
+                  } else {
+                    setBedroomsError(false);
+                    setBedrooms(e);
+                  }
+                }}
+                value={Bedrooms}
+                label="Bedroom(s)"
+                errorText={BedroomsError}
+                autoCapitalize="none"
+                style
+              />
+            </View>
+
+            <View style={styles().mt15}>
+              <TextField
+                keyboardType="numeric"
+                maxLength={3}
+                onChangeText={(e) => {
+                  if (e % 1 != 0) {
+                    FlashMessage({
+                      msg: "Enter a Valid Number",
+                      type: "warning",
+                    });
+                  } else {
+                    setBathroomError(false);
+                    setBathroom(e);
+                  }
+                }}
+                value={Bathroom}
+                label="Bathroom(s)"
+                errorText={BathroomError}
+                autoCapitalize="none"
+                style
+              />
+            </View>
+
+            <View
+              style={[
+                styles().mt15,
+                styles().h70px,
+                styles().br10,
+                styles().bw1,
+                { borderColor: currentTheme.cEFEFEF },
+              ]}
+            >
+              <Text
+                style={[
+                  styles().ml15,
+                  styles().mt5,
+                  styles().mb5,
+                  styles().fs12,
+                  styles().fw400,
+                  { color: currentTheme.textColor },
+                ]}
+              >
+                How long have you owned your home?
+              </Text>
+              <View
+                style={[
+                  styles().flexRow,
+                  styles().justifyCenter,
+                  styles().overflowH,
+                  styles().h40px,
+                  styles().alignCenter,
+                ]}
+              >
+                <Slider
+                  min={0}
+                  max={10}
+                  step={1}
+                  valueOnChange={(value) => setValue(value)}
+                  showValueLabels={false}
+                  showRangeLabels={false}
+                  knobColor={currentTheme.themeBackground}
+                  knobSize={12}
+                  styleSize={"small"}
+                  inRangeBarColor={currentTheme.EEEEEE}
+                  outOfRangeBarColor={currentTheme.EEEEEE}
+                  barHeight={40}
+                  containerStyle={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                />
+                <Text
+                  style={[
+                    styles().fs13,
+                    styles().fontRegular,
+                    styles().mr15,
+                    { color: currentTheme.black },
+                  ]}
+                >
+                  {value}
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles().mt15}>
+              {Loading ? (
+                <Spinner />
+              ) : (
+                <ThemeButton Title={"Create"} onPress={() => Register()} />
+              )}
+            </View>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </AuthLayout>
   );
 }
