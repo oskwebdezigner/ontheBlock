@@ -30,7 +30,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function TellAboutHome(props) {
   let { user, password, goal } = props?.route?.params;
   // console.log(user);
-  // console.log(goal._id);
+  console.log('====ye rhay goals===>',goal);
 
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
@@ -142,7 +142,7 @@ export default function TellAboutHome(props) {
           address: user?.address,
           email: user?.email,
           first_name: user?.firstName,
-          goals: goal?._id,
+          goals: goal,
           last_name: user?.lastName,
           password: password,
           phone: user?.phone,

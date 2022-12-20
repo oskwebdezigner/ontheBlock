@@ -21,6 +21,7 @@ import gql from "graphql-tag";
 import { goals } from "../../apollo/server";
 import Spinner from "../../Component/Spinner/Spinner";
 import Loader from "../../Component/Loader/Loader";
+import FlashMessage from "../../Component/FlashMessage/FlashMessage";
 
 export default function ChooseGoals(props) {
   const { width, height } = Dimensions.get("window");
@@ -28,6 +29,7 @@ export default function ChooseGoals(props) {
   const currentTheme = theme[themeContext.ThemeValue];
   const [goal, SetGoal] = useState(false);
   const [topgoals, setTopgoals] = useState("");
+  const [selectedGoals, setSelectedGoals] = useState([]);
 
   const GOALS = gql`
     ${goals}
@@ -36,7 +38,7 @@ export default function ChooseGoals(props) {
   const { loading, error, data, refetch } = useQuery(GOALS, {
     fetchPolicy: "cache-and-network",
     onCompleted: ({ goals }) => {
-      console.log("goals res :", goals.results);
+      // console.log("goals res :", goals.results);
       setTopgoals(goals.results);
     },
     onError: (err) => {
@@ -45,6 +47,7 @@ export default function ChooseGoals(props) {
   });
 
   if (loading) return <Loader loading={true} />;
+  console.log("selectedGoals====>", selectedGoals);
   // if (error) return alert("Something Went Wrong While Choosing Goals!");
   return (
     <AuthLayout navigation={props.navigation} withoutScroll={true}>
@@ -72,7 +75,7 @@ export default function ChooseGoals(props) {
               styles().fontSemibold,
               styles().lh30,
               styles().fw600,
-              { color: currentTheme.themeBackground,  },
+              { color: currentTheme.themeBackground },
             ]}
           >
             Top {"\n"}Goals
@@ -90,10 +93,14 @@ export default function ChooseGoals(props) {
               <TouchableOpacity
                 activeOpacity={0.8}
                 onPress={() => {
-                  SetGoal(index);
-                  props.navigation.navigate("TellAboutYourself", {
-                    goal: item,
-                  });
+                  let x = selectedGoals.indexOf(item._id);
+                  if (x === -1) {
+                    setSelectedGoals((prev) => [...prev, item._id]);
+                  } else {
+                    selectedGoals.splice(x, 1);
+                    setSelectedGoals((prev) => [...prev]);
+                  }
+                  console.log("x===>", x);
                 }}
                 style={[
                   styles().mb20,
@@ -105,10 +112,9 @@ export default function ChooseGoals(props) {
                     marginLeft: index % 2 == 0 ? 0 : width * 0.05,
                     borderTopRightRadius: 30,
                     borderBottomLeftRadius: 30,
-                    borderColor:
-                      goal === index
-                        ? currentTheme.themeBackground
-                        : currentTheme.cE5E5E5,
+                    borderColor: selectedGoals.includes(item._id)
+                      ? currentTheme.themeBackground
+                      : currentTheme.cE5E5E5,
                   },
                 ]}
               >
@@ -119,10 +125,9 @@ export default function ChooseGoals(props) {
                     styles().justifyCenter,
                     styles().br5,
                     {
-                      backgroundColor:
-                        goal === index
-                          ? currentTheme.themeBackground
-                          : currentTheme.cE5E5E5,
+                      backgroundColor: selectedGoals.includes(item._id)
+                        ? currentTheme.themeBackground
+                        : currentTheme.cE5E5E5,
                     },
                   ]}
                 >
@@ -159,6 +164,20 @@ export default function ChooseGoals(props) {
           }}
           keyExtractor={(item, index) => index.toString()}
         />
+        <View style={[styles().mb20]}>
+          <ThemeButton
+            Title={"Next"}
+            onPress={() => {
+              if (selectedGoals.length !== 0) {
+                props.navigation.navigate("TellAboutYourself", {
+                  goal: selectedGoals,
+                });
+              } else {
+                FlashMessage({ msg: "Choose Your Goals!", type: "warning" });
+              }
+            }}
+          />
+        </View>
       </View>
     </AuthLayout>
   );
