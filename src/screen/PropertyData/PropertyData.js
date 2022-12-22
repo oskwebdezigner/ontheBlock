@@ -131,21 +131,30 @@ export default function PropertyData(props) {
   };
 
   async function UpdateProperty() {
-    setLoading(true);
-    await mutate({
-      variables: {
-        updatePropertyId: property._id,
-        updatePropertyInput: {
-          name: PropertyNick,
-          type: PropertyType,
-          zip_code: Zipcode,
-          city: City,
-          country: State,
-          address: Street,
-          images: images,
+    let status = true;
+    if (PropertyNick === "") {
+      FlashMessage({ msg: "Enter Property Name!", type: "warning" });
+      setPropertyNickError(true);
+      status = false;
+      return;
+    }
+    if (status) {
+      setLoading(true);
+      await mutate({
+        variables: {
+          updatePropertyId: property._id,
+          updatePropertyInput: {
+            name: PropertyNick,
+            type: PropertyType,
+            zip_code: Zipcode,
+            city: City,
+            country: State,
+            address: Street,
+            images: images,
+          },
         },
-      },
-    });
+      });
+    }
   }
 
   useEffect(() => {

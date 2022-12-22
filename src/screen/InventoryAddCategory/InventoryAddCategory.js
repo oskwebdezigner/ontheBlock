@@ -88,7 +88,9 @@ export default function InventoryAddCategory(props) {
       },
     },
     fetchPolicy: "cache-and-network",
-    onCompleted: ({ categories }) => {},
+    onCompleted: ({ categories }) => {
+      // console.log("categories=====>", categories);
+    },
     onError: (err) => {
       console.log("error in categories :", err);
     },
@@ -153,15 +155,31 @@ export default function InventoryAddCategory(props) {
       await mutate({
         variables: {
           inputInventory: {
+            added_by: user?._id,
             brand: ItemBrand,
+            // description: null,
             images: images,
+            // is_active: null,
+            mainCatgeory: ItemCat,
             model_no: ItemModel,
             name: ItemName,
-            type: inventory_id ? inventory_id : ItemCat,
-            added_by: user._id,
             property: property?._id,
+            // serail_no: null,
+            // type: inventory_id ? inventory_id : ItemCat,
+            type:  ItemCat,
           },
         },
+        // variables: {
+        //   inputInventory: {
+        //     brand: ItemBrand,
+        //     images: images,
+        //     model_no: ItemModel,
+        //     name: ItemName,
+        //     type: inventory_id ? inventory_id : ItemCat,
+        //     added_by: user._id,
+        //     property: property?._id,
+        //   },
+        // },
       });
     }
   }
@@ -169,7 +187,7 @@ export default function InventoryAddCategory(props) {
     return item._id === ItemCat;
   });
 
-  console.log(inventory_id, ItemCat, ctg?.name, property?._id);
+  console.log(inventory_id, ItemCat);
 
   return (
     <Layout

@@ -531,16 +531,26 @@ export const getInventoryByCategory = `query GetInventoryByCategory($propertyId:
 
 export const categories = `query Categories($options: options) {
   categories(options: $options) {
-    results {
-      name
-      image
-      description
-      _id
-    }
-    page
-    limit
-    totalPages
     totalResults
+    totalPages
+    results {
+      _id
+      name
+      description
+      image
+      createdAt
+      updatedAt
+      subCategories {
+        name
+        _id
+        subCategories {
+          name
+          _id
+        }
+      }
+    }
+     limit
+    page
   }
 }`;
 
@@ -592,13 +602,22 @@ export const addFolder = `mutation AddFolder($inputFolder: InputFolder) {
 
 export const addInventory = `mutation AddInventory($inputInventory: InputInventory) {
   addInventory(inputInventory: $inputInventory) {
-    _id
-    brand
-    description
+  _id
     name
-    model_no
-    serail_no
+    type {
+      _id
+      name
+    }
     images
+    mainCatgeory {
+      _id
+      name
+      image
+    }
+    added_by {
+      _id
+      email
+    }
   }
 }`;
 
@@ -711,6 +730,10 @@ export const inventories = `query Inventories($options: options, $filters: Inven
       brand
       description
       serail_no
+        type {
+        _id
+        name
+      }
     }
      page
     limit
@@ -885,5 +908,29 @@ export const deleteProperty = `mutation DeleteProperty($deletePropertyInput: Del
       _id
       email
     }
+  }
+}`;
+
+export const notifications = `query Notifications($options: options) {
+  notifications(options: $options) {
+    results {
+      createdAt
+      image
+      seen
+      subTitle
+      task {
+        _id
+        added_by {
+          email
+        }
+      }
+      title
+      to
+      type
+    }
+    page
+    limit
+    totalPages
+    totalResults
   }
 }`;

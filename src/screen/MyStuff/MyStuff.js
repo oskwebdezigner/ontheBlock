@@ -24,9 +24,14 @@ export default function MyStuff(props) {
   const user = useContext(UserContext);
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
-
+  // console.log(user._id)
   const { loading, error, data, refetch } = useQuery(INVENTORIES, {
     fetchPolicy: "cache-and-network",
+    variables: {
+      filters: {
+        added_by: user?._id,
+      },
+    },
     onCompleted: ({ inventories }) => {
       console.log("inventories res >>>>>>>>>>>>>>>>>", inventories.results);
     },
@@ -140,7 +145,7 @@ export default function MyStuff(props) {
                   >
                     {item.name?.toUpperCase()}
                   </Text>
-                  <View
+                  {/* <View
                     style={[
                       styles().flexRow,
                       styles().alignCenter,
@@ -163,9 +168,9 @@ export default function MyStuff(props) {
                         { color: currentTheme.textColor },
                       ]}
                     >
-                      {item.address ? item.address : "No Address"}
+                      {item?.type ? item.type?.name : "No Type Selected"}
                     </Text>
-                  </View>
+                  </View> */}
                 </TouchableOpacity>
               );
             }}

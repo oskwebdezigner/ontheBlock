@@ -205,6 +205,7 @@ export default function InventoryEdit(props) {
         name: ItemName,
         serail_no: ItemSerial,
         type: ItemCat,
+        mainCatgeory: ItemCat,
         model_no: ItemModel,
         images: images,
         brand: ItemBrand,
@@ -214,7 +215,8 @@ export default function InventoryEdit(props) {
     let files = Documentfile.map((file) => {
       return file.uri;
     });
-    console.log("update data :", data, "documentfile :", files);
+
+    console.log("update data :", data);
     await mutate({
       variables: data,
     });

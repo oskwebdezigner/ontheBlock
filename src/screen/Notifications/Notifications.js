@@ -19,7 +19,7 @@ import ThemeButton from "../../Component/ThemeButton/ThemeButton";
 import UserContext from "../../context/User/User";
 import { useQuery, useMutation, useSubscription } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import { properties, upcommingTasksList } from "../../apollo/server";
+import { notifications } from "../../apollo/server";
 import Loader from "../../Component/Loader/Loader";
 import moment from "moment";
 import { useIsFocused } from "@react-navigation/native";
@@ -27,10 +27,14 @@ import { useIsFocused } from "@react-navigation/native";
 const { width, height } = Dimensions.get("window");
 
 export default function Notifications(props) {
+  const NOTIFICATIONS = gql`
+    ${notifications}
+  `;
+
   const themeContext = useContext(ThemeContext);
   const user = useContext(UserContext);
   const currentTheme = theme[themeContext.ThemeValue];
-  const [notifications, setNotifications] = useState([
+  const [Notifications, setNotifications] = useState([
     {
       type: "New",
       count: 2,
@@ -89,6 +93,22 @@ export default function Notifications(props) {
       ],
     },
   ]);
+
+  const { loading, error, data, refetch } = useQuery(NOTIFICATIONS, {
+    fetchPolicy: "cache-and-network",
+    // variables: {
+    //   options: {
+    //     // "limit": null,
+    //     page: 1,
+    //   },
+    // },
+    onCompleted: ({ notifications }) => {
+      console.log("notifications res =====>", notifications.results);
+    },
+    onError: (err) => {
+      console.log("error in notifications :", err);
+    },
+  });
 
   const style = StyleSheet.create({
     type: { flexDirection: "row", alignItems: "center", marginTop: 10 },
@@ -152,6 +172,7 @@ export default function Notifications(props) {
       //   backgroundColor: "red",
     },
   });
+  
   return (
     <Layout
       navigation={props.navigation}
@@ -163,7 +184,7 @@ export default function Notifications(props) {
       <View style={[styles().flex, { paddingLeft: width * 0.06 }]}>
         <View style={[styles().mb20, styles().mt5]}>
           <FlatList
-            data={notifications}
+            data={Notifications}
             showsVerticalScrollIndicator={false}
             renderItem={({ item, index }) => {
               return (

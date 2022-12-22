@@ -31,7 +31,6 @@
       "useNextNotificationsApi": true,
       "permissions": ["CAMERA", "LOCATION", "ACCESS_FINE_LOCATION"]
     },
-    "googleServicesFile": "./google-services.json",
     "notification": {
       "iosDisplayInForeground": true
     },

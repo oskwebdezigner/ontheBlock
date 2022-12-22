@@ -43,6 +43,7 @@ export default function InventoryCatList(props) {
   const property = props?.route?.params?.property;
   const _scrollView = useRef();
   const [page, Setpage] = useState(1);
+  const [viewImage, setViewImage] = useState("");
   const [InvModalVisible, SetInvModalVisible] = useState(false);
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
@@ -65,7 +66,7 @@ export default function InventoryCatList(props) {
     }
   );
 
-  console.log("inventory=========>", data?.getInventoryByCategory);
+  // console.log("inventory=========>", data?.getInventoryByCategory);
   function handleOnScroll(event) {
     //calculate screenIndex by contentOffset and screen width
     Setpage(
@@ -85,7 +86,7 @@ export default function InventoryCatList(props) {
       navigation={props.navigation}
       LeftIcon={true}
       withoutScroll={true}
-      pagetitle={property?.name ? property?.name.toUpperCase() : "My Stuff"}
+      pagetitle={property?.name ? property?.name?.toUpperCase() : "My Stuff"}
       style={[styles().ph0, styles().pl20, { backgroundColor: "transparent" }]}
     >
       <View style={[styles().flex]}>
@@ -96,13 +97,15 @@ export default function InventoryCatList(props) {
           bounces={false}
           renderItem={({ item, index }) => {
             // console.log("========>", item?.inventories[index]?.images[index]);
+            // console.log(`=====${index}===>`, item?.inventories);
+            // console.log(`=====${"viewimage"}===>`, viewImage);
             return (
               <View
                 key={index}
                 style={[styles().justifyBetween, styles().mb25, styles().flex]}
               >
                 <Modal
-                  animationType="slide"
+                  animationType="fade"
                   transparent={true}
                   visible={InvModalVisible}
                 >
@@ -115,7 +118,9 @@ export default function InventoryCatList(props) {
                   >
                     <TouchableOpacity
                       activeOpacity={1}
-                      onPress={() => SetInvModalVisible(!InvModalVisible)}
+                      onPress={() => {
+                        SetInvModalVisible(!InvModalVisible);
+                      }}
                       style={[
                         styles().posAbs,
                         styles().top0,
@@ -140,10 +145,10 @@ export default function InventoryCatList(props) {
                             borderRadius: 10,
                           }}
                         >
-                          {item?.inventories[index]?.images ? (
+                          {item?.inventories[index]?.images?.length !== 0 ? (
                             <Image
                               source={{
-                                uri: item?.inventories[index]?.images[index],
+                                uri: item?.inventories[viewImage]?.images[0],
                               }}
                               style={{
                                 height: "100%",
@@ -223,7 +228,7 @@ export default function InventoryCatList(props) {
                       ]}
                     >
                       <Image
-                        source={{ uri: item.category.image }}
+                        source={{ uri: item?.category?.image }}
                         resizeMode="contain"
                         style={styles().wh100}
                       />
@@ -244,7 +249,7 @@ export default function InventoryCatList(props) {
                       onPress={() =>
                         props.navigation.navigate("InventorySingleList", {
                           inventoryListing: item,
-                          category: item.category,
+                          category: item?.category,
                           property: property,
                         })
                       }
@@ -266,13 +271,24 @@ export default function InventoryCatList(props) {
                   horizontal
                   bounces={false}
                   showsHorizontalScrollIndicator={false}
-                  renderItem={({ item: InventoryCategoryTitle, index }) => {
+                  renderItem={({ item: InventoryCategoryTitle, index: i }) => {
                     return (
                       <TouchableOpacity
-                        key={index}
-                        onPress={() => SetInvModalVisible(!InvModalVisible)}
+                        key={i}
+                        onPress={() => {
+                          setViewImage(i);
+                          SetInvModalVisible(true);
+                          // console.log(
+                          //   `=====${i}===>`,
+                          //   item?.inventories[viewImage].images
+                          // );
+                        }}
                         style={[
-                          { width: width * 0.4, marginRight: width * 0.05 },
+                          {
+                            width: width * 0.4,
+                            marginRight: width * 0.03,
+                            marginLeft: 5,
+                          },
                         ]}
                       >
                         <View
@@ -287,10 +303,10 @@ export default function InventoryCatList(props) {
                             { backgroundColor: currentTheme.bodyBg },
                           ]}
                         >
-                          {InventoryCategoryTitle.images.length !== 0 ? (
+                          {InventoryCategoryTitle?.images?.length !== 0 ? (
                             <Image
                               source={{
-                                uri: InventoryCategoryTitle.images[0],
+                                uri: InventoryCategoryTitle?.images[0],
                               }}
                               resizeMode="contain"
                               style={[styles().wh100]}
@@ -338,7 +354,7 @@ export default function InventoryCatList(props) {
                             onPress={() =>
                               props.navigation.navigate("InventoryEdit", {
                                 inventory_item: InventoryCategoryTitle,
-                                category: item.category,
+                                category: item?.category,
                               })
                             }
                             style={[
@@ -380,7 +396,7 @@ export default function InventoryCatList(props) {
                                 styles(currentTheme).bgTextWhite,
                               ]}
                             >
-                              {InventoryCategoryTitle?.images.length !== 0
+                              {InventoryCategoryTitle?.images?.length !== 0
                                 ? 1
                                 : 0}
                               /
