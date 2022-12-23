@@ -76,7 +76,7 @@ export default function MyStuff(props) {
                 <TouchableOpacity
                   key={index}
                   onPress={() => {
-                    if(item.images.length > 0 ){
+                    if(item.images.length !== 0 ){
                       let babuji = []
                       item.images.map(d=>babuji.push({uri:d}))
                       

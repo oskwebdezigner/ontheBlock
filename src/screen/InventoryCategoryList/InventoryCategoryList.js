@@ -45,8 +45,7 @@ export default function InventoryCatList(props) {
   const property = props?.route?.params?.property;
   const _scrollView = useRef();
   const [page, Setpage] = useState(1);
-  const [viewImage, setViewImage] = useState("");
-  const [InvModalVisible, SetInvModalVisible] = useState(false);
+  
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
   const SliderWidth = width * 0.8;
@@ -105,7 +104,7 @@ export default function InventoryCatList(props) {
   presentationStyle={'fullScreen'}
   visible={visible}
   onRequestClose={() => setIsVisible(false)}
-/>
+/> 
       <View style={[styles().flex]}>
         <FlatList
           data={data?.getInventoryByCategory}
@@ -196,17 +195,18 @@ export default function InventoryCatList(props) {
                     return (
                       <TouchableOpacity
                         key={i}
+                        // activeOpacity={1}
                         onPress={() => {
-                          if(InventoryCategoryTitle.images.length > 0 ){
+                          if(InventoryCategoryTitle.images.length !==  0 ){
                             let babuji = []
-                          
+                            InventoryCategoryTitle.images.map(d=>babuji.push({uri:d}))
                             // console.log(InventoryCategoryTitle.images)
-                           // console.log(InventoryCategoryTitle.images.map(d=>babuji.push({uri:d})))
+                            // console.log(InventoryCategoryTitle.images.map(d=>babuji.push({uri:d})))
                             //console.log(babuji)
                             setImageLists(babuji)
-                          setViewImage(i);
+                          
                           setIsVisible(true)
-                          SetInvModalVisible(true);
+                          
                         }
                           // console.log(
                           //   `=====${i}===>`,
