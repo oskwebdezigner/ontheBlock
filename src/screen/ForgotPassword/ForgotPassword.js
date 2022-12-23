@@ -14,7 +14,7 @@ import ThemeButton from "../../Component/ThemeButton/ThemeButton";
 import { validateFunc } from "../../constraints/constraints";
 import { useIsFocused } from "@react-navigation/native";
 import { forgotPassword } from "../../apollo/server";
-import { gql, useMutation } from "@apollo/client";
+import { gql, makeVar, useMutation } from "@apollo/client";
 import Spinner from "../../Component/Spinner/Spinner";
 import FlashMessage from "../../Component/FlashMessage/FlashMessage";
 
@@ -97,11 +97,11 @@ export default function ForgotPassword(props) {
     <AuthLayout navigation={props.navigation}>
       <View style={styles().flex}>
         <View style={[styles().w150px, styles().h110px]}>
-            <Image
-              source={require("../../assets/images/logo.png")}
-              resizeMode="cover"
-              style={styles().wh100}
-            />
+          <Image
+            source={require("../../assets/images/logo.png")}
+            resizeMode="cover"
+            style={styles().wh100}
+          />
         </View>
 
         <View style={[styles().mt25]}>
@@ -127,7 +127,17 @@ export default function ForgotPassword(props) {
             </Text>
           </Text>
         </View>
-
+        <Text
+          style={[
+            styles().fontRegular,
+            { color: currentTheme.textColor, marginBottom: 10, marginTop: 10 },
+            ,
+            styles().fs14,
+          ]}
+        >
+          Enter the phone number or email address link with your account to
+          reset your password.
+        </Text>
         <View style={styles().mt10}>
           <TextField
             keyboardType="default"

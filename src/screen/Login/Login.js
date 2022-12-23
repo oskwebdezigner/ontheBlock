@@ -273,7 +273,7 @@ export default function Login(props) {
                 { color: currentTheme.textColor },
               ]}
             >
-              {"Forget Password?"}
+              {"Forgot Password?"}
             </Text>
           </TouchableOpacity>
 
@@ -370,7 +370,7 @@ export default function Login(props) {
                 { color: currentTheme.lightBlue },
               ]}
             >
-              Dont Have an account ?{" "}
+              Don't have an account?{" "}
             </Text>
             <TouchableOpacity
               onPress={() => props.navigation.navigate("LetsBegin")}

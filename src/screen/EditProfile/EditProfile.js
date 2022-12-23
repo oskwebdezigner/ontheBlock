@@ -111,18 +111,32 @@ export default function EditProfile(props) {
   }, []);
 
   async function UpdateProfile() {
-    setLoading(true);
-    mutate({
-      variables: {
-        updateUserInput: {
-          address: address,
-          first_name: fname,
-          last_name: lname,
-          notificationToken: user?.notificationToken,
-          photo: profilepic,
+    let status = true;
+    if (fname === "") {
+      FlashMessage({ msg: "Enter First Name!", type: "warning" });
+      status = false;
+      return;
+    }
+    if (lname === "") {
+      FlashMessage({ msg: "Enter Lat Name!", type: "warning" });
+      status = false;
+      return;
+    }
+
+    if (status) {
+      setLoading(true);
+      mutate({
+        variables: {
+          updateUserInput: {
+            address: address,
+            first_name: fname,
+            last_name: lname,
+            notificationToken: user?.notificationToken,
+            photo: profilepic,
+          },
         },
-      },
-    });
+      });
+    }
   }
 
   const ProfileHeader = () => {
