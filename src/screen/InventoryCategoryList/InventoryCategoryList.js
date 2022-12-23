@@ -34,6 +34,8 @@ import ThemeButton from "../../Component/ThemeButton/ThemeButton";
 import { getInventoryByCategory } from "../../apollo/server";
 import { useIsFocused } from "@react-navigation/native";
 
+import ImageView from "react-native-image-viewing";
+
 const { width, height } = Dimensions.get("window");
 
 export default function InventoryCatList(props) {
@@ -80,6 +82,11 @@ export default function InventoryCatList(props) {
     refetch();
   }, [isFocused]);
 
+  const [visible, setIsVisible] = useState(false);
+
+  const [imageLists, setImageLists] = useState([]);
+
+  console.log('imageLists', imageLists)
   return (
     <Layout
       loading={loading}
@@ -89,6 +96,16 @@ export default function InventoryCatList(props) {
       pagetitle={property?.name ? property?.name?.toUpperCase() : "My Stuff"}
       style={[styles().ph0, styles().pl20, { backgroundColor: "transparent" }]}
     >
+
+          
+
+<ImageView
+  images={imageLists}
+  imageIndex={0}
+  presentationStyle={'fullScreen'}
+  visible={visible}
+  onRequestClose={() => setIsVisible(false)}
+/>
       <View style={[styles().flex]}>
         <FlatList
           data={data?.getInventoryByCategory}
@@ -99,117 +116,19 @@ export default function InventoryCatList(props) {
             // console.log("========>", item?.inventories[index]?.images[index]);
             // console.log(`=====${index}===>`, item?.inventories);
             // console.log(`=====${"viewimage"}===>`, viewImage);
+
+           
+
+            
             return (
               <View
                 key={index}
                 style={[styles().justifyBetween, styles().mb25, styles().flex]}
               >
-                <Modal
-                  animationType="fade"
-                  transparent={true}
-                  visible={InvModalVisible}
-                >
-                  <View
-                    style={[
-                      styles().flex,
-                      styles().alignCenter,
-                      styles().justifyCenter,
-                    ]}
-                  >
-                    <TouchableOpacity
-                      activeOpacity={1}
-                      onPress={() => {
-                        SetInvModalVisible(!InvModalVisible);
-                      }}
-                      style={[
-                        styles().posAbs,
-                        styles().top0,
-                        styles().bottom0,
-                        styles().left0,
-                        styles().right0,
-                        { backgroundColor: currentTheme.InventoryShadow },
-                      ]}
-                    />
-                    <View style={{ width: SliderWidth, height: SliderHeight }}>
-                      <ScrollView
-                        pagingEnabled
-                        horizontal
-                        onScroll={(e) => handleOnScroll(e)}
-                        scrollEventThrottle={5}
-                        ref={_scrollView}
-                      >
-                        <View
-                          style={{
-                            height: SliderHeight,
-                            width: SliderWidth,
-                            borderRadius: 10,
-                          }}
-                        >
-                          {item?.inventories[index]?.images?.length !== 0 ? (
-                            <Image
-                              source={{
-                                uri: item?.inventories[viewImage]?.images[0],
-                              }}
-                              style={{
-                                height: "100%",
-                                width: "100%",
-                                borderRadius: 10,
-                              }}
-                            />
-                          ) : null}
-                        </View>
-                        <View
-                          style={[
-                            styles().alignCenter,
-                            styles().flexRow,
-                            styles().zIndex2,
-                            styles().posAbs,
-                            styles().justifyBetween,
-                            styles().flex,
-                            styles().left10,
-                            styles().right10,
-                            { top: SliderHeight / 2 },
-                          ]}
-                        >
-                          <TouchableOpacity
-                            onPress={() => {
-                              page > 0 ? Setpage(page - 1) : null;
-                            }}
-                          >
-                            <FontAwesome
-                              name="arrow-left"
-                              size={20}
-                              color={
-                                page > 0
-                                  ? currentTheme.black
-                                  : currentTheme.SliderDots
-                              }
-                            />
-                          </TouchableOpacity>
-                          <TouchableOpacity
-                            onPress={() => {
-                              page <
-                              item?.inventories[index]?.images?.length - 1
-                                ? Setpage(page + 1)
-                                : null;
-                            }}
-                          >
-                            <FontAwesome
-                              name="arrow-right"
-                              size={20}
-                              color={
-                                page <
-                                item?.inventories[index]?.images?.length - 1
-                                  ? currentTheme.black
-                                  : currentTheme.SliderDots
-                              }
-                            />
-                          </TouchableOpacity>
-                        </View>
-                      </ScrollView>
-                    </View>
-                  </View>
-                </Modal>
+           
+                
+
+
                 <View
                   style={[
                     styles().flexRow,
@@ -272,12 +191,23 @@ export default function InventoryCatList(props) {
                   bounces={false}
                   showsHorizontalScrollIndicator={false}
                   renderItem={({ item: InventoryCategoryTitle, index: i }) => {
+                    // console.log('asd', InventoryCategoryTitle)
+
                     return (
                       <TouchableOpacity
                         key={i}
                         onPress={() => {
+                          if(InventoryCategoryTitle.images.length > 0 ){
+                            let babuji = []
+                          
+                            // console.log(InventoryCategoryTitle.images)
+                           // console.log(InventoryCategoryTitle.images.map(d=>babuji.push({uri:d})))
+                            //console.log(babuji)
+                            setImageLists(babuji)
                           setViewImage(i);
+                          setIsVisible(true)
                           SetInvModalVisible(true);
+                        }
                           // console.log(
                           //   `=====${i}===>`,
                           //   item?.inventories[viewImage].images
@@ -425,48 +355,48 @@ export default function InventoryCatList(props) {
             );
           }}
           keyExtractor={(item, index) => index.toString()}
-          // ListFooterComponent={
-          //   <View style={styles().mb100}>
-          //     <View
-          //       style={[styles().flexRow, styles().mb20, styles().alignCenter]}
-          //     >
-          //       <View
-          //         style={[styles().wh30px, styles().overflowH, styles().mr5]}
-          //       >
-          //         <Image
-          //           source={require("../../assets/images/personal-items.png")}
-          //           resizeMode="contain"
-          //           style={styles().wh100}
-          //         />
-          //       </View>
-          //       <Text
-          //         style={[
-          //           styles().fs16,
-          //           styles().lh18,
-          //           styles().fw600,
-          //           { color: currentTheme.CACCD3 },
-          //         ]}
-          //       >
-          //         Personal Items
-          //       </Text>
-          //     </View>
-          //     <View
-          //       style={[
-          //         styles().bw1,
-          //         styles().br5,
-          //         styles().wh130px,
-          //         styles().alignCenter,
-          //         styles().justifyCenter,
-          //         {
-          //           borderColor: currentTheme.textColor,
-          //           borderStyle: "dashed",
-          //         },
-          //       ]}
-          //     >
-          //       <Feather name="plus" size={40} color={currentTheme.textColor} />
-          //     </View>
-          //   </View>
-          // }
+          ListFooterComponent={
+            <View style={styles().mb100}>
+              {/* <View
+                style={[styles().flexRow, styles().mb20, styles().alignCenter]}
+              >
+                <View
+                  style={[styles().wh30px, styles().overflowH, styles().mr5]}
+                >
+                  <Image
+                    source={require("../../assets/images/personal-items.png")}
+                    resizeMode="contain"
+                    style={styles().wh100}
+                  />
+                </View>
+                <Text
+                  style={[
+                    styles().fs16,
+                    styles().lh18,
+                    styles().fw600,
+                    { color: currentTheme.CACCD3 },
+                  ]}
+                >
+                  Personal Items
+                </Text>
+              </View>
+              <View
+                style={[
+                  styles().bw1,
+                  styles().br5,
+                  styles().wh130px,
+                  styles().alignCenter,
+                  styles().justifyCenter,
+                  {
+                    borderColor: currentTheme.textColor,
+                    borderStyle: "dashed",
+                  },
+                ]}
+              >
+                <Feather name="plus" size={40} color={currentTheme.textColor} />
+              </View> */}
+            </View>
+          }
           ListEmptyComponent={() => {
             return (
               <View
