@@ -25,6 +25,7 @@ import {
   FontAwesome,
   MaterialCommunityIcons,
   Entypo,
+  MaterialIcons,
 } from "@expo/vector-icons";
 import Spinner from "../../Component/Spinner/Spinner";
 import { useQuery, useMutation, useSubscription } from "@apollo/react-hooks";
@@ -40,6 +41,7 @@ import {
   addFolder,
   categories,
   updateInventory,
+  deleteInventory,
 } from "../../apollo/server";
 import {
   uploadImageToCloudinary,
@@ -50,6 +52,8 @@ import FlashMessage from "../../Component/FlashMessage/FlashMessage";
 import * as DocumentPicker from "expo-document-picker";
 import { useIsFocused } from "@react-navigation/native";
 import UserContext from "../../context/User/User";
+import SectionedMultiSelect from "react-native-sectioned-multi-select";
+import fontStyles from "../../utils/fonts/fontStyles";
 
 const { width, height } = Dimensions.get("window");
 
@@ -63,14 +67,19 @@ export default function InventoryEdit(props) {
   const ADD_FOLDER = gql`
     ${addFolder}
   `;
+  const DELETE_INVENTORY = gql`
+    ${deleteInventory}
+  `;
 
   let inventory_item = props?.route?.params.inventory_item;
   let category = props?.route?.params.category;
+  // console.log("inventory_item===>", inventory_item);
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
   const user = useContext(UserContext);
   const isFocused = useIsFocused();
   const [Loading, setLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const [ItemCat, setItemCat] = useState("");
 
   const [ItemName, setItemName] = useState("");
@@ -101,7 +110,9 @@ export default function InventoryEdit(props) {
       },
     },
     fetchPolicy: "cache-and-network",
-    onCompleted: ({ categories }) => {},
+    onCompleted: ({ categories }) => {
+      // console.log("categories =====>", categories);
+    },
     onError: (err) => {
       console.log("error in categories :", err);
     },
@@ -130,6 +141,30 @@ export default function InventoryEdit(props) {
     FlashMessage({ msg: error?.message?.toString(), type: "danger" });
     setLoading(false);
     console.log("updateInventory error  :", error);
+  }
+  const [delete_inventory_mutate] = useMutation(DELETE_INVENTORY, {
+    onCompleted: onCompleted_delete_inventory,
+    onError: onError_delete_inventory,
+  });
+
+  async function onCompleted_delete_inventory(data) {
+    try {
+      FlashMessage({ msg: "Inventory Deleted!", type: "success" });
+      setDeleteLoading(false);
+      props.navigation.navigate("InventoryCategoryList");
+      console.log("DELETE_INVENTORY res :", data.deleteInventory);
+    } catch (e) {
+      setDeleteLoading(false);
+      console.log(e);
+    } finally {
+      setDeleteLoading(false);
+    }
+  }
+
+  function onError_delete_inventory(error) {
+    FlashMessage({ msg: error?.message?.toString(), type: "danger" });
+    setDeleteLoading(false);
+    console.log("DELETE_INVENTORY error  :", error);
   }
 
   const [addFolder_mutate, {}] = useMutation(ADD_FOLDER, {
@@ -189,7 +224,7 @@ export default function InventoryEdit(props) {
   };
 
   useEffect(() => {
-    setItemCat(category?._id);
+    // setItemCat(category?._id);
     setItemName(inventory_item?.name);
     setItemBrand(inventory_item?.brand);
     setItemModel(inventory_item?.model_no);
@@ -197,47 +232,65 @@ export default function InventoryEdit(props) {
     setImages(inventory_item?.images);
   }, []);
 
+  let mainCatgeory = data?.categories?.results?.find((item) => {
+    let subs = item.subCategories.find((find) => {
+      return find._id === ItemCat[0];
+    });
+    return subs;
+  });
+  console.log("mainCatgeory====>", mainCatgeory?.name, ItemCat[0]);
+
   async function UpdateItem() {
-    setLoading(true);
-    let data = {
-      updateInventoryId: inventory_item?._id,
-      updateInventoryInput: {
-        name: ItemName,
-        serail_no: ItemSerial,
-        type: ItemCat,
-        mainCatgeory: ItemCat,
-        model_no: ItemModel,
-        images: images,
-        brand: ItemBrand,
-        added_by: user?._id,
-      },
-    };
-    let files = Documentfile.map((file) => {
-      return file.uri;
-    });
-
-    console.log("update data :", data);
-    await mutate({
-      variables: data,
-    });
-
-    if (Documentfile.length > 0 && ItemDocName === "") {
-      FlashMessage({ msg: "Enter Document Name to Upload", type: "warning" });
+    let status = true;
+    if (ItemCat === "") {
+      FlashMessage({ msg: "Select Category!", type: "warning" });
+      status = false;
       return;
     }
 
-    if (Documentfile.length > 0 && ItemDocName !== "") {
-      await addFolder_mutate({
-        variables: {
-          inputFolder: {
-            files: files,
-            name: ItemDocName,
-            inventory: inventory_item?._id,
-          },
+    if (status) {
+      setLoading(true);
+      let data = {
+        updateInventoryId: inventory_item?._id,
+        updateInventoryInput: {
+          name: ItemName,
+          serail_no: ItemSerial,
+          type: ItemCat[0],
+          mainCatgeory: mainCatgeory?._id,
+          model_no: ItemModel,
+          images: images,
+          brand: ItemBrand,
+          // added_by: user?._id,
         },
+      };
+      console.log("update data :", data);
+      await mutate({
+        variables: data,
       });
     }
+
+    // let files = Documentfile.map((file) => {
+    //   return file.uri;
+    // });
+
+    // if (Documentfile.length > 0 && ItemDocName === "") {
+    //   FlashMessage({ msg: "Enter Document Name to Upload", type: "warning" });
+    //   return;
+    // }
+
+    // if (Documentfile.length > 0 && ItemDocName !== "") {
+    //   await addFolder_mutate({
+    //     variables: {
+    //       inputFolder: {
+    //         files: files,
+    //         name: ItemDocName,
+    //         inventory: inventory_item?._id,
+    //       },
+    //     },
+    //   });
+    // }
   }
+
   let ctg = data?.categories?.results?.find((item) => {
     return item._id === ItemCat;
   });
@@ -271,11 +324,72 @@ export default function InventoryEdit(props) {
             >
               Item Category
             </Text>
-            <Multiselect
+            {/* <Multiselect
               ListItems={data?.categories?.results}
               SelectText={ctg?.name}
               value={ItemCat}
               setValue={(e) => setItemCat(e[0])}
+            /> */}
+            <SectionedMultiSelect
+              styles={{
+                button: {
+                  backgroundColor: currentTheme.themeBackground,
+                },
+                modalWrapper: {
+                  justifyContent: "center",
+                },
+                container: {
+                  // flex: 0.25,
+                },
+                selectToggle: [
+                  {
+                    paddingTop: 5,
+                    // paddingBottom:20,
+                    // backgroundColor:currentTheme.black,
+                    paddingLeft: 15,
+                    height: 40,
+                    justifyContent: "flex-end",
+                    // borderWidth:2
+                  },
+                ],
+                selectToggleText: {
+                  fontFamily: fontStyles.PoppinsRegular,
+                  fontSize: 12,
+                  color: currentTheme.black,
+                  // borderWidth:2,
+                  // height:'100%',
+                },
+                itemText: {
+                  paddingTop: 10,
+                  fontSize: 14,
+                  fontWeight: "400",
+                  fontFamily: fontStyles.PoppinsRegular,
+                },
+              }}
+              showCancelButton={true}
+              hideSearch={true}
+              items={data?.categories?.results}
+              selectToggleIconComponent={
+                <AntDesign
+                  name="caretdown"
+                  size={14}
+                  color={currentTheme.black}
+                  style={{ right: 10 }}
+                />
+              }
+              IconRenderer={MaterialIcons}
+              uniqueKey="_id"
+              displayKey="name"
+              subKey={"subCategories"}
+              single={true}
+              selectText={"Select"}
+              showDropDowns={true}
+              readOnlyHeadings={true}
+              onSelectedItemsChange={(item) => {
+                console.log("on seleted change :", item);
+                setItemCat(item);
+              }}
+              selectedItems={ItemCat}
             />
           </View>
 
@@ -568,6 +682,30 @@ export default function InventoryEdit(props) {
             </View>
           </View> */}
           <View style={[styles().mt35, styles().mb20]}>
+            {deleteLoading ? (
+              <Spinner />
+            ) : (
+              <ThemeButton
+                Style={{
+                  backgroundColor: currentTheme.dangerRed,
+                  borderWidth: 0,
+                  height: 50,
+                  marginBottom: 10,
+                }}
+                StyleText={{ color: currentTheme.white }}
+                onPress={() => {
+                  setDeleteLoading(true);
+                  delete_inventory_mutate({
+                    variables: {
+                      deleteInventoryInput: {
+                        id: inventory_item?._id,
+                      },
+                    },
+                  });
+                }}
+                Title={"Delete Item"}
+              />
+            )}
             {Loading ? (
               <Spinner />
             ) : (

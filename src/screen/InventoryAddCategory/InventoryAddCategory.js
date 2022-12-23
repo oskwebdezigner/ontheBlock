@@ -24,6 +24,7 @@ import {
   EvilIcons,
   FontAwesome,
   MaterialCommunityIcons,
+  MaterialIcons,
   Entypo,
 } from "@expo/vector-icons";
 
@@ -44,6 +45,8 @@ import gql from "graphql-tag";
 import { addInventory, categories } from "../../apollo/server";
 import FlashMessage from "../../Component/FlashMessage/FlashMessage";
 import UserContext from "../../context/User/User";
+import SectionedMultiSelect from "react-native-sectioned-multi-select";
+import fontStyles from "../../utils/fonts/fontStyles";
 
 const { width, height } = Dimensions.get("window");
 export default function InventoryAddCategory(props) {
@@ -112,12 +115,6 @@ export default function InventoryAddCategory(props) {
     setImages(() => [...newArr]);
   };
 
-  const ItemCategList = [
-    {
-      name: inventory_name,
-      _id: inventory_id,
-    },
-  ];
   const [mutate, { client }] = useMutation(ADD_INVENTORY, {
     onCompleted,
     onError,
@@ -151,24 +148,26 @@ export default function InventoryAddCategory(props) {
       return;
     }
     if (status) {
+      let data = {
+        inputInventory: {
+          added_by: user?._id,
+          brand: ItemBrand,
+          // description: null,
+          images: images,
+          // is_active: null,
+          mainCatgeory: mainCatgeory._id,
+          model_no: ItemModel,
+          name: ItemName,
+          property: property?._id,
+          serail_no: ItemSerial,
+          // type: inventory_id ? inventory_id : ItemCat,
+          type: ItemCat[0],
+        },
+      };
+      console.log('new added item data :',data)
       setLoading(true);
       await mutate({
-        variables: {
-          inputInventory: {
-            added_by: user?._id,
-            brand: ItemBrand,
-            // description: null,
-            images: images,
-            // is_active: null,
-            mainCatgeory: ItemCat,
-            model_no: ItemModel,
-            name: ItemName,
-            property: property?._id,
-            // serail_no: null,
-            // type: inventory_id ? inventory_id : ItemCat,
-            type:  ItemCat,
-          },
-        },
+        variables: data,
         // variables: {
         //   inputInventory: {
         //     brand: ItemBrand,
@@ -183,11 +182,21 @@ export default function InventoryAddCategory(props) {
       });
     }
   }
-  let ctg = data?.categories?.results?.find((item) => {
-    return item._id === ItemCat;
+  let mainCatgeory = data?.categories?.results?.find((item) => {
+    let subs = item.subCategories.find((find) => {
+      return find._id === ItemCat[0];
+    });
+    return subs;
   });
 
-  console.log(inventory_id, ItemCat);
+  console.log("mainCatgeory====>", mainCatgeory);
+
+  // console.log(
+  //   "subCateogory====>",
+  //   mainCatgeory?.subCategories?.find((item) => {
+  //     return item._id === ItemCat[0];
+  //   })
+  // );
 
   return (
     <Layout
@@ -224,11 +233,73 @@ export default function InventoryAddCategory(props) {
               value={ItemCat}
               setValue={setItemCat}
             /> */}
-            <Multiselect
+            {/* <Multiselect
               ListItems={data?.categories?.results}
               SelectText={ctg?.name}
+              subCategories={"subCategories"}
               value={ItemCat}
               setValue={(e) => setItemCat(e[0])}
+            /> */}
+            <SectionedMultiSelect
+              styles={{
+                button: {
+                  backgroundColor: currentTheme.themeBackground,
+                },
+                modalWrapper: {
+                  justifyContent: "center",
+                },
+                container: {
+                  // flex: 0.25,
+                },
+                selectToggle: [
+                  {
+                    paddingTop: 5,
+                    // paddingBottom:20,
+                    // backgroundColor:currentTheme.black,
+                    paddingLeft: 15,
+                    height: 40,
+                    justifyContent: "flex-end",
+                    // borderWidth:2
+                  },
+                ],
+                selectToggleText: {
+                  fontFamily: fontStyles.PoppinsRegular,
+                  fontSize: 12,
+                  color: currentTheme.black,
+                  // borderWidth:2,
+                  // height:'100%',
+                },
+                itemText: {
+                  paddingTop: 10,
+                  fontSize: 14,
+                  fontWeight: "400",
+                  fontFamily: fontStyles.PoppinsRegular,
+                },
+              }}
+              showCancelButton={true}
+              hideSearch={true}
+              items={data?.categories?.results}
+              selectToggleIconComponent={
+                <AntDesign
+                  name="caretdown"
+                  size={14}
+                  color={currentTheme.black}
+                  style={{ right: 10 }}
+                />
+              }
+              IconRenderer={MaterialIcons}
+              uniqueKey="_id"
+              displayKey="name"
+              subKey={"subCategories"}
+              single={true}
+              selectText={"Select item category..."}
+              showDropDowns={true}
+              readOnlyHeadings={true}
+              onSelectedItemsChange={(item) => {
+                console.log("on seleted change :", item);
+                setItemCat(item);
+              }}
+              selectedItems={ItemCat}
             />
           </View>
 

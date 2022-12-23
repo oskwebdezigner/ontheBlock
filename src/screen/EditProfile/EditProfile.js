@@ -122,7 +122,6 @@ export default function EditProfile(props) {
       status = false;
       return;
     }
-
     if (status) {
       setLoading(true);
       mutate({

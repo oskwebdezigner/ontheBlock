@@ -516,6 +516,10 @@ export const getInventoryByCategory = `query GetInventoryByCategory($propertyId:
         description
         _id
       }
+       mainCatgeory {
+        _id
+        name
+      }
       brand
       description
       _id
@@ -525,6 +529,18 @@ export const getInventoryByCategory = `query GetInventoryByCategory($propertyId:
       name
       description
       _id
+        subCategories {
+        _id
+        image
+        name
+        subCategories {
+          subCategories {
+            _id
+            image
+            name
+          }
+        }
+      }
     }
   }
 }`;
@@ -932,5 +948,24 @@ export const notifications = `query Notifications($options: options) {
     limit
     totalPages
     totalResults
+  }
+}`;
+
+export const deleteInventory = `mutation DeleteInventory($deleteInventoryInput: DeleteInventoryInput) {
+  deleteInventory(deleteInventoryInput: $deleteInventoryInput) {
+    _id
+    name
+    type {
+      _id
+      name
+    }
+    mainCatgeory {
+      _id
+      name
+    }
+    added_by {
+      _id
+      email
+    }
   }
 }`;
