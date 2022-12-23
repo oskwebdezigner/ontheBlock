@@ -228,7 +228,7 @@ export default function InventoryCatList(props) {
                             // styles().overflowH,
                             styles().h130px,
                             styles().br10,
-                            styles().boxpeshadowCart,
+                            // styles().boxpeshadowCart,
 
                             { backgroundColor: currentTheme.bodyBg },
                           ]}
@@ -253,14 +253,14 @@ export default function InventoryCatList(props) {
                                   borderColor: currentTheme.BCBCBC,
                                   alignItems: "center",
                                   justifyContent: "center",
-                                  shadowColor: "#000",
-                                  shadowOffset: {
-                                    width: 0,
-                                    height: 2,
-                                  },
-                                  shadowOpacity: 0.25,
-                                  shadowRadius: 3.84,
-                                  elevation: 5,
+                                  // shadowColor: "#000",
+                                  // shadowOffset: {
+                                  //   width: 0,
+                                  //   height: 2,
+                                  // },
+                                  // shadowOpacity: 0.25,
+                                  // shadowRadius: 3.84,
+                                  // elevation: 5,
                                 },
                               ]}
                             >

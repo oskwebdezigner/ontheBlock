@@ -43,6 +43,7 @@ export default function Layout({
   pagetitle,
   ProfileImg,
   loading,
+  property,
 }) {
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
@@ -64,6 +65,7 @@ export default function Layout({
             LeftIcon={LeftIcon}
             ProfileImg={ProfileImg}
             pagetitle={pagetitle}
+            property={property}
             HeaderStyle={{ backgroundColor: currentTheme.white }}
           />
         )}
@@ -71,7 +73,10 @@ export default function Layout({
         {withoutScroll ? (
           <View
             style={[
-              { flexGrow: 1, backgroundColor: currentTheme.white },
+              {
+                flexGrow: 1,
+                backgroundColor: currentTheme.white,
+              },
               styles().ph20,
 
               style,
@@ -84,7 +89,10 @@ export default function Layout({
             showsVerticalScrollIndicator={false}
             contentContainerStyle={[
               styles().ph20,
-              { flexGrow: 1, backgroundColor: currentTheme.white },
+              {
+                flexGrow: 1,
+                backgroundColor: currentTheme.white,
+              },
               style,
             ]}
             keyboardShouldPersistTaps="handled"

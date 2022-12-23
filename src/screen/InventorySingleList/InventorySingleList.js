@@ -60,7 +60,7 @@ export default function InventorySingleList(props) {
                 style={[
                   styles().mb20,
                   {
-                    width: width * 0.44,
+                    width: width * 0.43,
                     marginRight: index % 2 === 0 ? width * 0.04 : 0,
                   },
                 ]}
@@ -72,15 +72,55 @@ export default function InventorySingleList(props) {
                     styles().overflowH,
                     styles().h130px,
                     styles().br10,
+                    styles().boxpeshadowCart,
+
+                    { backgroundColor: currentTheme.bodyBg },
                   ]}
                 >
-                  {InventoryCategoryTitle?.images ? (
+                  {InventoryCategoryTitle?.images.length !== 0 ? (
                     <Image
                       source={{ uri: InventoryCategoryTitle?.images[0] }}
                       resizeMode="contain"
                       style={[styles().wh100]}
                     />
-                  ) : null}
+                  ) : (
+                    <View
+                      style={[
+                        styles().wh100,
+                        styles().br10,
+                        {
+                          backgroundColor: currentTheme.white,
+                          borderWidth: 0.5,
+                          borderColor: currentTheme.BCBCBC,
+                          alignItems: "center",
+                          justifyContent: "center",
+                          // shadowColor: "#000",
+                          // shadowOffset: {
+                          //   width: 0,
+                          //   height: 2,
+                          // },
+                          // shadowOpacity: 0.25,
+                          // shadowRadius: 3.84,
+                          // elevation: 5,
+                        },
+                      ]}
+                    >
+                      <Ionicons
+                        name="image"
+                        size={50}
+                        color={currentTheme.BCBCBC}
+                      />
+                      <Text
+                        style={{
+                          color: currentTheme.BCBCBC,
+                          fontWeight: "bold",
+                          fontSize: 12,
+                        }}
+                      >
+                        No Image
+                      </Text>
+                    </View>
+                  )}
                   <TouchableOpacity
                     onPress={() =>
                       props.navigation.navigate("InventoryEdit", {
@@ -113,7 +153,7 @@ export default function InventorySingleList(props) {
                     { color: currentTheme.black },
                   ]}
                 >
-                  {InventoryCategoryTitle.name}
+                  {InventoryCategoryTitle.name?.toUpperCase()}
                 </Text>
               </TouchableOpacity>
             );

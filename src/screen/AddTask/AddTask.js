@@ -44,7 +44,7 @@ export default function AddTask(props) {
   const INVENTORIES = gql`
     ${inventories}
   `;
-  // console.log("schedule task ====>", task);
+  console.log("schedule task ====>", task);
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
   const [invenetory, setInvenetory] = useState("");
@@ -100,7 +100,8 @@ export default function AddTask(props) {
   async function onCompleted(data) {
     try {
       FlashMessage({ msg: "Task Added!", type: "success" });
-      props.navigation.navigate("SinglePropertyListing");
+      props.navigation.navigate("Home");
+      // props.navigation.navigate("SinglePropertyListing");
       console.log("addTask res :", data.addTask);
       setLoading(false);
     } catch (e) {

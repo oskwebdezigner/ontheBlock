@@ -45,7 +45,6 @@ export default function PropertyData(props) {
   const UPDATE_PROPERTY = gql`
     ${updateProperty}
   `;
-  const Title = props.route.params.pageTitle;
   const property = props.route.params.property;
   console.log("property data :", property);
 
@@ -183,7 +182,7 @@ export default function PropertyData(props) {
       navigation={props.navigation}
       LeftIcon={true}
       withoutScroll={true}
-      pagetitle={Title?.toUpperCase()}
+      pagetitle={property?.name?.toUpperCase()}
       loading={loading}
     >
       <KeyboardAvoidingView style={styles().flex}>

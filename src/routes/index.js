@@ -57,6 +57,7 @@ import MyDocuments from "../screen/MyDocuments.js/MyDocuments";
 import CreateProperty from "../screen/CreateProperty/CreateProperty";
 import UpcommingMaintenance from "../screen/UpcommingMaintenance/UpcommingMaintenance";
 import MyNotifications from "../screen/Notifications/Notifications";
+import DocumentView from "../screen/DocumentView/DocumentView";
 
 // Auth Stack
 import LandingScreen from "../screen/Landing/Landing";
@@ -180,6 +181,7 @@ function HomeNavigator() {
       <HomeStack.Screen name="EditProfile" component={EditProfile} />
       <HomeStack.Screen name="CreateProperty" component={CreateProperty} />
       <HomeStack.Screen name="MyNotifications" component={MyNotifications} />
+      <HomeStack.Screen name="DocumentView" component={DocumentView} />
       <HomeStack.Screen
         name="UpcommingMaintenance"
         component={UpcommingMaintenance}

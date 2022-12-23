@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
   Image,
+  Linking,
 } from "react-native";
 import ThemeContext from "../../context/ThemeContext/ThemeContext";
 import { theme } from "../../context/ThemeContext/ThemeColor";
@@ -34,66 +35,77 @@ import { useIsFocused } from "@react-navigation/native";
 const { width, height } = Dimensions.get("window");
 
 export default function DocumentListing(props) {
-  const FOLDERS = gql`
-    ${folders}
-  `;
-
+  const docs = props?.route?.params?.docs;
   const property = props?.route?.params?.property;
+  //   console.log("docs========>", docs);
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
-
-  const { loading, error, data, refetch } = useQuery(FOLDERS, {
-    fetchPolicy: "cache-and-network",
-    variables: {
-      filters: {
-        property: property?._id,
-      },
-    },
-    onCompleted: ({ folders }) => {
-      //   console.log("folders res :", folders.results);
-    },
-    onError: (err) => {
-      console.log("error in folders :", err);
-    },
-  });
-  // console.log("folders =====>", data?.folders?.results);
-  const isFocused = useIsFocused();
-
-  useEffect(() => {
-    refetch();
-  }, [isFocused]);
 
   return (
     <Layout
       navigation={props.navigation}
       LeftIcon={true}
       withoutScroll={true}
-      pagetitle={
-        property?.name ? property?.name?.toUpperCase() : "My Documents"
-      }
+      pagetitle={"Documents"}
       style={[styles().ph0]}
     >
       <View style={[styles().flex, { marginHorizontal: width * 0.04 }]}>
         <FlatList
-          data={data?.folders?.results}
+          data={docs?.files}
           bounces={false}
           numColumns={2}
           ListHeaderComponent={<View style={styles().pt30} />}
           showsVerticalScrollIndicator={false}
           renderItem={({ item, index }) => {
+            function get_url_extension(url) {
+              return url
+                .split(/[#?]/)[0]
+                .split(".")
+                .pop()
+                .trim();
+            }
+
+            let docType = get_url_extension(item.path);
+            console.log("===>", docType);
+            let icon =
+              docType === "pdf" ? (
+                <FontAwesome5
+                  name="file-pdf"
+                  size={45}
+                  color={currentTheme.themeBackground}
+                />
+              ) : docType === "docx" || docType === "doc" ? (
+                <FontAwesome
+                  name="file-word-o"
+                  size={45}
+                  color={currentTheme.themeBackground}
+                />
+              ) : docType === "png" ||
+                docType === "jpeg" ||
+                docType === "jpg" ||
+                docType === "gif" ? (
+                <FontAwesome
+                  name="file-image-o"
+                  size={45}
+                  color={currentTheme.themeBackground}
+                />
+              ) : (
+                <FontAwesome
+                  name="file-text-o"
+                  size={45}
+                  color={currentTheme.themeBackground}
+                />
+              );
             return (
               <TouchableOpacity
                 activeOpacity={0.5}
                 key={index}
-                onPress={() =>
-                  props.navigation.navigate("DocumentView", {
-                    docs: item,
-                    property: property,
-                  })
-                }
-                // onPress={() =>
-                //   props.navigation.navigate("DocumentEdit", { docs: item })
-                // }
+                onPress={() => {
+                  //   props.navigation.navigate("DocumentEdit", { docs: item });
+                  Linking.openURL(item.path).catch((err) =>
+                    console.error("Error in linking", err)
+                  );
+                }}
                 style={[
                   styles().mb20,
                   {
@@ -108,7 +120,7 @@ export default function DocumentListing(props) {
                     styles().w100,
                     styles().boxpeshadow,
                     styles().bgWhite,
-                    // styles().ph10,
+                    styles().ph10,
                     styles().mb10,
                     styles().h130px,
                     styles().br5,
@@ -120,38 +132,9 @@ export default function DocumentListing(props) {
                       styles().overflowH,
                       styles().alignCenter,
                       styles().justifyCenter,
-                      { backgroundColor: currentTheme.bodyBg },
                     ]}
                   >
-                    {/* <FontAwesome
-                      name="folder-open"
-                      size={65}
-                      color={currentTheme.themeBackground}
-                    /> */}
-                    <Image
-                      source={require("../../assets/images/folder.png")}
-                      resizeMode="contain"
-                      style={[styles().wh80px]}
-                    />
-                    <TouchableOpacity
-                      style={[
-                        styles().top10,
-                        styles().alignCenter,
-                        styles().justifyCenter,
-                        styles().wh20px,
-                        styles().br5,
-                        styles().right10,
-                        styles().posAbs,
-                        styles().bgWhite,
-                        { right: 10 },
-                      ]}
-                    >
-                      <Ionicons
-                        name="ellipsis-vertical"
-                        size={16}
-                        color={currentTheme.SliderDots}
-                      />
-                    </TouchableOpacity>
+                    {icon}
                   </View>
                 </View>
                 <Text
@@ -191,7 +174,6 @@ export default function DocumentListing(props) {
           }}
         />
       </View>
-
       <View
         style={[
           styles().left20,
@@ -202,9 +184,12 @@ export default function DocumentListing(props) {
       >
         <ThemeButton
           onPress={() => {
-            props.navigation.navigate("AddNewFolder", { property: property });
+            props.navigation.navigate("DocumentEdit", {
+              docs: docs,
+              property: property,
+            });
           }}
-          Title={"Add New Folder"}
+          Title={"Add Document"}
         />
       </View>
     </Layout>

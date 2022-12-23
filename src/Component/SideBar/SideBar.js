@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   View,
   Text,
@@ -21,36 +21,76 @@ import { LinearGradient } from "expo-linear-gradient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CommonActions } from "@react-navigation/native";
 
+// const MenuItems = [
+//   {
+//     id: 1,
+//     name: "My Properties",
+//     Image: require("../../assets/images/my-properties.png"),
+//     navigateTo: "MyProperties",
+//   },
+//   {
+//     id: 2,
+//     name: "My Stuff",
+//     Image: require("../../assets/images/my-stuff.png"),
+//     navigateTo: "MyStuff",
+//   },
+//   {
+//     id: 3,
+//     name: "My Documents",
+//     Image: require("../../assets/images/my-documents.png"),
+//     navigateTo: "MyDocuments",
+//   },
+//   {
+//     id: 4,
+//     name: "Schedule Task",
+//     Image: require("../../assets/images/schedule-task.png"),
+//     // navigateTo: "ScheduleEdit",
+//   },
+//   {
+//     id: 5,
+//     name: "Finance",
+//     Image: require("../../assets/images/finance.png"),
+//     // navigateTo: 'TermsCondition'
+//   },
+// ];
+
 const MenuItems = [
   {
     id: 1,
-    name: "My Properties",
+    name: "Property Data",
     Image: require("../../assets/images/my-properties.png"),
-    navigateTo: "MyProperties",
+    navigateTo: "PropertyData",
   },
   {
     id: 2,
-    name: "My Stuff",
+    name: "Inventory",
     Image: require("../../assets/images/my-stuff.png"),
-    navigateTo: "MyStuff",
+    navigateTo: "InventoryCategoryList",
   },
   {
     id: 3,
-    name: "My Documents",
+    name: "Add New Documents",
     Image: require("../../assets/images/my-documents.png"),
-    navigateTo: "MyDocuments",
+    navigateTo: "DocumentListing",
   },
   {
     id: 4,
     name: "Schedule Task",
     Image: require("../../assets/images/schedule-task.png"),
-    // navigateTo: "ScheduleEdit",
+    navigateTo: "AddTask",
   },
+
   {
     id: 5,
+    name: "My Handyperson",
+    Image: require("../../assets/images/SinglePropertyList-img5.png"),
+    navigateTo: "MyHandymen",
+  },
+  {
+    id: 6,
     name: "Finance",
     Image: require("../../assets/images/finance.png"),
-    // navigateTo: 'TermsCondition'
+    // navigateTo: "MyHandymen",
   },
 ];
 
@@ -60,6 +100,15 @@ export default function SideBar(props) {
   // console.log('babuji keh rahe hain', props.navigation)
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
+  const [property, setProperty] = useState("");
+
+  const getPropertyAsync = async () => {
+    let property = await AsyncStorage.getItem("property");
+    // console.log("property in sidedrawer =====>", property);
+    setProperty(property);
+    return property;
+  };
+
   async function Logout() {
     props.navigation.dispatch(
       CommonActions.reset({
@@ -69,6 +118,10 @@ export default function SideBar(props) {
     );
     await AsyncStorage.clear().then(() => console.log("async clear - logout!"));
   }
+
+  useEffect(() => {
+    getPropertyAsync();
+  }, []);
 
   return (
     <LinearGradient
@@ -103,10 +156,18 @@ export default function SideBar(props) {
             renderItem={({ item, index }) => {
               return (
                 <TouchableOpacity
-                  onPress={() =>
-                    item.navigateTo &&
-                    props.navigation.navigate(item.navigateTo)
-                  }
+                  onPress={async () => {
+                    await getPropertyAsync().then((res) => {
+                      item.navigateTo &&
+                        props.navigation.navigate(item.navigateTo, {
+                          property: JSON.parse(res),
+                        });
+                    });
+                    // item.navigateTo &&
+                    //   props.navigation.navigate(item.navigateTo, {
+                    //     property: property,
+                    //   });
+                  }}
                   style={[
                     styles().flexRow,
                     styles().flex,
@@ -122,30 +183,40 @@ export default function SideBar(props) {
                         styles().wh100,
                         {
                           tintColor:
-                            item.name === "Finance" && currentTheme.BCBCBC,
+                            item.name === "Finance"
+                              ? currentTheme.BCBCBC
+                              : currentTheme.themeBackground,
                         },
                       ]}
                       resizeMode={"contain"}
                     />
                   </View>
                   <View>
-                  <Text
-                    style={[
-                      styles().fs13,
-                      styles().fw600,
-                      {
-                        color:
-                          item.name === "Finance"
-                            ? currentTheme.BCBCBC
-                            : currentTheme.black,
-                      },
-                    ]}
-                  >
-                    {item.name}
-                  </Text>
-                  {item.name === "Finance" && (
-                    <Text style={[styles().fs10, styles().fw400, {color:currentTheme.BCBCBC}]}>Feature coming soon</Text>
-                  )}
+                    <Text
+                      style={[
+                        styles().fs13,
+                        styles().fw600,
+                        {
+                          color:
+                            item.name === "Finance"
+                              ? currentTheme.BCBCBC
+                              : currentTheme.black,
+                        },
+                      ]}
+                    >
+                      {item.name}
+                    </Text>
+                    {item.name === "Finance" && (
+                      <Text
+                        style={[
+                          styles().fs10,
+                          styles().fw400,
+                          { color: currentTheme.BCBCBC },
+                        ]}
+                      >
+                        Feature coming soon
+                      </Text>
+                    )}
                   </View>
                   {item.name === "Notifications" && (
                     <View style={[styles().flex, styles().alignEnd]}>

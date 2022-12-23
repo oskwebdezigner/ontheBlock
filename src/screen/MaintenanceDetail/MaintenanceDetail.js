@@ -40,7 +40,7 @@ export default function MaintenaceDetail(props) {
     ${updateTask}
   `;
   const item = props.route.params.maintenance;
-  console.log("task >>>>>>", item.get_notifications);
+  console.log("task >>>>>>", item);
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
 
@@ -383,7 +383,12 @@ export default function MaintenaceDetail(props) {
                         style={[
                           styles().fs10,
                           styles().fontRegular,
-                          { color: currentTheme.textColor },
+                          {
+                            color:
+                              i === 3
+                                ? currentTheme.dangerRed
+                                : currentTheme.textColor,
+                          },
                         ]}
                       >
                         {pops.name}

@@ -31,7 +31,6 @@ export default function Multiselect({
   ListItems,
   SelectText,
   stylesWrapper,
-  subCategories,
 }) {
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
@@ -86,9 +85,9 @@ export default function Multiselect({
         />
       }
       IconRenderer={MaterialIcons}
-      // uniqueKey="_id"
+      uniqueKey="_id"
       displayKey="name"
-      subKey={subCategories}
+      // subKey="children"
       single={true}
       selectText={SelectText}
       showDropDowns={true}

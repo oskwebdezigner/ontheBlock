@@ -63,6 +63,14 @@ export default function ScheduleEdit(props) {
   });
   const { loading, error, data, refetch } = useQuery(HANDYMEN, {
     fetchPolicy: "cache-and-network",
+    variables: {
+      filters: {
+        property: task?.property?._id,
+      },
+      options: {
+        limit: 1000,
+      },
+    },
     onCompleted: ({ handymen }) => {
       // console.log("handymen res :", handymen.results);
     },

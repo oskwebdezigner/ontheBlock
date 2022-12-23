@@ -164,7 +164,7 @@ export default function InventoryAddCategory(props) {
           type: ItemCat[0],
         },
       };
-      console.log('new added item data :',data)
+      console.log("new added item data :", data);
       setLoading(true);
       await mutate({
         variables: data,

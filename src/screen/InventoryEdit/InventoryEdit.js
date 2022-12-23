@@ -230,15 +230,8 @@ export default function InventoryEdit(props) {
     setItemModel(inventory_item?.model_no);
     setItemSerial(inventory_item?.serail_no);
     setImages(inventory_item?.images);
+    refetch();
   }, []);
-
-  let mainCatgeory = data?.categories?.results?.find((item) => {
-    let subs = item.subCategories.find((find) => {
-      return find._id === ItemCat[0];
-    });
-    return subs;
-  });
-  console.log("mainCatgeory====>", mainCatgeory?.name, ItemCat[0]);
 
   async function UpdateItem() {
     let status = true;
@@ -294,6 +287,14 @@ export default function InventoryEdit(props) {
   let ctg = data?.categories?.results?.find((item) => {
     return item._id === ItemCat;
   });
+
+  let mainCatgeory = data?.categories?.results?.find((item) => {
+    let subs = item.subCategories.find((find) => {
+      return find._id === ItemCat[0];
+    });
+    return subs;
+  });
+  console.log("mainCatgeory====>", mainCatgeory?.name, ItemCat[0]);
 
   return (
     <Layout
@@ -382,7 +383,7 @@ export default function InventoryEdit(props) {
               displayKey="name"
               subKey={"subCategories"}
               single={true}
-              selectText={"Select"}
+              selectText={"Select Category"}
               showDropDowns={true}
               readOnlyHeadings={true}
               onSelectedItemsChange={(item) => {

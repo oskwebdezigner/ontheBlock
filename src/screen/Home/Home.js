@@ -22,6 +22,7 @@ import { properties, upcommingTasksList } from "../../apollo/server";
 import Loader from "../../Component/Loader/Loader";
 import moment from "moment";
 import { useIsFocused } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const { width, height } = Dimensions.get("window");
 
 export default function Home(props) {
@@ -35,14 +36,19 @@ export default function Home(props) {
     {
       Image: require("../../assets/images/home-top-img1.png"),
       title: "Add Document",
-      onPress: () => props.navigation.navigate("MyDocuments"),
+      onPress: () =>
+        props.navigation.navigate("DocumentListing", {
+          singleList: singleProperty,
+          property: singleProperty,
+        }),
     },
     {
       Image: require("../../assets/images/home-top-img2.png"),
       title: "Add Item",
       onPress: () =>
-        props.navigation.navigate("SinglePropertyListing", {
+        props.navigation.navigate("InventoryCategoryList", {
           singleList: singleProperty,
+          property: singleProperty,
         }),
     },
     {
@@ -67,6 +73,7 @@ export default function Home(props) {
     onCompleted: ({ properties }) => {
       // console.log("properties res ============>", properties.results);
       setSingleProperty(properties.results[0]);
+      AsyncStorage.setItem("property", JSON.stringify(properties.results[0]));
     },
     onError: (err) => {
       console.log("error in properties :", err);
@@ -106,6 +113,7 @@ export default function Home(props) {
     <Layout
       navigation={props.navigation}
       // loading={loading}
+      property={singleProperty}
       NotiIcon={true}
       withoutScroll={true}
       ProfileImg={true}
@@ -224,11 +232,15 @@ export default function Home(props) {
                       return (
                         <TouchableOpacity
                           activeOpacity={0.5}
-                          onPress={() =>
-                            props.navigation.navigate("SinglePropertyListing", {
+                          onPress={() => {
+                            props.navigation.navigate("PropertyData", {
                               singleList: item,
-                            })
-                          }
+                              property: singleProperty,
+                            });
+                            // props.navigation.navigate("SinglePropertyListing", {
+                            //   singleList: item,
+                            // });
+                          }}
                           style={[
                             styles().justifyCenter,
                             {
@@ -244,6 +256,7 @@ export default function Home(props) {
                               styles().overflowH,
                               styles().justifyCenter,
                               styles().mb10,
+                              { backgroundColor: currentTheme.bodyBg },
                             ]}
                           >
                             {item?.images?.length !== 0 ? (

@@ -25,6 +25,8 @@ import {
   EvilIcons,
   FontAwesome,
   Feather,
+  Entypo,
+  MaterialCommunityIcons,
 } from "@expo/vector-icons";
 
 import Spinner from "../../Component/Spinner/Spinner";
@@ -161,6 +163,19 @@ export default function HandymenEdit(props) {
                   justifyContent: "space-between",
                 }}
               >
+                <TouchableOpacity
+                  onPress={() => DeleteHandyman(item._id)}
+                  style={{
+                    position: "absolute",
+                    right: 0,
+                    top: 0,
+                    // bottom: -10,
+                    zIndex: 100,
+                    padding: 10,
+                  }}
+                >
+                  <FontAwesome name="remove" color={"black"} size={20} />
+                </TouchableOpacity>
                 <View
                   style={{
                     height: 69,
@@ -180,12 +195,6 @@ export default function HandymenEdit(props) {
                 <View
                   style={{ flex: 1, paddingHorizontal: 10, paddingVertical: 5 }}
                 >
-                  <TouchableOpacity
-                    onPress={() => DeleteHandyman(item._id)}
-                    style={{ position: "absolute", right: 0 }}
-                  >
-                    <Feather name="delete" color={"black"} size={20} />
-                  </TouchableOpacity>
                   <Text
                     numberOfLines={1}
                     style={{

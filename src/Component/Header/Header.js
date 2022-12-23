@@ -47,7 +47,11 @@ export default function Header(props) {
   function Menu() {
     return (
       <TouchableOpacity
-        onPress={() => props.navigation.dispatch(DrawerActions.toggleDrawer())}
+        onPress={() =>
+          props.navigation.dispatch(DrawerActions.toggleDrawer(), {
+            property: props.property,
+          })
+        }
         style={[
           styles().boxpeshadow,
           styles().br5,

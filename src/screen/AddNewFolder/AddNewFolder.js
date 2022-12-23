@@ -31,6 +31,7 @@ export default function DocumentEdit(props) {
   const currentTheme = theme[themeContext.ThemeValue];
   //   let docs = props.route?.params?.docs;
   const property = props.route.params.property;
+  console.log(property);
   const user = useContext(UserContext);
   const [Loading, setLoading] = useState(false);
   const [folderName, setFolderName] = useState("");

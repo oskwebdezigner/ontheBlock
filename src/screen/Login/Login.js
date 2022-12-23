@@ -223,7 +223,8 @@ export default function Login(props) {
             <TextField
               keyboardType="default"
               value={UserName}
-              label="Email/Phone"
+              // label="Email/Phone"
+              label="Email"
               errorText={UserError}
               autoCapitalize="none"
               style
@@ -334,7 +335,7 @@ export default function Login(props) {
 
           <View style={styles().mb25}>
             <TouchableOpacity
-              onPress={() => GoogleSignup()}
+              // onPress={() => GoogleSignup()}
               style={[
                 styles().bw1,
                 styles().br50,
@@ -361,6 +362,7 @@ export default function Login(props) {
               styles().flexRow,
               styles().justifyCenter,
               styles().alignCenter,
+              styles().mb30
             ]}
           >
             <Text
