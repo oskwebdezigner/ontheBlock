@@ -16,6 +16,7 @@ import { inventories } from "../../apollo/server";
 import { theme } from "../../context/ThemeContext/ThemeColor";
 import UserContext from "../../context/User/User";
 import ThemeContext from "../../context/ThemeContext/ThemeContext";
+import ImageView from "react-native-image-viewing";
 const { width, height } = Dimensions.get("window");
 export default function MyStuff(props) {
   const INVENTORIES = gql`
@@ -39,6 +40,11 @@ export default function MyStuff(props) {
       console.log("error in inventories :", err);
     },
   });
+  
+  const [visible, setIsVisible] = useState(false);
+  
+
+  const [imageLists, setImageLists] = useState([]);
   return (
     <Layout
       navigation={props.navigation}
@@ -48,6 +54,15 @@ export default function MyStuff(props) {
       loading={loading}
       style={[styles().ph0]}
     >
+
+<ImageView
+  images={imageLists}
+  imageIndex={0}
+  presentationStyle={'fullScreen'}
+  visible={visible}
+  onRequestClose={() => setIsVisible(false)}
+/>
+
       <View style={[styles().flex, { paddingLeft: width * 0.06 }]}>
         <View style={[styles().mb20, styles().mt5]}>
           <FlatList
@@ -56,9 +71,21 @@ export default function MyStuff(props) {
             showsVerticalScrollIndicator={false}
             numColumns={2}
             renderItem={({ item, index }) => {
+              console.log('item', item)
               return (
                 <TouchableOpacity
                   key={index}
+                  onPress={() => {
+                    if(item.images.length !== 0 ){
+                      let babuji = []
+                      item.images.map(d=>babuji.push({uri:d}))
+                      
+                      setImageLists(babuji)
+                    
+                    setIsVisible(true)
+                    
+                  }
+                  }}
                   // onPress={() =>
                   //   props.navigation.navigate("SinglePropertyListing", {
                   //     singleList: item,
