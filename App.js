@@ -21,7 +21,7 @@ import { AuthContext } from "./src/context/Auth/auth";
 import * as SplashScreen from "expo-splash-screen";
 import * as Notifications from "expo-notifications";
 import "react-native-url-polyfill/auto";
-
+import * as ImagePicker from "expo-image-picker";
 const themeValue = "Yellow";
 const STATUSBAR_HEIGHT = StatusBar.currentHeight;
 
@@ -150,6 +150,15 @@ export default function App() {
     if (token) {
       setToken(token);
     }
+    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    console.log("permissionResult",permissionResult)
+    if (permissionResult.granted === false) {
+      //   FlashMessage({ message: "Permission to access camera roll is required!", type: "warning", position: 'top', height: 0.025 })
+      Alert.alert("Permission to access camera roll is required!");
+      // props.loading(false);
+      return;
+    }
+    let permission = await ImagePicker.requestCameraPermissionsAsync();
     setFontLoaded(true);
     setupClient(client);
 

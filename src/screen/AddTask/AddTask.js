@@ -152,11 +152,11 @@ export default function AddTask(props) {
 
   async function Addtask() {
     let status = true;
-    if (handyman === "") {
-      FlashMessage({ msg: "Select Handmen!", type: "warning" });
-      status = false;
-      return;
-    }
+    // if (handyman === "") {
+    //   FlashMessage({ msg: "Select Handmen!", type: "warning" });
+    //   status = false;
+    //   return;
+    // }
     if (MaintenanceDesc === "") {
       FlashMessage({ msg: "Enter Task Description!", type: "warning" });
       status = false;

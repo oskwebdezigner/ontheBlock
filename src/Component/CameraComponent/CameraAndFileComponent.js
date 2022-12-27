@@ -15,13 +15,14 @@ import {
   ActivityIndicator,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import * as DocumentPicker from "expo-document-picker";
 import { FontAwesome5, FontAwesome } from "@expo/vector-icons";
 import ThemeContext from "../../context/ThemeContext/ThemeContext";
 import { theme } from "../../context/ThemeContext/ThemeColor";
 
 const { width, height } = Dimensions.get("screen");
 
-function CameraComponent(props) {
+function CameraAndFileComponent(props) {
   const [selectedImage, setSelectedImage] = useState(null);
   const [year, setYear] = useState(null);
 
@@ -33,7 +34,7 @@ function CameraComponent(props) {
     props.setSelectedYear(year);
   }
 
-  let Years = ["Cancel", "Open Galley", "Camera"];
+  let Years = ["Cancel", "Open Galley", "Camera", "Upload Document"];
 
   const onPress = async () => {
     ActionSheetIOS.showActionSheetWithOptions(
@@ -50,8 +51,20 @@ function CameraComponent(props) {
         } else if (buttonIndex === 2) {
           openCameraPickerAsync();
         }
+        else if (buttonIndex === 3) {
+          setFile();
+        }
       }
     );
+  };
+
+  const setFile = async () => {
+    props.loading(true);
+    let document = await DocumentPicker.getDocumentAsync({
+      type: "*/*",
+    });
+    console.log("document",document)
+    props.fileUpload(document);
   };
 
   let IOSPicker = async () => {
@@ -78,10 +91,6 @@ function CameraComponent(props) {
       props.loading(false);
       return;
     }
-    // picker.name = 'abc.jpeg'
-    // picker.mimetype =	'image/jpeg'
-    // props.update(picker);
-    // props.loading(false);
     let imageUri = picker ? `data:image/jpg;base64,${picker.base64}` : null;
     let img = {
       base64_image: imageUri,
@@ -176,7 +185,7 @@ function CameraComponent(props) {
         </TouchableOpacity>
       )}
 
-      <Modal
+      {/* <Modal
         animationType="fade"
         transparent={true}
         visible={modalVisible}
@@ -199,6 +208,22 @@ function CameraComponent(props) {
             ]}
           >
             <View style={styles.modalView}>
+            <TouchableOpacity
+                  onPress={() => {
+                    setFile()
+                  }}
+                  style={[
+                    styles.appButtonContainer,
+                    {
+                      justifyContent: "center",
+                      margin: 5,
+                      //  borderBottomWidth : 0.6,
+                      //  borderBottomColor : currentTheme.themeBackground
+                    },
+                  ]}
+                >
+                  <Text style={styles.appButtonText}>Upload Document</Text>
+                </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
                   IOSPicker();
@@ -213,7 +238,7 @@ function CameraComponent(props) {
                   },
                 ]}
               >
-                <Text style={styles.appButtonText}>Open Gallery</Text>
+                <Text style={styles.appButtonText}>Open Gallery123</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -230,7 +255,7 @@ function CameraComponent(props) {
                   },
                 ]}
               >
-                <Text style={styles.appButtonText}>Camera</Text>
+                <Text style={styles.appButtonText}>Camerasss</Text>
               </TouchableOpacity>
             </View>
 
@@ -255,7 +280,7 @@ function CameraComponent(props) {
             </View>
           </View>
         </TouchableWithoutFeedback>
-      </Modal>
+      </Modal> */}
     </View>
   );
 }
@@ -299,4 +324,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CameraComponent;
+export default CameraAndFileComponent;

@@ -2,12 +2,17 @@ import React, { useContext, useState, useEffect } from "react";
 import {
   Dimensions,
   Text,
+  StyleSheet,
   ActivityIndicator,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
+  Modal,
+  Alert,
   Image,
   Linking,
 } from "react-native";
+import * as ImagePicker from 'expo-image-picker';
 import ThemeContext from "../../context/ThemeContext/ThemeContext";
 import { theme } from "../../context/ThemeContext/ThemeColor";
 import styles from "../styles";
@@ -16,7 +21,7 @@ import TextField from "../../Component/FloatTextField/FloatTextField";
 import ThemeButton from "../../Component/ThemeButton/ThemeButton";
 import { EvilIcons, Ionicons, AntDesign, Entypo } from "@expo/vector-icons";
 import Spinner from "../../Component/Spinner/Spinner";
-import CameraComponent from "../../Component/CameraComponent/CameraComponent";
+import CameraAndFileComponent from "../../Component/CameraComponent/CameraAndFileComponent";
 import DocumentComponent from "../../Component/DocumentPicker/DocumentPicker";
 import * as DocumentPicker from "expo-document-picker";
 import { useQuery, useMutation, useSubscription } from "@apollo/react-hooks";
@@ -26,8 +31,10 @@ import {
   addMultipleFiles,
   getImageKitToken,
 } from "../../apollo/server";
-import { uploadToImageKit } from "../../Component/CameraComponent/CloudUpload";
+import { uploadToImageKit, uploadImageToImageKit } from "../../Component/CameraComponent/CloudUpload";
 import FlashMessage from "../../Component/FlashMessage/FlashMessage";
+
+
 export default function DocumentEdit(props) {
   const ADD_MULTIPLE_FILES = gql`
     ${addMultipleFiles}
@@ -55,7 +62,7 @@ export default function DocumentEdit(props) {
   //     console.log("error in getImageKitToken :", err);
   //   },
   // });
-
+  const [modalVisible, setModalVisible] = useState(false);
   const [mutate, { client }] = useMutation(ADD_MULTIPLE_FILES, {
     onCompleted,
     onError,
@@ -100,13 +107,47 @@ export default function DocumentEdit(props) {
     setDeletedFiles((prevfile) => [...prevfile, deleted[0]]);
   };
 
+  let IOSPicker = async () => {
+    try{
+
+    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    console.log("permissionResult",permissionResult)
+    if (permissionResult.granted === false) {
+       Alert.alert("Permission to access camera roll is required!");
+      return;
+    }
+    Alert.alert("Permission sdfsdf");
+    let picker = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      base64: true,
+      allowsEditing: false,
+      aspect: [4, 3],
+      quality: 0.5
+    });
+    console.log("pciker",picker)
+    // let imageUri = picker ? `data:image/jpg;base64,${picker.base64}` : null;
+    // let img = {
+    //   base64_image: imageUri,
+    // };
+    // console.log("img",img)
+    }catch(err){
+      console.log("err",err)
+    }
+  };
+
+
+
+  
   const setFile = async () => {
     setDocumentfileLoading(true);
     let document = await DocumentPicker.getDocumentAsync({
       type: "*/*",
     });
+    console.log("document",document)
     if (document.type === "success") {
       await uploadToImageKit(document).then((file) => {
+        console.log('file>>>1234',file)
         setDocumentfileLoading(false);
         setUploadNewDocs((prevfile) => [
           ...prevfile,
@@ -123,6 +164,48 @@ export default function DocumentEdit(props) {
     }
   };
 
+  const openCameraPickerAsync = async () => {
+    setModalVisible(false);
+    // props.loading(true);
+    let permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+    console.log("permissionResult",permissionResult)
+    if (permissionResult.granted === false) {
+
+        //   FlashMessage({ message: "Permission to access camera is required!", type: "warning", position: 'top', height: 0.025 })
+        Alert.alert("Permission to access camera is required!");
+
+        // props.loading(false);
+        return;
+      
+    }
+    try{
+    let cameraResult = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      base64: true,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+      allowsMultipleSelection: true,
+    });
+    if (cameraResult.cancelled === true) {
+      setLoader(false);
+      // props.loading(false);
+      return;
+    }
+
+  }catch(err){
+    alert(err.toString())
+  }
+  
+    let imageUri = cameraResult
+      ? `data:image/jpg;base64,${cameraResult.base64}`
+      : null;
+    let img = {
+      base64_image: imageUri,
+    };
+    // props.update(imageUri);
+    // props.loading(false);
+  };
   console.log("upload docs=======>", UploadNewDocs);
   console.log("del docs =======>", deletedFiles);
   console.log("prev docs=======>", Documentfile);
@@ -259,7 +342,7 @@ export default function DocumentEdit(props) {
                     activeOpacity={0.6}
                     style={[
                       styles().posAbs,
-                      styles().zIndex10,
+                      // styles().zIndex10,
                       {
                         right: -7,
                         top: -5,
@@ -283,8 +366,44 @@ export default function DocumentEdit(props) {
                 </View>
               );
             })}
-            <TouchableOpacity
-              onPress={() => setFile()}
+      <CameraAndFileComponent 
+      loading = { (e) => {setDocumentfileLoading(e)}} 
+      fileUpload = {async(document)=>{
+        if (document.type === "success") {
+          await uploadToImageKit(document).then((file) => {
+            console.log('file>>>1234',file)
+            setDocumentfileLoading(false);
+            setUploadNewDocs((prevfile) => [
+              ...prevfile,
+              {
+                name: file.name,
+                mimetype: document.mimeType,
+                path: file.url,
+              },
+            ]);
+          });
+        }
+        if (document.type === "cancel") {
+          setDocumentfileLoading(false);
+        }
+      }}
+      update = {async (image) => {console.log('responsesssss>>>',image)
+      uploadImageToImageKit(image)
+      await uploadImageToImageKit(image).then((img) => {
+        console.log('img>>>',img)
+        setUploadNewDocs((prevfile) => [
+              ...prevfile,
+              {
+                name: img.name,
+                mimetype: 'image/jpeg',
+                path: img.url,
+              },
+            ]);
+      });
+      }} > 
+            {/* <TouchableOpacity
+              // onPress={() => setFile()}
+              onPress={() => setModalVisible(true) }
               style={[
                 styles().mt10,
                 styles().justifyCenter,
@@ -299,8 +418,24 @@ export default function DocumentEdit(props) {
                   marginLeft: 10,
                 },
               ]}
+            > */}
+            <View 
+             style={[
+              styles().mt10,
+              styles().justifyCenter,
+              styles().alignCenter,
+              styles().br5,
+              styles().bw1,
+              styles().wh40px,
+              {
+                top: -3,
+                borderStyle: "dashed",
+                borderColor: currentTheme.textColor,
+                marginLeft: 10,
+              },
+            ]}
             >
-              {DocumentfileLoading ? (
+            {DocumentfileLoading ? (
                 <ActivityIndicator size={"small"} />
               ) : (
                 <AntDesign
@@ -309,7 +444,10 @@ export default function DocumentEdit(props) {
                   size={20}
                 />
               )}
-            </TouchableOpacity>
+            </View>
+            
+            {/* </TouchableOpacity> */}
+            </CameraAndFileComponent>
           </View>
 
           <View style={[styles().ml15, styles().mt10]}>
@@ -387,7 +525,7 @@ export default function DocumentEdit(props) {
                       activeOpacity={0.6}
                       style={[
                         styles().posAbs,
-                        styles().zIndex10,
+                        // styles().zIndex10,
                         {
                           right: -7,
                           top: -5,
@@ -436,3 +574,43 @@ export default function DocumentEdit(props) {
     </Layout>
   );
 }
+
+
+const style = StyleSheet.create({
+  /* Other styles hidden to keep the example brief... */
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    // alignItems: "center",
+    // marginTop: 22
+  },
+  thumbnail: {
+    width: 300,
+    height: 300,
+    resizeMode: "contain",
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 10,
+  },
+  CheckBoxBtn: {
+    flexDirection: "row",
+    paddingTop: 8,
+    paddingBottom: 8,
+  },
+  appButtonContainer: {
+    // width : width,
+    // backgroundColor: "#009688",
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+  },
+  appButtonText: {
+    fontSize: 14,
+    // color: "#fff",
+    // fontWeight: "bold",
+    alignSelf: "center",
+    // textTransform: "uppercase"
+  },
+});

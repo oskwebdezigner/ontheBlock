@@ -34,6 +34,14 @@
     "notification": {
       "iosDisplayInForeground": true
     },
-    "plugins": ["expo-media-library"]
+    "plugins": [
+      ["expo-media-library"],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ]
+    ]
   }
 }
