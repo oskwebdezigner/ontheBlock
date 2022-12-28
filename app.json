@@ -2,7 +2,7 @@
   "expo": {
     "name": "OntheBlock",
     "slug": "ontheblock",
-    "version": "0.0.0",
+    "version": "0.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -15,7 +15,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "buildNumber": "1.0.3",
+      "buildNumber": "1.0.9",
       "config": {
         "googleMapsApiKey": "AIzaSyD0vSz1qjsn_RSPBB9HRD1Eqztm7DyuKw8"
       },

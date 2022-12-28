@@ -173,7 +173,7 @@ export default function AddTask(props) {
       let data = {
         inputTask: {
           added_by: user._id,
-          assign_to: handyman,
+          assign_to:  handyman === "" ? null : handyman,
           description: MaintenanceDesc,
           get_notifications: NotificationCheck,
           inventory: invenetory,
@@ -184,7 +184,7 @@ export default function AddTask(props) {
       let todo = {
         inputTask: {
           added_by: user._id,
-          assign_to: handyman,
+          assign_to: handyman === "" ? null : handyman,
           description: MaintenanceDesc,
           get_notifications: NotificationCheck,
           property: task._id,

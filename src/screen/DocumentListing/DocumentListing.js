@@ -10,6 +10,7 @@ import {
   View,
   Image,
 } from "react-native";
+import FlashMessage from "../../Component/FlashMessage/FlashMessage";
 import ThemeContext from "../../context/ThemeContext/ThemeContext";
 import { theme } from "../../context/ThemeContext/ThemeColor";
 import styles from "../styles";
@@ -28,7 +29,7 @@ import Layout from "../../Component/Layout/Layout";
 import ThemeButton from "../../Component/ThemeButton/ThemeButton";
 import { useQuery, useMutation, useSubscription } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import { folders } from "../../apollo/server";
+import { folders, DeleteFolder } from "../../apollo/server";
 import { useIsFocused } from "@react-navigation/native";
 
 const { width, height } = Dimensions.get("window");
@@ -38,10 +39,15 @@ export default function DocumentListing(props) {
     ${folders}
   `;
 
+  const DELETE_FOLDERS = gql`
+  ${DeleteFolder}
+`;
+
   const property = props?.route?.params?.property;
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
-
+  const [popFolder, setPopFolder] = useState(false)
+  const [selectedFolderIndex, setSelectedFolderIndex] = useState("")
   const { loading, error, data, refetch } = useQuery(FOLDERS, {
     fetchPolicy: "cache-and-network",
     variables: {
@@ -58,6 +64,28 @@ export default function DocumentListing(props) {
   });
   // console.log("folders =====>", data?.folders?.results);
   const isFocused = useIsFocused();
+
+  const [delete_folder_mutate] = useMutation(DELETE_FOLDERS, {
+    onCompleted: onCompleted_delete_folder,
+    onError: onError_delete_folder,
+  });
+
+  async function onCompleted_delete_folder(data) {
+    try {
+      FlashMessage({ msg: "Folder Deleted!", type: "success" });
+      refetch()
+      props.navigation.navigate("DocumentListing");
+      console.log("DELETE_FOLDERS res :", data);
+    } catch (e) {
+      console.log(e);
+    } finally {
+    }
+  }
+
+  function onError_delete_folder(error) {
+    FlashMessage({ msg: error?.message?.toString(), type: "danger" });
+    console.log("DELETE_FOLDERS error  :", error);
+  }
 
   useEffect(() => {
     refetch();
@@ -133,25 +161,77 @@ export default function DocumentListing(props) {
                       resizeMode="contain"
                       style={[styles().wh80px]}
                     />
-                    <TouchableOpacity
-                      style={[
-                        styles().top10,
+                  
+                    <View style={[
+                          styles().top10,
+                          styles().alignEnd,
+                          styles().right10,
+                          styles().posAbs,
+                        ]}>
+                      <TouchableOpacity
+                        style={[
+                          styles().alignCenter,
+                          styles().justifyCenter,
+                          styles().wh30px,
+                          styles().posRel,
+                          styles().br5,
+                          styles().bgWhite,
+                        ]}
+                        onPress={()=>{setPopFolder(!popFolder);setSelectedFolderIndex(index) }}
+                      >
+                        <Ionicons
+                          name="ellipsis-vertical"
+                          size={20}
+                          color={currentTheme.SliderDots}
+                        />
+                      </TouchableOpacity>
+                      { selectedFolderIndex === index && popFolder ? 
+                      <View style={[
+                          styles().boxpeshadow,
+                          styles().w100,
+                          styles().br10,
+                          styles().mt5,
+                        ]}
+                      >
+                        <TouchableOpacity  style={[
+                        styles().w100,
+                        styles().ph25,
                         styles().alignCenter,
-                        styles().justifyCenter,
-                        styles().wh20px,
-                        styles().br5,
-                        styles().right10,
-                        styles().posAbs,
-                        styles().bgWhite,
-                        { right: 10 },
+                        styles().pv5,
+                        
                       ]}
-                    >
-                      <Ionicons
-                        name="ellipsis-vertical"
-                        size={16}
-                        color={currentTheme.SliderDots}
-                      />
-                    </TouchableOpacity>
+                      onPress={() => { setPopFolder(!popFolder); props.navigation.navigate("AddNewFolder", { property: property, folder:item }) }}
+                      >
+                          <Text style={[styles().textCenter, {color:currentTheme.black}]}>Edit</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={[
+                        styles().w100,
+                        styles().alignCenter,
+                        styles().pv5,
+                        styles().ph25,
+                        {
+                          borderTopWidth: 1,
+                          borderTopColor: currentTheme.cEFEFEF,
+                        },
+                      ]}
+                      onPress={() => {
+                        // setDeleteLoading(true);
+                        setPopFolder(!popFolder)
+                        delete_folder_mutate({
+                          variables: {
+                            deleteFolderInput: {
+                              id: item?._id,
+                            },
+                          },
+                        });
+                      }}
+                      >
+                          <Text style={{color:currentTheme.black}}>Delete</Text>
+                        </TouchableOpacity>
+                      </View> 
+                    : null
+                      } 
+                      </View>
                   </View>
                 </View>
                 <Text

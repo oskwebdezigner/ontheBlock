@@ -1,4 +1,4 @@
-import React, { useContext, useState, useCallback } from "react";
+import React, { useContext, useState, useCallback, useEffect } from "react";
 import {
   Platform,
   Dimensions,
@@ -72,6 +72,9 @@ export default function TellAboutHome(props) {
     onCompleted: ({ propertyTypes }) => {
       //   console.log("propertyTypes :", propertyTypes);
       setProperty(propertyTypes.results);
+      if(PropertyType === ""){
+        setPropertyType([propertyTypes.results[0]?._id.toString()])
+      }
     },
     onError: (err) => {
       console.log("error in PropertyTypes :", err);
@@ -100,6 +103,7 @@ export default function TellAboutHome(props) {
   }
 
   async function AddProperty() {
+
     let status = true;
     if (PropertyNick === "") {
       setPropertyNickError(true);
@@ -229,7 +233,7 @@ export default function TellAboutHome(props) {
               </Text>
               <Multiselect
                 ListItems={property}
-                SelectText={PropertyType ? property[0]?.name : "Select"}
+                SelectText={PropertyType}
                 value={PropertyType}
                 setValue={setPropertyType}
               />
