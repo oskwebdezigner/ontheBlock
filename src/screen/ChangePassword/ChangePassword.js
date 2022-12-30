@@ -102,6 +102,11 @@ export default function ChangePassword(props) {
       status = false;
       return;
     }
+    if(NewPassword === OldPassword ){
+      FlashMessage({ msg: "Current Password and New Password Cannot be same", type: "warning" });
+      status = false;
+      return;
+    }
 
     if (!passwordRegex.test(NewPassword.trim())) {
       FlashMessage({

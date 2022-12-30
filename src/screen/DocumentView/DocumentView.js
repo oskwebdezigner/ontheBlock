@@ -57,6 +57,7 @@ export default function DocumentListing(props) {
           ListHeaderComponent={<View style={styles().pt30} />}
           showsVerticalScrollIndicator={false}
           renderItem={({ item, index }) => {
+            console.log(item.path)
             function get_url_extension(url) {
               return url
                 .split(/[#?]/)[0]
@@ -84,11 +85,12 @@ export default function DocumentListing(props) {
                 docType === "jpeg" ||
                 docType === "jpg" ||
                 docType === "gif" ? (
-                <FontAwesome
-                  name="file-image-o"
-                  size={45}
-                  color={currentTheme.themeBackground}
-                />
+                // <FontAwesome
+                //   name="file-image-o"
+                //   size={45}
+                //   color={currentTheme.themeBackground}
+                // />
+                <Image source={{uri:item.path}} style={styles().wh100}/>
               ) : (
                 <FontAwesome
                   name="file-text-o"

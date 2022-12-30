@@ -224,7 +224,7 @@ export default function Login(props) {
               keyboardType="default"
               value={UserName}
               // label="Email/Phone"
-              label="Email"
+              label="Email / Phone Number"
               errorText={UserError}
               autoCapitalize="none"
               style

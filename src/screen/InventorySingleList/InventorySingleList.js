@@ -27,6 +27,8 @@ import {
 import Layout from "../../Component/Layout/Layout";
 import ThemeButton from "../../Component/ThemeButton/ThemeButton";
 
+import ImageView from "react-native-image-viewing";
+
 const { width, height } = Dimensions.get("window");
 
 export default function InventorySingleList(props) {
@@ -37,6 +39,12 @@ export default function InventorySingleList(props) {
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
 
+  const [visible, setIsVisible] = useState(false);
+
+  const [imageLists, setImageLists] = useState([]);
+
+  console.log('imageLists', imageLists)
+
   return (
     <Layout
       navigation={props.navigation}
@@ -45,6 +53,13 @@ export default function InventorySingleList(props) {
       pagetitle={`${inventory?.category?.name?.toUpperCase()}`}
       style={[styles().ph0]}
     >
+      <ImageView
+  images={imageLists}
+  imageIndex={0}
+  presentationStyle={'fullScreen'}
+  visible={visible}
+  onRequestClose={() => setIsVisible(false)}
+/> 
       <View style={[styles().flex, { marginHorizontal: width * 0.04 }]}>
         <FlatList
           data={inventory?.inventories}
@@ -55,7 +70,7 @@ export default function InventorySingleList(props) {
           renderItem={({ item: InventoryCategoryTitle, index }) => {
             return (
               <TouchableOpacity
-                activeOpacity={1}
+                // activeOpacity={1}
                 key={index}
                 style={[
                   styles().mb20,
@@ -64,6 +79,17 @@ export default function InventorySingleList(props) {
                     marginRight: index % 2 === 0 ? width * 0.04 : 0,
                   },
                 ]}
+                onPress={() => {
+                  if(InventoryCategoryTitle.images.length !==  0 ){
+                    let babuji = []
+                    InventoryCategoryTitle.images.map(d=>babuji.push({uri:d}))
+                    setImageLists(babuji)
+                  
+                  setIsVisible(true)
+                  
+                }
+                 
+                }}
               >
                 <View
                   style={[
