@@ -70,7 +70,7 @@ export default function InventoryEdit(props) {
   const DELETE_INVENTORY = gql`
     ${deleteInventory}
   `;
-
+console.log("props?.route?.params",props?.route?.params)
   let inventory_item = props?.route?.params.inventory_item;
   let category = props?.route?.params.category;
   // console.log("inventory_item===>", inventory_item);
@@ -80,7 +80,7 @@ export default function InventoryEdit(props) {
   const isFocused = useIsFocused();
   const [Loading, setLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
-  const [ItemCat, setItemCat] = useState("");
+  const [ItemCat, setItemCat] = useState(inventory_item && inventory_item?.type ? inventory_item?.type?._id : "");
 
   const [ItemName, setItemName] = useState("");
   const [ItemNameError, setItemNameError] = useState(false);
@@ -382,8 +382,9 @@ export default function InventoryEdit(props) {
               uniqueKey="_id"
               displayKey="name"
               subKey={"subCategories"}
+              alwaysShowSelectText = {true}
               single={true}
-              selectText={"Select Category"}
+              // selectText={  "Select Category"}
               showDropDowns={true}
               readOnlyHeadings={true}
               onSelectedItemsChange={(item) => {

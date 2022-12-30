@@ -15,7 +15,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "buildNumber": "1.0.9",
+      "buildNumber": "1.1.0",
       "config": {
         "googleMapsApiKey": "AIzaSyD0vSz1qjsn_RSPBB9HRD1Eqztm7DyuKw8"
       },

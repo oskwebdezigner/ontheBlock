@@ -50,7 +50,7 @@ export default function InventoryCatList(props) {
   const currentTheme = theme[themeContext.ThemeValue];
   const SliderWidth = width * 0.8;
   const SliderHeight = height * 0.5;
-
+  console.log("property=========>", property);
   const { loading, error, data, refetch } = useQuery(
     GET_INVENTORY_BY_CATEGORY,
     {
@@ -67,7 +67,7 @@ export default function InventoryCatList(props) {
     }
   );
 
-  // console.log("inventory=========>", data?.getInventoryByCategory);
+  console.log("inventory=========>", data);
   function handleOnScroll(event) {
     //calculate screenIndex by contentOffset and screen width
     Setpage(
@@ -80,6 +80,10 @@ export default function InventoryCatList(props) {
   useEffect(() => {
     refetch();
   }, [isFocused]);
+
+  useEffect(() => {
+  console.log("data updated",data)
+  }, [data]);
 
   const [visible, setIsVisible] = useState(false);
 
@@ -112,6 +116,7 @@ export default function InventoryCatList(props) {
           ListHeaderComponent={<View style={styles().pt30} />}
           bounces={false}
           renderItem={({ item, index }) => {
+            console.log("itme in list",item)
             // console.log("========>", item?.inventories[index]?.images[index]);
             // console.log(`=====${index}===>`, item?.inventories);
             // console.log(`=====${"viewimage"}===>`, viewImage);
@@ -146,7 +151,7 @@ export default function InventoryCatList(props) {
                       ]}
                     >
                       <Image
-                        source={{ uri: item?.category?.image }}
+                        source={{ uri: item?.mainCatgeory?.image }}
                         resizeMode="contain"
                         style={styles().wh100}
                       />
@@ -159,7 +164,7 @@ export default function InventoryCatList(props) {
                         { color: currentTheme.black },
                       ]}
                     >
-                      {item.category.name}
+                      {item?.mainCatgeory?.name}
                     </Text>
                   </View>
                   <View>
@@ -167,7 +172,7 @@ export default function InventoryCatList(props) {
                       onPress={() =>
                         props.navigation.navigate("InventorySingleList", {
                           inventoryListing: item,
-                          category: item?.category,
+                          category: item?.mainCatgeory,
                           property: property,
                         })
                       }
@@ -281,12 +286,12 @@ export default function InventoryCatList(props) {
                             </View>
                           )}
                           <TouchableOpacity
-                            onPress={() =>
+                            onPress={() => {
                               props.navigation.navigate("InventoryEdit", {
                                 inventory_item: InventoryCategoryTitle,
-                                category: item?.category,
+                                category: item?.mainCatgeory,
                               })
-                            }
+                             } }
                             style={[
                               styles().top5,
                               styles().alignCenter,

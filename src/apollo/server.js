@@ -515,15 +515,11 @@ export const getInventoryByCategory = `query GetInventoryByCategory($propertyId:
         description
         _id
       }
-       mainCatgeory {
-        _id
-        name
-      }
       brand
       description
       _id
     }
-    category {
+    mainCatgeory {
       image
       name
       description
