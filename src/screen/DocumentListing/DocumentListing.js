@@ -40,14 +40,14 @@ export default function DocumentListing(props) {
   `;
 
   const DELETE_FOLDERS = gql`
-  ${DeleteFolder}
-`;
+    ${DeleteFolder}
+  `;
 
   const property = props?.route?.params?.property;
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
-  const [popFolder, setPopFolder] = useState(false)
-  const [selectedFolderIndex, setSelectedFolderIndex] = useState("")
+  const [popFolder, setPopFolder] = useState(false);
+  const [selectedFolderIndex, setSelectedFolderIndex] = useState("");
   const { loading, error, data, refetch } = useQuery(FOLDERS, {
     fetchPolicy: "cache-and-network",
     variables: {
@@ -73,7 +73,7 @@ export default function DocumentListing(props) {
   async function onCompleted_delete_folder(data) {
     try {
       FlashMessage({ msg: "Folder Deleted!", type: "success" });
-      refetch()
+      refetch();
       props.navigation.navigate("DocumentListing");
       console.log("DELETE_FOLDERS res :", data);
     } catch (e) {
@@ -124,6 +124,7 @@ export default function DocumentListing(props) {
                 // }
                 style={[
                   styles().mb20,
+                  // styles().br10,
                   {
                     padding: 5,
                     width: width * 0.44,
@@ -161,13 +162,15 @@ export default function DocumentListing(props) {
                       resizeMode="contain"
                       style={[styles().wh80px]}
                     />
-                  
-                    <View style={[
-                          styles().top10,
-                          styles().alignEnd,
-                          styles().right10,
-                          styles().posAbs,
-                        ]}>
+
+                    <View
+                      style={[
+                        styles().top10,
+                        styles().alignEnd,
+                        styles().right10,
+                        styles().posAbs,
+                      ]}
+                    >
                       <TouchableOpacity
                         style={[
                           styles().alignCenter,
@@ -177,7 +180,10 @@ export default function DocumentListing(props) {
                           styles().br5,
                           styles().bgWhite,
                         ]}
-                        onPress={()=>{setPopFolder(!popFolder);setSelectedFolderIndex(index) }}
+                        onPress={() => {
+                          setPopFolder(!popFolder);
+                          setSelectedFolderIndex(index);
+                        }}
                       >
                         <Ionicons
                           name="ellipsis-vertical"
@@ -185,53 +191,74 @@ export default function DocumentListing(props) {
                           color={currentTheme.SliderDots}
                         />
                       </TouchableOpacity>
-                      { selectedFolderIndex === index && popFolder ? 
-                      <View style={[
-                          styles().boxpeshadow,
-                          styles().w100,
-                          styles().br10,
-                          styles().mt5,
-                        ]}
-                      >
-                        <TouchableOpacity  style={[
-                        styles().w100,
-                        styles().ph25,
-                        styles().alignCenter,
-                        styles().pv5,
-                        
-                      ]}
-                      onPress={() => { setPopFolder(!popFolder); props.navigation.navigate("AddNewFolder", { property: property, folder:item }) }}
-                      >
-                          <Text style={[styles().textCenter, {color:currentTheme.black}]}>Edit</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={[
-                        styles().w100,
-                        styles().alignCenter,
-                        styles().pv5,
-                        styles().ph25,
-                        {
-                          borderTopWidth: 1,
-                          borderTopColor: currentTheme.cEFEFEF,
-                        },
-                      ]}
-                      onPress={() => {
-                        // setDeleteLoading(true);
-                        setPopFolder(!popFolder)
-                        delete_folder_mutate({
-                          variables: {
-                            deleteFolderInput: {
-                              id: item?._id,
-                            },
-                          },
-                        });
-                      }}
-                      >
-                          <Text style={{color:currentTheme.black}}>Delete</Text>
-                        </TouchableOpacity>
-                      </View> 
-                    : null
-                      } 
-                      </View>
+                      {selectedFolderIndex === index && popFolder ? (
+                        <View
+                          style={[
+                            styles().boxpeshadow,
+                            styles().w100,
+                            styles().br10,
+                            styles().mt5,
+                          ]}
+                        >
+                          <TouchableOpacity
+                            style={[
+                              styles().w100,
+                              styles().ph25,
+                              styles().alignCenter,
+                              styles().pv5,
+                            ]}
+                            onPress={() => {
+                              setPopFolder(!popFolder);
+                              props.navigation.navigate("AddNewFolder", {
+                                property: property,
+                                folder: item,
+                              });
+                            }}
+                          >
+                            <Text
+                              style={[
+                                styles().textCenter,
+                                { color: currentTheme.black, fontSize: 12 },
+                              ]}
+                            >
+                              Edit
+                            </Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            style={[
+                              styles().w100,
+                              styles().alignCenter,
+                              styles().pv5,
+                              styles().ph25,
+                              {
+                                borderTopWidth: 1,
+                                borderTopColor: currentTheme.cEFEFEF,
+                              },
+                            ]}
+                            onPress={() => {
+                              // setDeleteLoading(true);
+                              setPopFolder(!popFolder);
+                              delete_folder_mutate({
+                                variables: {
+                                  deleteFolderInput: {
+                                    id: item?._id,
+                                  },
+                                },
+                              });
+                            }}
+                          >
+                            <Text
+                              style={{
+                                color: currentTheme.black,
+                                fontSize: 12,
+                              }}
+                            >
+                              Delete
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      ) : null}
+                    </View>
                   </View>
                 </View>
                 <Text

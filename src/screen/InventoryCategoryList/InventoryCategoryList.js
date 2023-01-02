@@ -45,7 +45,7 @@ export default function InventoryCatList(props) {
   const property = props?.route?.params?.property;
   const _scrollView = useRef();
   const [page, Setpage] = useState(1);
-  
+
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
   const SliderWidth = width * 0.8;
@@ -82,14 +82,14 @@ export default function InventoryCatList(props) {
   }, [isFocused]);
 
   useEffect(() => {
-  console.log("data updated",data)
+    console.log("data updated", data);
   }, [data]);
 
   const [visible, setIsVisible] = useState(false);
 
   const [imageLists, setImageLists] = useState([]);
 
-  console.log('imageLists', imageLists)
+  console.log("imageLists", imageLists);
   return (
     <Layout
       loading={loading}
@@ -99,16 +99,13 @@ export default function InventoryCatList(props) {
       pagetitle={property?.name ? property?.name?.toUpperCase() : "My Stuff"}
       style={[styles().ph0, styles().pl20, { backgroundColor: "transparent" }]}
     >
-
-          
-
-<ImageView
-  images={imageLists}
-  imageIndex={0}
-  presentationStyle={'fullScreen'}
-  visible={visible}
-  onRequestClose={() => setIsVisible(false)}
-/> 
+      <ImageView
+        images={imageLists}
+        imageIndex={0}
+        presentationStyle={"fullScreen"}
+        visible={visible}
+        onRequestClose={() => setIsVisible(false)}
+      />
       <View style={[styles().flex]}>
         <FlatList
           data={data?.getInventoryByCategory}
@@ -116,23 +113,16 @@ export default function InventoryCatList(props) {
           ListHeaderComponent={<View style={styles().pt30} />}
           bounces={false}
           renderItem={({ item, index }) => {
-            console.log("itme in list",item)
+            console.log("itme in list", item);
             // console.log("========>", item?.inventories[index]?.images[index]);
             // console.log(`=====${index}===>`, item?.inventories);
             // console.log(`=====${"viewimage"}===>`, viewImage);
 
-           
-
-            
             return (
               <View
                 key={index}
                 style={[styles().justifyBetween, styles().mb25, styles().flex]}
               >
-           
-                
-
-
                 <View
                   style={[
                     styles().flexRow,
@@ -202,17 +192,18 @@ export default function InventoryCatList(props) {
                         key={i}
                         // activeOpacity={1}
                         onPress={() => {
-                          if(InventoryCategoryTitle.images.length !==  0 ){
-                            let babuji = []
-                            InventoryCategoryTitle.images.map(d=>babuji.push({uri:d}))
+                          if (InventoryCategoryTitle.images.length !== 0) {
+                            let babuji = [];
+                            InventoryCategoryTitle.images.map((d) =>
+                              babuji.push({ uri: d })
+                            );
                             // console.log(InventoryCategoryTitle.images)
                             // console.log(InventoryCategoryTitle.images.map(d=>babuji.push({uri:d})))
                             //console.log(babuji)
-                            setImageLists(babuji)
-                          
-                          setIsVisible(true)
-                          
-                        }
+                            setImageLists(babuji);
+
+                            setIsVisible(true);
+                          }
                           // console.log(
                           //   `=====${i}===>`,
                           //   item?.inventories[viewImage].images
@@ -290,8 +281,8 @@ export default function InventoryCatList(props) {
                               props.navigation.navigate("InventoryEdit", {
                                 inventory_item: InventoryCategoryTitle,
                                 category: item?.mainCatgeory,
-                              })
-                             } }
+                              });
+                            }}
                             style={[
                               styles().top5,
                               styles().alignCenter,
