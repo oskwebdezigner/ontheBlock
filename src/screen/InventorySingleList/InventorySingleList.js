@@ -28,7 +28,6 @@ import Layout from "../../Component/Layout/Layout";
 import ThemeButton from "../../Component/ThemeButton/ThemeButton";
 import ImageView from "react-native-image-viewing";
 
-import ImageView from "react-native-image-viewing";
 
 const { width, height } = Dimensions.get("window");
 

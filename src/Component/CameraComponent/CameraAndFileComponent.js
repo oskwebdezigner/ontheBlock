@@ -59,12 +59,14 @@ function CameraAndFileComponent(props) {
   };
 
   const setFile = async () => {
+    
     props.loading(true);
     let document = await DocumentPicker.getDocumentAsync({
       type: "*/*",
     });
     console.log("document",document)
     props.fileUpload(document);
+    setModalVisible(false);
   };
 
   let IOSPicker = async () => {
@@ -185,7 +187,7 @@ function CameraAndFileComponent(props) {
         </TouchableOpacity>
       )}
 
-      {/* <Modal
+      <Modal
         animationType="fade"
         transparent={true}
         visible={modalVisible}
@@ -280,7 +282,7 @@ function CameraAndFileComponent(props) {
             </View>
           </View>
         </TouchableWithoutFeedback>
-      </Modal> */}
+      </Modal>
     </View>
   );
 }

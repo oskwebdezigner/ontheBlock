@@ -91,7 +91,8 @@ export default function TellAboutYourself(props) {
   }
 
   function onError(error) {
-    FlashMessage({ msg: "Invalid Phone Number!", type: "danger" });
+    // FlashMessage({ msg: "Invalid Phone Number!", type: "danger" });
+    FlashMessage({ msg: error?.message?.toString(), type: "danger" });
     setLoading(false);
     console.log("SendPhoneCode error  :", error);
   }

@@ -238,7 +238,7 @@ export default function PropertyData(props) {
             />
           </View>
 
-          <View
+          {/* <View
             style={[
               styles().mt15,
               styles().h60px,
@@ -264,7 +264,7 @@ export default function PropertyData(props) {
               value={Residence}
               setValue={setResidence}
             />
-          </View>
+          </View> */}
 
           <View style={styles().mt15}>
             <TextField
