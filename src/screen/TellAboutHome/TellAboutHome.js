@@ -30,7 +30,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function TellAboutHome(props) {
   let { user, password, goal } = props?.route?.params;
   // console.log(user);
-  console.log('====ye rhay goals===>',goal);
+  console.log("====ye rhay goals===>", goal);
 
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
@@ -45,7 +45,7 @@ export default function TellAboutHome(props) {
   const [value, setValue] = useState(0);
   const [PropertyType, setPropertyType] = useState("");
   const [property, setProperty] = useState([]);
-  
+
   const REGISTER_WITH_PROPERTY = gql`
     ${RegisterWithProperty}
   `;
@@ -62,8 +62,8 @@ export default function TellAboutHome(props) {
     fetchPolicy: "cache-and-network",
     onCompleted: ({ propertyTypes }) => {
       setProperty(propertyTypes.results);
-      if(PropertyType === ""){
-        setPropertyType([propertyTypes.results[0]?._id.toString()])
+      if (PropertyType === "") {
+        setPropertyType([propertyTypes.results[0]?._id.toString()]);
       }
     },
     onError: (err) => {
@@ -95,19 +95,8 @@ export default function TellAboutHome(props) {
     console.log("RegisterWithProperty error  :", error);
   }
 
-  const PropertyTypeList = [
-    {
-      name: "Apartment",
-      _id: 0,
-    },
-    {
-      name: "Bangalow",
-      _id: 1,
-    },
-  ];
-
   async function Register() {
-    console.log("enter property type",PropertyType)
+    console.log("enter property type", PropertyType);
     let status = true;
     if (PropertyNick === "") {
       setPropertyNickError(true);
