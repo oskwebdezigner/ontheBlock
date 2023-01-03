@@ -70,9 +70,12 @@ export default function InventoryEdit(props) {
   const DELETE_INVENTORY = gql`
     ${deleteInventory}
   `;
-console.log("props?.route?.params",props?.route?.params)
+  // console.log("props?.route?.params", props?.route?.params);
   let inventory_item = props?.route?.params.inventory_item;
   let category = props?.route?.params.category;
+  let subCategories = props?.route?.params.subCategories;
+  let mainCatgeory = props?.route?.params.mainCatgeory;
+
   // console.log("inventory_item===>", inventory_item);
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
@@ -80,7 +83,9 @@ console.log("props?.route?.params",props?.route?.params)
   const isFocused = useIsFocused();
   const [Loading, setLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
-  const [ItemCat, setItemCat] = useState(inventory_item && inventory_item?.type ? inventory_item?.type?._id : "");
+  const [ItemCat, setItemCat] = useState(
+    inventory_item && inventory_item?.type ? inventory_item?.type?._id : ""
+  );
 
   const [ItemName, setItemName] = useState("");
   const [ItemNameError, setItemNameError] = useState(false);
@@ -97,7 +102,7 @@ console.log("props?.route?.params",props?.route?.params)
   const [images, setImages] = useState("");
   //   const [ItemDocName, setItemDocName] = useState("");
   //   const [ItemDocNameError, setItemDocNameError] = useState(false);
-
+  const [imgLoader, setImgLoader] = useState(false);
   const [profilePicLoading, setProfilePicLoading] = useState(false);
   const [ItemDocName, setItemDocName] = useState("");
   const [ItemDocNameError, setItemDocNameError] = useState(false);
@@ -191,12 +196,7 @@ console.log("props?.route?.params",props?.route?.params)
     console.log("addFolder error  :", error);
   }
 
-  // console.log(
-  //   "inventory_item =======:",
-  //   inventory_item,
-  //   "category :",
-  //   category
-  // );
+  console.log("inventory_item =======:", inventory_item);
 
   const setImage = async (image) => {
     // await uploadImageToCloudinary(image).then((img) => {
@@ -204,6 +204,7 @@ console.log("props?.route?.params",props?.route?.params)
     // });
     await uploadImageToImageKit(image).then((img) => {
       setImages((previmgs) => [...previmgs, img.url]);
+      setImgLoader(false);
     });
   };
 
@@ -224,7 +225,7 @@ console.log("props?.route?.params",props?.route?.params)
   };
 
   useEffect(() => {
-    // setItemCat(category?._id);
+    setItemCat(inventory_item?.type._id);
     setItemName(inventory_item?.name);
     setItemBrand(inventory_item?.brand);
     setItemModel(inventory_item?.model_no);
@@ -235,11 +236,11 @@ console.log("props?.route?.params",props?.route?.params)
 
   async function UpdateItem() {
     let status = true;
-    if (ItemCat === "") {
-      FlashMessage({ msg: "Select Category!", type: "warning" });
-      status = false;
-      return;
-    }
+    // if (ItemCat === "") {
+    //   FlashMessage({ msg: "Select Category!", type: "warning" });
+    //   status = false;
+    //   return;
+    // }
 
     if (status) {
       setLoading(true);
@@ -248,9 +249,9 @@ console.log("props?.route?.params",props?.route?.params)
         updateInventoryInput: {
           name: ItemName,
           serail_no: ItemSerial,
-          type: ItemCat[0],
+          type: ItemCat,
           mainCatgeory: mainCatgeory?._id,
-          model_no: ItemModel,
+          model_no: inventory_item?.model_no,
           images: images,
           brand: ItemBrand,
           // added_by: user?._id,
@@ -284,17 +285,17 @@ console.log("props?.route?.params",props?.route?.params)
     // }
   }
 
-  let ctg = data?.categories?.results?.find((item) => {
+  let ctg = subCategories?.find((item) => {
     return item._id === ItemCat;
   });
 
-  let mainCatgeory = data?.categories?.results?.find((item) => {
-    let subs = item.subCategories.find((find) => {
-      return find._id === ItemCat[0];
-    });
-    return subs;
-  });
-  console.log("mainCatgeory====>", mainCatgeory?.name, ItemCat[0]);
+  // let mainCatgeory = data?.categories?.results?.find((item) => {
+  //   let subs = item.subCategories.find((find) => {
+  //     return find._id === ItemCat[0];
+  //   });
+  //   return subs;
+  // });
+  console.log("mainCatgeory====>", subCategories, ItemCat);
 
   return (
     <Layout
@@ -325,13 +326,14 @@ console.log("props?.route?.params",props?.route?.params)
             >
               Item Category
             </Text>
-            {/* <Multiselect
-              ListItems={data?.categories?.results}
+            <Multiselect
+              // ListItems={data?.categories?.results}
+              ListItems={subCategories}
               SelectText={ctg?.name}
               value={ItemCat}
               setValue={(e) => setItemCat(e[0])}
-            /> */}
-            <SectionedMultiSelect
+            />
+            {/* <SectionedMultiSelect
               styles={{
                 button: {
                   backgroundColor: currentTheme.themeBackground,
@@ -382,7 +384,7 @@ console.log("props?.route?.params",props?.route?.params)
               uniqueKey="_id"
               displayKey="name"
               subKey={"subCategories"}
-              alwaysShowSelectText = {true}
+              alwaysShowSelectText={true}
               single={true}
               // selectText={  "Select Category"}
               showDropDowns={true}
@@ -392,7 +394,7 @@ console.log("props?.route?.params",props?.route?.params)
                 setItemCat(item);
               }}
               selectedItems={ItemCat}
-            />
+            /> */}
           </View>
 
           <View style={styles().mt15}>
@@ -528,6 +530,7 @@ console.log("props?.route?.params",props?.route?.params)
                     );
                   })
                 : null}
+              {imgLoader ? <Spinner /> : null}
               <View
                 style={[
                   styles().flexRow,
@@ -539,7 +542,9 @@ console.log("props?.route?.params",props?.route?.params)
               >
                 {!profilePicLoading ? (
                   <CameraComponent
-                    loading={(e) => setProfilePicLoading(e)}
+                    loading={(e) => {
+                      setProfilePicLoading(e);
+                    }}
                     update={(img) => {
                       setImage(img);
                     }}
@@ -684,6 +689,11 @@ console.log("props?.route?.params",props?.route?.params)
             </View>
           </View> */}
           <View style={[styles().mt35, styles().mb20]}>
+            {Loading ? (
+              <Spinner />
+            ) : (
+              <ThemeButton onPress={() => UpdateItem()} Title={"Save"} />
+            )}
             {deleteLoading ? (
               <Spinner />
             ) : (
@@ -692,7 +702,7 @@ console.log("props?.route?.params",props?.route?.params)
                   backgroundColor: currentTheme.dangerRed,
                   borderWidth: 0,
                   height: 50,
-                  marginBottom: 10,
+                  marginTop: 15,
                 }}
                 StyleText={{ color: currentTheme.white }}
                 onPress={() => {
@@ -707,11 +717,6 @@ console.log("props?.route?.params",props?.route?.params)
                 }}
                 Title={"Delete Item"}
               />
-            )}
-            {Loading ? (
-              <Spinner />
-            ) : (
-              <ThemeButton onPress={() => UpdateItem()} Title={"Save"} />
             )}
           </View>
         </ScrollView>

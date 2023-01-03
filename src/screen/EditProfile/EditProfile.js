@@ -289,6 +289,7 @@ export default function EditProfile(props) {
             <TextField
               keyboardType="numeric"
               value={phone}
+              editable={false}
               label="Phone Number"
               errorText={phoneError}
               editable={false}

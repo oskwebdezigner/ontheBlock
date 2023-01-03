@@ -764,6 +764,11 @@ export const inventories = `query Inventories($options: options, $filters: Inven
       _id
       images
       name
+      model_no
+      property {
+        name
+        _id
+      }
       is_active
       brand
       description
@@ -988,6 +993,24 @@ export const deleteInventory = `mutation DeleteInventory($deleteInventoryInput: 
     added_by {
       _id
       email
+    }
+  }
+}`;
+
+export const getInventoryMainCategoryAndChildCategory = `query GetInventoryMainCategoryAndChildCategory($propertyId: ID!) {
+  getInventoryMainCategoryAndChildCategory(propertyId: $propertyId) {
+    _id
+    mainCatgeory {
+      _id
+      name
+      description
+      image
+    }
+    subCategories {
+      _id
+      image
+      name
+      description
     }
   }
 }`;
