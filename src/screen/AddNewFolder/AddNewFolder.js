@@ -17,7 +17,7 @@ import Spinner from "../../Component/Spinner/Spinner";
 import FlashMessage from "../../Component/FlashMessage/FlashMessage";
 import { useQuery, useMutation, useSubscription } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import { addFolder } from "../../apollo/server";
+import { addFolder, updateFolder } from "../../apollo/server";
 import * as DocumentPicker from "expo-document-picker";
 import { EvilIcons, Ionicons, AntDesign } from "@expo/vector-icons";
 import UserContext from "../../context/User/User";
@@ -27,18 +27,25 @@ export default function DocumentEdit(props) {
   const ADD_FOLDER = gql`
     ${addFolder}
   `;
+  const EDIT_FOLDER = gql`
+  ${updateFolder}
+`;
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
   //   let docs = props.route?.params?.docs;
   const property = props.route.params.property;
+  const folder = props?.route?.params?.folder;
+  console.log("props.route.params:", props.route.params);
   console.log(property);
   const user = useContext(UserContext);
   const [Loading, setLoading] = useState(false);
-  const [folderName, setFolderName] = useState("");
+  const [folderName, setFolderName] = useState(folder?.name ? folder?.name : "");
   const [folderNameErr, setFolderNameErr] = useState(false);
   const [Documentfile, setDocumentfile] = useState([]);
+  const CALL_MUTATION = folder?._id ? EDIT_FOLDER : ADD_FOLDER
 
-  const [mutate, { client }] = useMutation(ADD_FOLDER, {
+  console.log("CALL_MUTATION",CALL_MUTATION)
+  const [mutate, { client }] = useMutation(CALL_MUTATION, {
     onCompleted,
     onError,
   });
@@ -82,16 +89,31 @@ export default function DocumentEdit(props) {
     }
     if (status) {
       setLoading(true);
-      let data = {
-        inputFolder: {
-          added_by: user?._id,
-          // files: Documentfile ? Documentfile : null,
-          // inventory: null,
-          name: folderName,
-          property: property?._id,
-        },
-      };
-      console.log("folder data :", data);
+      let data = null;
+      if(folder?.name){
+        data = {
+          updateFolderId: folder?._id ? folder?._id: null,
+          updateFolderInput: {
+            added_by: user?._id,
+            // files: Documentfile ? Documentfile : null,
+            // inventory: null,
+            name: folderName,
+            property: property?._id,
+          },
+        };
+      }else{
+        data = {
+          inputFolder: {
+            added_by: user?._id,
+            // files: Documentfile ? Documentfile : null,
+            // inventory: null,
+            name: folderName,
+            property: property?._id,
+          },
+        };
+      }
+     
+      console.log("folder data :>>>>123", data);
       await mutate({
         variables: data,
       });
@@ -224,7 +246,7 @@ export default function DocumentEdit(props) {
         {Loading ? (
           <Spinner />
         ) : (
-          <ThemeButton onPress={() => Addfolder()} Title={"Add"} />
+          <ThemeButton onPress={() => Addfolder()} Title={ folder?.name ? "Update" : "Add"} />
         )}
       </View>
     </Layout>

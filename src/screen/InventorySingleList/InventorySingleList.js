@@ -26,6 +26,7 @@ import {
 } from "@expo/vector-icons";
 import Layout from "../../Component/Layout/Layout";
 import ThemeButton from "../../Component/ThemeButton/ThemeButton";
+import ImageView from "react-native-image-viewing";
 
 import ImageView from "react-native-image-viewing";
 
@@ -34,14 +35,14 @@ const { width, height } = Dimensions.get("window");
 export default function InventorySingleList(props) {
   const inventory = props.route.params.inventoryListing;
   const property = props.route.params.property;
-  console.log("inventory ====>>>>>>", property);
+  console.log("inventory ====>>>>>>", inventory);
 
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
-
+  const [imageLists, setImageLists] = useState([]);
   const [visible, setIsVisible] = useState(false);
 
-  const [imageLists, setImageLists] = useState([]);
+  
 
   console.log('imageLists', imageLists)
 
@@ -50,7 +51,7 @@ export default function InventorySingleList(props) {
       navigation={props.navigation}
       LeftIcon={true}
       withoutScroll={true}
-      pagetitle={`${inventory?.category?.name?.toUpperCase()}`}
+      pagetitle={`${inventory?.mainCatgeory?.name?.toUpperCase()}`}
       style={[styles().ph0]}
     >
       <ImageView
@@ -70,7 +71,18 @@ export default function InventorySingleList(props) {
           renderItem={({ item: InventoryCategoryTitle, index }) => {
             return (
               <TouchableOpacity
-                // activeOpacity={1}
+                onPress={() => {
+                  if (InventoryCategoryTitle.images.length !== 0) {
+                    // alert('here')
+                    let babuji = [];
+                    InventoryCategoryTitle.images.map((d) =>
+                      babuji.push({ uri: d })
+                    );
+                    setImageLists(babuji);
+                    setIsVisible(true);
+                  }
+                }}
+                activeOpacity={0.5}
                 key={index}
                 style={[
                   styles().mb20,
@@ -79,17 +91,7 @@ export default function InventorySingleList(props) {
                     marginRight: index % 2 === 0 ? width * 0.04 : 0,
                   },
                 ]}
-                onPress={() => {
-                  if(InventoryCategoryTitle.images.length !==  0 ){
-                    let babuji = []
-                    InventoryCategoryTitle.images.map(d=>babuji.push({uri:d}))
-                    setImageLists(babuji)
-                  
-                  setIsVisible(true)
-                  
-                }
-                 
-                }}
+                
               >
                 <View
                   style={[

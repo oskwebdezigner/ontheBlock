@@ -158,7 +158,6 @@ export default function App() {
       // props.loading(false);
       return;
     }
-    let permission = await ImagePicker.requestCameraPermissionsAsync();
     setFontLoaded(true);
     setupClient(client);
 

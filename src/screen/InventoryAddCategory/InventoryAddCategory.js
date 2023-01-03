@@ -167,18 +167,7 @@ export default function InventoryAddCategory(props) {
       console.log("new added item data :", data);
       setLoading(true);
       await mutate({
-        variables: data,
-        // variables: {
-        //   inputInventory: {
-        //     brand: ItemBrand,
-        //     images: images,
-        //     model_no: ItemModel,
-        //     name: ItemName,
-        //     type: inventory_id ? inventory_id : ItemCat,
-        //     added_by: user._id,
-        //     property: property?._id,
-        //   },
-        // },
+        variables: data
       });
     }
   }

@@ -238,7 +238,6 @@ export const forgotPasswordVerfication = `mutation forgotPasswordVerification(
       result
     }
   }`;
-
 export const verifyAccount = ` mutation verifyAccount($email:String!,$code: String!,$emailCode: String! ){
     verifyAccount(verifyInput:{
       email:$email,
@@ -516,15 +515,11 @@ export const getInventoryByCategory = `query GetInventoryByCategory($propertyId:
         description
         _id
       }
-       mainCatgeory {
-        _id
-        name
-      }
       brand
       description
       _id
     }
-    category {
+    mainCatgeory {
       image
       name
       description
@@ -596,6 +591,33 @@ export const updateInventory = `mutation UpdateInventory($updateInventoryId: ID!
 
 export const addFolder = `mutation AddFolder($inputFolder: InputFolder) {
   addFolder(inputFolder: $inputFolder) {
+    _id
+    added_by {
+      _id
+      email
+      first_name
+    }
+    inventory {
+      _id
+      name
+    }
+    name
+    files {
+      _id
+      mimetype
+      name
+      path
+    }
+  }
+}`;
+export const DeleteFolder = `mutation DeleteFolder($deleteFolderInput: DeleteFolderInput) {
+  deleteFolder(deleteFolderInput: $deleteFolderInput) {
+    _id
+    name
+  }
+}`;
+export const updateFolder = `mutation updateFolder($updateFolderId:ID!, $updateFolderInput: InputFolder) {
+  updateFolder(id:$updateFolderId, updateFolderInput: $updateFolderInput) {
     _id
     added_by {
       _id

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useCallback } from "react";
+import React, { useContext, useState, useCallback, useEffect } from "react";
 import {
   Platform,
   Dimensions,
@@ -45,7 +45,7 @@ export default function TellAboutHome(props) {
   const [value, setValue] = useState(0);
   const [PropertyType, setPropertyType] = useState("");
   const [property, setProperty] = useState([]);
-
+  
   const REGISTER_WITH_PROPERTY = gql`
     ${RegisterWithProperty}
   `;
@@ -61,8 +61,10 @@ export default function TellAboutHome(props) {
   const { loading, error, data, refetch } = useQuery(PROPERTY_TYPE, {
     fetchPolicy: "cache-and-network",
     onCompleted: ({ propertyTypes }) => {
-      console.log("propertyTypes :", propertyTypes);
       setProperty(propertyTypes.results);
+      if(PropertyType === ""){
+        setPropertyType([propertyTypes.results[0]?._id.toString()])
+      }
     },
     onError: (err) => {
       console.log("error in PropertyTypes :", err);
@@ -105,6 +107,7 @@ export default function TellAboutHome(props) {
   ];
 
   async function Register() {
+    console.log("enter property type",PropertyType)
     let status = true;
     if (PropertyNick === "") {
       setPropertyNickError(true);
@@ -236,7 +239,7 @@ export default function TellAboutHome(props) {
               </Text>
               <Multiselect
                 ListItems={property}
-                SelectText={property[0]?.name}
+                SelectText={PropertyType}
                 value={PropertyType}
                 setValue={setPropertyType}
               />
