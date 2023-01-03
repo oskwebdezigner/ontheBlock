@@ -40,9 +40,8 @@ export default function MyStuff(props) {
       console.log("error in inventories :", err);
     },
   });
-  
+
   const [visible, setIsVisible] = useState(false);
-  
 
   const [imageLists, setImageLists] = useState([]);
   return (
@@ -54,14 +53,13 @@ export default function MyStuff(props) {
       loading={loading}
       style={[styles().ph0]}
     >
-
-<ImageView
-  images={imageLists}
-  imageIndex={0}
-  presentationStyle={'fullScreen'}
-  visible={visible}
-  onRequestClose={() => setIsVisible(false)}
-/>
+      <ImageView
+        images={imageLists}
+        imageIndex={0}
+        presentationStyle={"fullScreen"}
+        visible={visible}
+        onRequestClose={() => setIsVisible(false)}
+      />
 
       <View style={[styles().flex, { paddingLeft: width * 0.06 }]}>
         <View style={[styles().mb20, styles().mt5]}>
@@ -71,20 +69,19 @@ export default function MyStuff(props) {
             showsVerticalScrollIndicator={false}
             numColumns={2}
             renderItem={({ item, index }) => {
-              console.log('item', item)
+              console.log("item", item);
               return (
                 <TouchableOpacity
                   key={index}
                   onPress={() => {
-                    if(item.images.length !== 0 ){
-                      let babuji = []
-                      item.images.map(d=>babuji.push({uri:d}))
-                      
-                      setImageLists(babuji)
-                    
-                    setIsVisible(true)
-                    
-                  }
+                    if (item.images.length !== 0) {
+                      let babuji = [];
+                      item.images.map((d) => babuji.push({ uri: d }));
+
+                      setImageLists(babuji);
+
+                      setIsVisible(true);
+                    }
                   }}
                   // onPress={() =>
                   //   props.navigation.navigate("SinglePropertyListing", {
