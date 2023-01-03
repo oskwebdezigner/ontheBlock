@@ -118,7 +118,12 @@ export default function EditProfile(props) {
       return;
     }
     if (lname === "") {
-      FlashMessage({ msg: "Enter Lat Name!", type: "warning" });
+      FlashMessage({ msg: "Enter Last Name!", type: "warning" });
+      status = false;
+      return;
+    }
+    if (phone === "") {
+      FlashMessage({ msg: "Enter Phone!", type: "warning" });
       status = false;
       return;
     }
