@@ -4,6 +4,7 @@ import {
   Dimensions,
   FlatList,
   KeyboardAvoidingView,
+  ScrollView,
   Text,
   TextInput,
   ActivityIndicator,
@@ -33,7 +34,7 @@ import Spinner from "../../Component/Spinner/Spinner";
 
 import RangeSlider, { Slider } from "react-native-range-slider-expo";
 import Multiselect from "../../Component/Multiselect/Multiselect";
-import { ScrollView } from "react-native-gesture-handler";
+
 import CameraComponent from "../../Component/CameraComponent/CameraComponent";
 import MultipleImagePicker from "../../Component/CameraComponent/MultipleImagePicker";
 import { ImageBackground } from "react-native-web";
@@ -125,6 +126,8 @@ export default function HandymenEdit(props) {
       loading={Loading}
       style={[styles().ph0]}
     >
+      <KeyboardAvoidingView style={styles().flex}>
+        <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
       <View style={[styles().flex]}>
         <FlatList
           data={data?.handymen?.results}
@@ -246,6 +249,9 @@ export default function HandymenEdit(props) {
             );
           }}
         />
+        </View>
+        </ScrollView>
+        </KeyboardAvoidingView>
         <View style={[styles().mt35, styles().mb20, styles().ph20]}>
           <ThemeButton
             onPress={() =>
@@ -256,7 +262,7 @@ export default function HandymenEdit(props) {
             Title={"Add New Handyperson"}
           />
         </View>
-      </View>
+      
     </Layout>
   );
 }

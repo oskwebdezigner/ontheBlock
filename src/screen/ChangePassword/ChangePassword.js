@@ -5,6 +5,7 @@ import {
   FlatList,
   KeyboardAvoidingView,
   Text,
+  ScrollView,
   TextInput,
   TouchableOpacity,
   View,
@@ -149,6 +150,8 @@ export default function ChangePassword(props) {
       LeftIcon={true}
       pagetitle={"Change Password"}
     >
+      <KeyboardAvoidingView style={styles().flex}>
+        <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
       <View style={[styles().flex, styles().mt30]}>
         <View style={styles().mb20}>
           <TextField
@@ -230,6 +233,8 @@ export default function ChangePassword(props) {
           />
         </View>
       </View>
+      </ScrollView>
+      </KeyboardAvoidingView>
       <View style={[styles().justifyEnd, styles().mb20]}>
         {!Loading ? (
           <ThemeButton Title={"Save"} onPress={() => ChangePassword()} />
