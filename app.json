@@ -9,6 +9,14 @@
       "image": "./assets/splash.png",
       "resizeMode": "cover"
     },
+    "build": {
+      "preview": {
+        "channel": "preview"
+      },
+      "production": {
+        "channel": "production"
+      }
+    },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -21,7 +29,9 @@
       },
       "usesAppleSignIn": true,
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "This app uses the location to determine the delivery address for your orders."
+        "NSLocationWhenInUseUsageDescription": "This app uses the location to determine the delivery address for your orders.",
+        "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photos",
+        "NSPhotoLibraryAddUsageDescription": "Allow $(PRODUCT_NAME) to save photos"
       },
       "bundleIdentifier": "com.app.ontheblock"
     },
@@ -29,7 +39,14 @@
       "versionCode": 0,
       "package": "com.app.ontheblock",
       "useNextNotificationsApi": true,
-      "permissions": ["CAMERA", "LOCATION", "ACCESS_FINE_LOCATION"]
+      "permissions": [
+        "CAMERA",
+        "LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "notification": {
       "iosDisplayInForeground": true
@@ -42,6 +59,11 @@
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "07055091-231e-40e0-a475-469d87b3be2a"
+      }
+    }
   }
 }

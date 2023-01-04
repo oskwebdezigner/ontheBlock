@@ -103,8 +103,11 @@ export default function ChangePassword(props) {
       status = false;
       return;
     }
-    if(NewPassword === OldPassword ){
-      FlashMessage({ msg: "Current Password and New Password Cannot be same", type: "warning" });
+    if (NewPassword === OldPassword) {
+      FlashMessage({
+        msg: "Current Password and New Password Cannot be same",
+        type: "warning",
+      });
       status = false;
       return;
     }
@@ -151,89 +154,92 @@ export default function ChangePassword(props) {
       pagetitle={"Change Password"}
     >
       <KeyboardAvoidingView style={styles().flex}>
-        <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
-      <View style={[styles().flex, styles().mt30]}>
-        <View style={styles().mb20}>
-          <TextField
-            keyboardType="default"
-            value={OldPassword}
-            label="Current Password"
-            errorText={""}
-            autoCapitalize="none"
-            style
-            onChangeText={(text) => {
-              setOldPassword(text);
-            }}
-            secureTextEntry={ConfirmiconEye === "eye" ? false : true}
-            childrenPassword={
-              <TouchableOpacity
-                onPress={onChangeIconConfirm.bind()}
-                style={[styles().passEye]}
-              >
-                <FontAwesome
-                  name={ConfirmiconEye}
-                  size={16}
-                  color={currentTheme.textColor}
-                />
-              </TouchableOpacity>
-            }
-          />
-        </View>
-        <View style={styles().mb20}>
-          <TextField
-            keyboardType="default"
-            value={NewPassword}
-            label="New Password"
-            errorText={""}
-            autoCapitalize="none"
-            style
-            onChangeText={(text) => {
-              setNewPassword(text);
-            }}
-            secureTextEntry={NewiconEye === "eye" ? false : true}
-            childrenPassword={
-              <TouchableOpacity
-                onPress={onChangeIconNew.bind()}
-                style={[styles().passEye]}
-              >
-                <FontAwesome
-                  name={NewiconEye}
-                  size={16}
-                  color={currentTheme.textColor}
-                />
-              </TouchableOpacity>
-            }
-          />
-        </View>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={[styles().flex, styles().mt30]}>
+            <View style={styles().mb20}>
+              <TextField
+                keyboardType="default"
+                value={OldPassword}
+                label="Current Password"
+                errorText={""}
+                autoCapitalize="none"
+                style
+                onChangeText={(text) => {
+                  setOldPassword(text);
+                }}
+                secureTextEntry={ConfirmiconEye === "eye" ? false : true}
+                childrenPassword={
+                  <TouchableOpacity
+                    onPress={onChangeIconConfirm.bind()}
+                    style={[styles().passEye]}
+                  >
+                    <FontAwesome
+                      name={ConfirmiconEye}
+                      size={16}
+                      color={currentTheme.textColor}
+                    />
+                  </TouchableOpacity>
+                }
+              />
+            </View>
+            <View style={styles().mb20}>
+              <TextField
+                keyboardType="default"
+                value={NewPassword}
+                label="New Password"
+                errorText={""}
+                autoCapitalize="none"
+                style
+                onChangeText={(text) => {
+                  setNewPassword(text);
+                }}
+                secureTextEntry={NewiconEye === "eye" ? false : true}
+                childrenPassword={
+                  <TouchableOpacity
+                    onPress={onChangeIconNew.bind()}
+                    style={[styles().passEye]}
+                  >
+                    <FontAwesome
+                      name={NewiconEye}
+                      size={16}
+                      color={currentTheme.textColor}
+                    />
+                  </TouchableOpacity>
+                }
+              />
+            </View>
 
-        <View style={styles().mb20}>
-          <TextField
-            keyboardType="default"
-            secureTextEntry={iconEye === "eye" ? false : true}
-            value={ConfirmPassword}
-            label="Re-type Password"
-            errorText={""}
-            autoCapitalize="none"
-            style
-            onChangeText={(text) => {
-              setConfirmPassword(text);
-            }}
-            childrenPassword={
-              <TouchableOpacity
-                onPress={onChangeIcon.bind()}
-                style={[styles().passEye]}
-              >
-                <FontAwesome
-                  name={iconEye}
-                  size={16}
-                  color={currentTheme.textColor}
-                />
-              </TouchableOpacity>
-            }
-          />
-        </View>
-      </View>
-      </ScrollView>
+            <View style={styles().mb20}>
+              <TextField
+                keyboardType="default"
+                secureTextEntry={iconEye === "eye" ? false : true}
+                value={ConfirmPassword}
+                label="Re-type Password"
+                errorText={""}
+                autoCapitalize="none"
+                style
+                onChangeText={(text) => {
+                  setConfirmPassword(text);
+                }}
+                childrenPassword={
+                  <TouchableOpacity
+                    onPress={onChangeIcon.bind()}
+                    style={[styles().passEye]}
+                  >
+                    <FontAwesome
+                      name={iconEye}
+                      size={16}
+                      color={currentTheme.textColor}
+                    />
+                  </TouchableOpacity>
+                }
+              />
+            </View>
+          </View>
+        </ScrollView>
       </KeyboardAvoidingView>
       <View style={[styles().justifyEnd, styles().mb20]}>
         {!Loading ? (

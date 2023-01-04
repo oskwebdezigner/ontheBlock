@@ -32,6 +32,7 @@ export default function Home(props) {
   const UPCOMING_TASK_LIST = gql`
     ${upcommingTasksList}
   `;
+  
   const HomeTopList = [
     {
       Image: require("../../assets/images/home-top-img1.png"),

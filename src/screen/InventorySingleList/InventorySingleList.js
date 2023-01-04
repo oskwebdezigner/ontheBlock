@@ -204,6 +204,7 @@ export default function InventorySingleList(props) {
                   </View>
                 </View>
                 <Text
+                  numberOfLines={2}
                   style={[
                     styles().fs12,
                     styles().fw600,

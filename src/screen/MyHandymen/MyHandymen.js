@@ -127,142 +127,148 @@ export default function HandymenEdit(props) {
       style={[styles().ph0]}
     >
       <KeyboardAvoidingView style={styles().flex}>
-        <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
-      <View style={[styles().flex]}>
-        <FlatList
-          data={data?.handymen?.results}
-          keyExtractor={(item, index) => index.toString()}
+        <ScrollView
           showsVerticalScrollIndicator={false}
-          bounces={false}
-          renderItem={({ item, index }) => {
-            return (
-              <TouchableOpacity
-                onPress={() =>
-                  props.navigation.navigate("HandymenEdit", {
-                    property: property,
-                    isEdit: true,
-                    handymen: item,
-                  })
-                }
-                activeOpacity={0.5}
-                key={index}
-                style={{
-                  padding: 10,
-                  borderRadius: 10,
-                  width: width * 0.9,
-                  backgroundColor: currentTheme.white,
-                  marginHorizontal: width * 0.05,
-                  marginVertical: 5,
-                  shadowColor: "#000",
-                  shadowOffset: {
-                    width: 0,
-                    height: 2,
-                  },
-                  shadowOpacity: 0.25,
-                  shadowRadius: 3.84,
-                  elevation: 5,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                <TouchableOpacity
-                  onPress={() => DeleteHandyman(item._id)}
-                  style={{
-                    position: "absolute",
-                    right: 0,
-                    top: 0,
-                    // bottom: -10,
-                    zIndex: 100,
-                    padding: 10,
-                  }}
-                >
-                  <FontAwesome name="remove" color={"black"} size={20} />
-                </TouchableOpacity>
-                <View
-                  style={{
-                    height: 69,
-                    width: 69,
-                    borderRadius: 10,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    backgroundColor: currentTheme.themeBackground,
-                  }}
-                >
-                  <Image
-                    source={require("../../assets/images/SinglePropertyList-img5.png")}
-                    style={[styles().wh40px, { tintColor: "black" }]}
-                    resizeMode={"contain"}
-                  />
-                </View>
-                <View
-                  style={{ flex: 1, paddingHorizontal: 10, paddingVertical: 5 }}
-                >
-                  <Text
-                    numberOfLines={1}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={[styles().flex]}>
+            <FlatList
+              data={data?.handymen?.results}
+              keyExtractor={(item, index) => index.toString()}
+              showsVerticalScrollIndicator={false}
+              bounces={false}
+              renderItem={({ item, index }) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() =>
+                      props.navigation.navigate("HandymenEdit", {
+                        property: property,
+                        isEdit: true,
+                        handymen: item,
+                      })
+                    }
+                    activeOpacity={0.5}
+                    key={index}
                     style={{
-                      fontSize: 16,
-                      fontWeight: "bold",
-                      color: currentTheme.black,
+                      padding: 10,
+                      borderRadius: 10,
+                      width: width * 0.9,
+                      backgroundColor: currentTheme.white,
+                      marginHorizontal: width * 0.05,
+                      marginVertical: 5,
+                      shadowColor: "#000",
+                      shadowOffset: {
+                        width: 0,
+                        height: 2,
+                      },
+                      shadowOpacity: 0.25,
+                      shadowRadius: 3.84,
+                      elevation: 5,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "space-between",
                     }}
                   >
-                    {item.name?.toUpperCase()}
-                  </Text>
-                  <Text
-                    numberOfLines={1}
+                    <TouchableOpacity
+                      onPress={() => DeleteHandyman(item._id)}
+                      style={{
+                        position: "absolute",
+                        right: 0,
+                        top: 0,
+                        // bottom: -10,
+                        zIndex: 100,
+                        padding: 10,
+                      }}
+                    >
+                      <FontAwesome name="remove" color={"black"} size={20} />
+                    </TouchableOpacity>
+                    <View
+                      style={{
+                        height: 69,
+                        width: 69,
+                        borderRadius: 10,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: currentTheme.themeBackground,
+                      }}
+                    >
+                      <Image
+                        source={require("../../assets/images/SinglePropertyList-img5.png")}
+                        style={[styles().wh40px, { tintColor: "black" }]}
+                        resizeMode={"contain"}
+                      />
+                    </View>
+                    <View
+                      style={{
+                        flex: 1,
+                        paddingHorizontal: 10,
+                        paddingVertical: 5,
+                      }}
+                    >
+                      <Text
+                        numberOfLines={1}
+                        style={{
+                          fontSize: 16,
+                          fontWeight: "bold",
+                          color: currentTheme.black,
+                        }}
+                      >
+                        {item.name?.toUpperCase()}
+                      </Text>
+                      <Text
+                        numberOfLines={1}
+                        style={{
+                          color: currentTheme.textColor,
+                          fontSize: 12,
+                          marginVertical: 3,
+                        }}
+                      >
+                        {item.occupation}
+                      </Text>
+                      <Text
+                        numberOfLines={1}
+                        style={{ color: currentTheme.textColor, fontSize: 12 }}
+                      >
+                        {item.contact_no}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                );
+              }}
+              ListEmptyComponent={() => {
+                return (
+                  <View
                     style={{
-                      color: currentTheme.textColor,
-                      fontSize: 12,
-                      marginVertical: 3,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginTop: 20,
                     }}
                   >
-                    {item.occupation}
-                  </Text>
-                  <Text
-                    numberOfLines={1}
-                    style={{ color: currentTheme.textColor, fontSize: 12 }}
-                  >
-                    {item.contact_no}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            );
-          }}
-          ListEmptyComponent={() => {
-            return (
-              <View
-                style={{
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginTop: 20,
-                }}
-              >
-                <Text
-                  style={{
-                    color: currentTheme.textColor,
-                    fontSize: 14,
-                  }}
-                >
-                  No Handypersons
-                </Text>
-              </View>
-            );
-          }}
-        />
-        </View>
+                    <Text
+                      style={{
+                        color: currentTheme.textColor,
+                        fontSize: 14,
+                      }}
+                    >
+                      No Handypersons
+                    </Text>
+                  </View>
+                );
+              }}
+            />
+          </View>
         </ScrollView>
-        </KeyboardAvoidingView>
-        <View style={[styles().mt35, styles().mb20, styles().ph20]}>
-          <ThemeButton
-            onPress={() =>
-              props.navigation.navigate("HandymenEdit", {
-                property: property,
-              })
-            }
-            Title={"Add New Handyperson"}
-          />
-        </View>
-      
+      </KeyboardAvoidingView>
+      <View style={[styles().mt35, styles().mb20, styles().ph20]}>
+        <ThemeButton
+          onPress={() =>
+            props.navigation.navigate("HandymenEdit", {
+              property: property,
+            })
+          }
+          Title={"Add New Handyperson"}
+        />
+      </View>
     </Layout>
   );
 }

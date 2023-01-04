@@ -142,7 +142,7 @@ export default function InventoryCatList(props) {
                   <View style={[styles().flexRow, styles().alignCenter]}>
                     <View
                       style={[
-                        styles().wh30px,
+                        styles().wh25px,
                         styles().overflowH,
                         styles().mr5,
                       ]}
@@ -158,7 +158,7 @@ export default function InventoryCatList(props) {
                         styles().fs16,
                         styles().lh18,
                         styles().fontBold,
-                        { color: currentTheme.black,letterSpacing:1 },
+                        { color: currentTheme.black, letterSpacing: 1 },
                       ]}
                     >
                       {item?.mainCatgeory?.name?.toUpperCase()}
