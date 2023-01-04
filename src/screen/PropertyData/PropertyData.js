@@ -31,7 +31,11 @@ import Spinner from "../../Component/Spinner/Spinner";
 import RangeSlider, { Slider } from "react-native-range-slider-expo";
 import Multiselect from "../../Component/Multiselect/Multiselect";
 import { ScrollView } from "react-native-gesture-handler";
-import { PropertyTypes, updateProperty } from "../../apollo/server";
+import {
+  PropertyTypes,
+  propertyUses,
+  updateProperty,
+} from "../../apollo/server";
 import Loader from "../../Component/Loader/Loader";
 import FlashMessage from "../../Component/FlashMessage/FlashMessage";
 import CameraComponent from "../../Component/CameraComponent/CameraComponent";
@@ -45,6 +49,10 @@ export default function PropertyData(props) {
   const UPDATE_PROPERTY = gql`
     ${updateProperty}
   `;
+  const PROPERTY_USE = gql`
+    ${propertyUses}
+  `;
+
   const property = props.route.params.property;
   console.log("property data :", property);
 
@@ -54,23 +62,17 @@ export default function PropertyData(props) {
   const [images, setImages] = useState([]);
   const [PropertyNick, setPropertyNick] = useState("");
   const [PropertyNickError, setPropertyNickError] = useState(false);
-
   const [value, setValue] = useState(0);
   const [PropertyType, setPropertyType] = useState("");
   const [Residence, setResidence] = useState("");
-
   const [Street, setStreet] = useState("");
   const [StreetError, setStreetError] = useState(false);
-
   const [City, setCity] = useState("");
   const [CityError, setCityError] = useState(false);
-
   const [State, setState] = useState("");
   const [StateError, setStateError] = useState(false);
-
   const [Zipcode, setZipcode] = useState("");
   const [ZipcodeError, setZipcodeError] = useState(false);
-
   const [Loading, setLoading] = useState(false);
 
   const ResidenceList = [
@@ -89,6 +91,21 @@ export default function PropertyData(props) {
     onCompleted: ({ propertyTypes }) => {},
     onError: (err) => {
       console.log("error in PropertyTypes :", err);
+    },
+  });
+
+  const {
+    loading: propertyuserLoader,
+    error: propertyuserError,
+    data: propertyuserData,
+    refetch: propertyuserRefetch,
+  } = useQuery(PROPERTY_USE, {
+    fetchPolicy: "cache-and-network",
+    onCompleted: ({ propertyUses }) => {
+      console.log("propertyUses :", propertyuserData);
+    },
+    onError: (err) => {
+      console.log("error in propertyUses :", err);
     },
   });
 
@@ -139,19 +156,22 @@ export default function PropertyData(props) {
     }
     if (status) {
       setLoading(true);
-      await mutate({
-        variables: {
-          updatePropertyId: property._id,
-          updatePropertyInput: {
-            name: PropertyNick,
-            type: PropertyType,
-            zip_code: Zipcode,
-            city: City,
-            country: State,
-            address: Street,
-            images: images,
-          },
+      let data = {
+        updatePropertyId: property?._id,
+        updatePropertyInput: {
+          name: PropertyNick,
+          type: PropertyType,
+          zip_code: Zipcode,
+          city: City,
+          country: State,
+          address: Street,
+          images: images,
+          use: Residence,
         },
+      };
+      console.log("data :", data);
+      await mutate({
+        variables: data,
       });
     }
   }
@@ -163,6 +183,7 @@ export default function PropertyData(props) {
     setState(property?.country);
     setZipcode(property?.zip_code);
     setImages(property?.images);
+    setResidence(property?.use?._id ? property?.use?._id : null);
     // setPropertyType(property?.type?._id);
     setPropertyType(
       property?.type?._id
@@ -176,8 +197,12 @@ export default function PropertyData(props) {
   let propt = data?.propertyTypes?.results?.find((item) => {
     return item._id === PropertyType;
   });
+  let proptuse = propertyuserData?.propertyUses?.results?.find((item) => {
+    return item._id === Residence;
+  });
 
-  console.log("propertyType img :", images);
+  // console.log("propertyType img :", Residence[0]);
+
   return (
     <Layout
       navigation={props.navigation}
@@ -260,10 +285,10 @@ export default function PropertyData(props) {
               Property Use (optional)
             </Text>
             <Multiselect
-              ListItems={ResidenceList}
-              SelectText={"Primary Residence"}
+              ListItems={propertyuserData?.propertyUses?.results}
+              SelectText={proptuse?.name ? proptuse?.name : proptuse?.name}
               value={Residence}
-              setValue={setResidence}
+              setValue={(e) => setResidence(e[0])}
             />
           </View>
 

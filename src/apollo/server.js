@@ -429,6 +429,10 @@ export const properties = `query Properties {
       is_active
       name
       owned_years
+       use {
+        _id
+        name
+      }
       type {
         name
         image
@@ -1007,6 +1011,17 @@ export const getInventoryMainCategoryAndChildCategory = `query GetInventoryMainC
       image
     }
     subCategories {
+      _id
+      image
+      name
+      description
+    }
+  }
+}`;
+
+export const propertyUses = `query PropertyUses($options: options, $filters: propertyUsefilters) {
+  propertyUses(options: $options, filters: $filters) {
+    results {
       _id
       image
       name

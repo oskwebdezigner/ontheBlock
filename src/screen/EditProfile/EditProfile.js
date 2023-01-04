@@ -292,7 +292,6 @@ export default function EditProfile(props) {
               editable={false}
               label="Phone Number"
               errorText={phoneError}
-              editable={false}
               autoCapitalize="none"
               style
               onChangeText={(text) => {
