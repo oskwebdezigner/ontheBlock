@@ -135,7 +135,7 @@ export default function SideBar(props) {
       <View
         style={[styles().pt35, styles().flex, styles().pl15, styles().pr15]}
       >
-        <View style={styles().mb35}>
+        <View style={[styles().mb35]}>
           <TouchableOpacity
             onPress={() => props.navigation.goBack()}
             style={[styles().alignEnd, styles().justifyEnd, styles().backButn]}
@@ -149,10 +149,10 @@ export default function SideBar(props) {
             />
           </View>
         </View>
-        <View>
+        <View style={[styles().flex]}>
           <FlatList
             data={MenuItems}
-            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
             renderItem={({ item, index }) => {
               return (
                 <TouchableOpacity
@@ -240,10 +240,31 @@ export default function SideBar(props) {
               );
             }}
             keyExtractor={(item, index) => index.toString()}
+            ListFooterComponent={<TouchableOpacity
+              onPress={() => Logout()}
+              style={[styles().flexRow, styles().pv10]}
+            >
+              <View style={[styles().mr20, styles().wh20px]}>
+                <Image
+                  source={require("../../assets/images/logout.png")}
+                  style={styles().wh100}
+                  resizeMode="contain"
+                />
+              </View>
+              <Text
+                style={[
+                  styles().fs13,
+                  styles().fw600,
+                  { color: currentTheme.black },
+                ]}
+              >
+                Logout
+              </Text>
+            </TouchableOpacity>}
           />
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => Logout()}
-            style={[styles().flexRow, styles().pv10, styles().mb10]}
+            style={[styles().flexRow, styles().pv10, {borderWidth:2}]}
           >
             <View style={[styles().mr20, styles().wh20px]}>
               <Image
@@ -261,7 +282,7 @@ export default function SideBar(props) {
             >
               Logout
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
 
@@ -271,6 +292,7 @@ export default function SideBar(props) {
           styles().alignCenter,
           styles().ph15,
           styles().pb25,
+          styles().mt20
         ]}
       >
         <Text
