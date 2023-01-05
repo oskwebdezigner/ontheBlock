@@ -429,6 +429,10 @@ export const properties = `query Properties {
       is_active
       name
       owned_years
+       use {
+        _id
+        name
+      }
       type {
         name
         image
@@ -764,6 +768,11 @@ export const inventories = `query Inventories($options: options, $filters: Inven
       _id
       images
       name
+      model_no
+      property {
+        name
+        _id
+      }
       is_active
       brand
       description
@@ -988,6 +997,35 @@ export const deleteInventory = `mutation DeleteInventory($deleteInventoryInput: 
     added_by {
       _id
       email
+    }
+  }
+}`;
+
+export const getInventoryMainCategoryAndChildCategory = `query GetInventoryMainCategoryAndChildCategory($propertyId: ID!) {
+  getInventoryMainCategoryAndChildCategory(propertyId: $propertyId) {
+    _id
+    mainCatgeory {
+      _id
+      name
+      description
+      image
+    }
+    subCategories {
+      _id
+      image
+      name
+      description
+    }
+  }
+}`;
+
+export const propertyUses = `query PropertyUses($options: options, $filters: propertyUsefilters) {
+  propertyUses(options: $options, filters: $filters) {
+    results {
+      _id
+      image
+      name
+      description
     }
   }
 }`;

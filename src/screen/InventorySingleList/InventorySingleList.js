@@ -13,27 +13,39 @@ import {
 import ThemeContext from "../../context/ThemeContext/ThemeContext";
 import { theme } from "../../context/ThemeContext/ThemeColor";
 import styles from "../styles";
-import {
-  Ionicons,
-  Foundation,
-  Entypo,
-  FontAwesome5,
-  Feather,
-  Octicons,
-  AntDesign,
-  FontAwesome,
-  MaterialIcons,
-} from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import Layout from "../../Component/Layout/Layout";
 import ThemeButton from "../../Component/ThemeButton/ThemeButton";
 import ImageView from "react-native-image-viewing";
-
+import UserContext from "../../context/User/User";
+import { inventories } from "../../apollo/server";
+import gql from "graphql-tag";
+import { useQuery } from "@apollo/react-hooks";
 
 const { width, height } = Dimensions.get("window");
 
 export default function InventorySingleList(props) {
+  const INVENTORIES = gql`
+    ${inventories}
+  `;
+  const user = useContext(UserContext);
   const inventory = props.route.params.inventoryListing;
-  const property = props.route.params.property;
+  const { subcategory, subCategories, property, category } = props.route.params;
+  const { loading, error, data, refetch } = useQuery(INVENTORIES, {
+    fetchPolicy: "cache-and-network",
+    variables: {
+      filters: {
+        added_by: user?._id,
+        type: subcategory?._id,
+      },
+    },
+    onCompleted: ({ inventories }) => {
+      console.log("inventories res >>>>>>>>>>>>>>>>>", data);
+    },
+    onError: (err) => {
+      console.log("error in inventories :", err);
+    },
+  });
   console.log("inventory ====>>>>>>", inventory);
 
   const themeContext = useContext(ThemeContext);
@@ -41,28 +53,28 @@ export default function InventorySingleList(props) {
   const [imageLists, setImageLists] = useState([]);
   const [visible, setIsVisible] = useState(false);
 
-  
-
-  console.log('imageLists', imageLists)
+  console.log("imageLists", imageLists);
 
   return (
     <Layout
       navigation={props.navigation}
       LeftIcon={true}
       withoutScroll={true}
-      pagetitle={`${inventory?.mainCatgeory?.name?.toUpperCase()}`}
+      pagetitle={`${subcategory?.name?.toUpperCase()}`}
       style={[styles().ph0]}
+      loading={loading}
     >
       <ImageView
-  images={imageLists}
-  imageIndex={0}
-  presentationStyle={'fullScreen'}
-  visible={visible}
-  onRequestClose={() => setIsVisible(false)}
-/> 
+        images={imageLists}
+        imageIndex={0}
+        presentationStyle={"fullScreen"}
+        visible={visible}
+        onRequestClose={() => setIsVisible(false)}
+      />
       <View style={[styles().flex, { marginHorizontal: width * 0.04 }]}>
         <FlatList
-          data={inventory?.inventories}
+          // data={inventory?.inventories}
+          data={data?.inventories?.results}
           bounces={false}
           numColumns={2}
           ListHeaderComponent={<View style={styles().pt30} />}
@@ -90,7 +102,6 @@ export default function InventorySingleList(props) {
                     marginRight: index % 2 === 0 ? width * 0.04 : 0,
                   },
                 ]}
-                
               >
                 <View
                   style={[
@@ -121,14 +132,6 @@ export default function InventorySingleList(props) {
                           borderColor: currentTheme.BCBCBC,
                           alignItems: "center",
                           justifyContent: "center",
-                          // shadowColor: "#000",
-                          // shadowOffset: {
-                          //   width: 0,
-                          //   height: 2,
-                          // },
-                          // shadowOpacity: 0.25,
-                          // shadowRadius: 3.84,
-                          // elevation: 5,
                         },
                       ]}
                     >
@@ -153,6 +156,8 @@ export default function InventorySingleList(props) {
                       props.navigation.navigate("InventoryEdit", {
                         inventory_item: InventoryCategoryTitle,
                         category: inventory?.category,
+                        subCategories: subCategories,
+                        mainCatgeory: category,
                       })
                     }
                     style={[
@@ -172,11 +177,37 @@ export default function InventorySingleList(props) {
                       color={currentTheme.SliderDots}
                     />
                   </TouchableOpacity>
+
+                  <View
+                    style={[
+                      styles().bottom10,
+                      styles().ph10,
+                      {
+                        paddingVertical: 3,
+                        backgroundColor: currentTheme.black,
+                      },
+                      styles().alignCenter,
+                      styles().justifyCenter,
+                      styles().br5,
+                      styles().left10,
+                      styles().posAbs,
+                    ]}
+                  >
+                    <Text
+                      style={[styles().fs12, styles(currentTheme).bgTextWhite]}
+                    >
+                      {InventoryCategoryTitle?.images?.length !== 0 ? 1 : 0}/
+                      {InventoryCategoryTitle?.images
+                        ? InventoryCategoryTitle?.images?.length
+                        : 0}
+                    </Text>
+                  </View>
                 </View>
                 <Text
+                  numberOfLines={2}
                   style={[
                     styles().fs12,
-                    styles().fw400,
+                    styles().fw600,
                     { color: currentTheme.black },
                   ]}
                 >
@@ -198,7 +229,7 @@ export default function InventorySingleList(props) {
           styles().bottom20,
         ]}
       >
-        <ThemeButton
+        {/* <ThemeButton
           onPress={() =>
             props.navigation.navigate("InventoryAddCategory", {
               inventory_id: inventory.category._id,
@@ -207,7 +238,7 @@ export default function InventorySingleList(props) {
             })
           }
           Title={"Add New Inventory"}
-        />
+        /> */}
       </View>
     </Layout>
   );

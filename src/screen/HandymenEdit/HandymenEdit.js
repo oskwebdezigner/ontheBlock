@@ -39,6 +39,7 @@ import gql from "graphql-tag";
 import { addHandyman, updateHandyman } from "../../apollo/server";
 
 const { width, height } = Dimensions.get("window");
+
 export default function HandymenEdit(props) {
   let property = props?.route?.params?.property;
   let isEdit = props?.route?.params?.isEdit;

@@ -314,7 +314,7 @@ export default function TellAboutYourself(props) {
             <ThemeButton
               Title={"Back"}
               withoutBg={true}
-              Style={styles().mt20}
+              Style={styles().mv20}
               onPress={() => props.navigation.goBack()}
             />
           </View>

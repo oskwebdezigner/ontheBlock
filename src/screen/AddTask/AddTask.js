@@ -64,6 +64,11 @@ export default function AddTask(props) {
 
     {
       fetchPolicy: "cache-and-network",
+      variables: {
+        filters: {
+          added_by: user?._id,
+        },
+      },
       onCompleted: ({ inventories }) => {
         // console.log("inventories res :", inventories);
       },
@@ -173,7 +178,7 @@ export default function AddTask(props) {
       let data = {
         inputTask: {
           added_by: user._id,
-          assign_to:  handyman === "" ? null : handyman,
+          assign_to: handyman === "" ? null : handyman,
           description: MaintenanceDesc,
           get_notifications: NotificationCheck,
           inventory: invenetory,

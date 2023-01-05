@@ -31,7 +31,10 @@ import { useQuery, useMutation, useSubscription } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import Layout from "../../Component/Layout/Layout";
 import ThemeButton from "../../Component/ThemeButton/ThemeButton";
-import { getInventoryByCategory } from "../../apollo/server";
+import {
+  getInventoryByCategory,
+  getInventoryMainCategoryAndChildCategory,
+} from "../../apollo/server";
 import { useIsFocused } from "@react-navigation/native";
 
 import ImageView from "react-native-image-viewing";
@@ -41,6 +44,9 @@ const { width, height } = Dimensions.get("window");
 export default function InventoryCatList(props) {
   const GET_INVENTORY_BY_CATEGORY = gql`
     ${getInventoryByCategory}
+  `;
+  const GET_INVENTORY_BY_MAINCATEGORY_CHILDCATEGORY = gql`
+    ${getInventoryMainCategoryAndChildCategory}
   `;
   const property = props?.route?.params?.property;
   const _scrollView = useRef();
@@ -52,7 +58,7 @@ export default function InventoryCatList(props) {
   const SliderHeight = height * 0.5;
   console.log("property=========>", property);
   const { loading, error, data, refetch } = useQuery(
-    GET_INVENTORY_BY_CATEGORY,
+    GET_INVENTORY_BY_MAINCATEGORY_CHILDCATEGORY,
     {
       variables: {
         propertyId: property?._id,
@@ -60,9 +66,9 @@ export default function InventoryCatList(props) {
     },
     {
       fetchPolicy: "cache-and-network",
-      onCompleted: ({ getInventoryByCategory }) => {},
+      onCompleted: (data) => {},
       onError: (err) => {
-        console.log("error in getInventoryByCategory :", err);
+        console.log("error :", err);
       },
     }
   );
@@ -108,7 +114,8 @@ export default function InventoryCatList(props) {
       />
       <View style={[styles().flex]}>
         <FlatList
-          data={data?.getInventoryByCategory}
+          // data={data?.getInventoryByCategory}
+          data={data?.getInventoryMainCategoryAndChildCategory}
           showsVerticalScrollIndicator={false}
           ListHeaderComponent={<View style={styles().pt30} />}
           bounces={false}
@@ -135,7 +142,7 @@ export default function InventoryCatList(props) {
                   <View style={[styles().flexRow, styles().alignCenter]}>
                     <View
                       style={[
-                        styles().wh30px,
+                        styles().wh25px,
                         styles().overflowH,
                         styles().mr5,
                       ]}
@@ -150,15 +157,15 @@ export default function InventoryCatList(props) {
                       style={[
                         styles().fs16,
                         styles().lh18,
-                        styles().fw600,
-                        { color: currentTheme.black },
+                        styles().fontBold,
+                        { color: currentTheme.black, letterSpacing: 1 },
                       ]}
                     >
-                      {item?.mainCatgeory?.name}
+                      {item?.mainCatgeory?.name?.toUpperCase()}
                     </Text>
                   </View>
                   <View>
-                    <TouchableOpacity
+                    {/* <TouchableOpacity
                       onPress={() =>
                         props.navigation.navigate("InventorySingleList", {
                           inventoryListing: item,
@@ -176,38 +183,41 @@ export default function InventoryCatList(props) {
                       >
                         See All
                       </Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                   </View>
                 </View>
                 <FlatList
-                  data={item.inventories}
+                  // data={item.inventories}
+                  data={item.subCategories}
                   horizontal
                   bounces={false}
                   showsHorizontalScrollIndicator={false}
-                  renderItem={({ item: InventoryCategoryTitle, index: i }) => {
+                  // renderItem={({ item: InventoryCategoryTitle, index: i }) => {
+                  renderItem={({ item: subcategory, index: i }) => {
                     // console.log('asd', InventoryCategoryTitle)
 
                     return (
                       <TouchableOpacity
                         key={i}
                         // activeOpacity={1}
-                        onPress={() => {
-                          if (InventoryCategoryTitle.images.length !== 0) {
-                            let babuji = [];
-                            InventoryCategoryTitle.images.map((d) =>
-                              babuji.push({ uri: d })
-                            );
-                            // console.log(InventoryCategoryTitle.images)
-                            // console.log(InventoryCategoryTitle.images.map(d=>babuji.push({uri:d})))
-                            //console.log(babuji)
-                            setImageLists(babuji);
+                        // onPress={() => {
+                        //   if (InventoryCategoryTitle.images.length !== 0) {
+                        //     let babuji = [];
+                        //     InventoryCategoryTitle.images.map((d) =>
+                        //       babuji.push({ uri: d })
+                        //     );
+                        //     setImageLists(babuji);
+                        //     setIsVisible(true);
+                        //   }
+                        // }}
 
-                            setIsVisible(true);
-                          }
-                          // console.log(
-                          //   `=====${i}===>`,
-                          //   item?.inventories[viewImage].images
-                          // );
+                        onPress={() => {
+                          props.navigation.navigate("InventorySingleList", {
+                            category: item?.mainCatgeory,
+                            property: property,
+                            subcategory: subcategory,
+                            subCategories: item.subCategories,
+                          });
                         }}
                         style={[
                           {
@@ -221,7 +231,10 @@ export default function InventoryCatList(props) {
                           style={[
                             styles().w100,
                             styles().mb10,
+                            styles().alignCenter,
+                            styles().justifyCenter,
                             // styles().overflowH,
+
                             styles().h130px,
                             styles().br10,
                             // styles().boxpeshadowCart,
@@ -229,13 +242,14 @@ export default function InventoryCatList(props) {
                             { backgroundColor: currentTheme.bodyBg },
                           ]}
                         >
-                          {InventoryCategoryTitle?.images?.length !== 0 ? (
+                          {subcategory?.image ? (
                             <Image
                               source={{
-                                uri: InventoryCategoryTitle?.images[0],
+                                // uri: subcategory?.images[0],
+                                uri: subcategory?.image,
                               }}
                               resizeMode="contain"
-                              style={[styles().wh100]}
+                              style={[styles().wh65px]}
                             />
                           ) : (
                             <View
@@ -276,10 +290,10 @@ export default function InventoryCatList(props) {
                               </Text>
                             </View>
                           )}
-                          <TouchableOpacity
+                          {/* <TouchableOpacity
                             onPress={() => {
                               props.navigation.navigate("InventoryEdit", {
-                                inventory_item: InventoryCategoryTitle,
+                                inventory_item: subcategory,
                                 category: item?.mainCatgeory,
                               });
                             }}
@@ -300,8 +314,8 @@ export default function InventoryCatList(props) {
                               size={16}
                               color={currentTheme.SliderDots}
                             />
-                          </TouchableOpacity>
-                          <View
+                          </TouchableOpacity> */}
+                          {/* <View
                             style={[
                               styles().bottom10,
                               styles().ph10,
@@ -322,25 +336,22 @@ export default function InventoryCatList(props) {
                                 styles(currentTheme).bgTextWhite,
                               ]}
                             >
-                              {InventoryCategoryTitle?.images?.length !== 0
-                                ? 1
-                                : 0}
-                              /
-                              {InventoryCategoryTitle?.images
-                                ? InventoryCategoryTitle?.images?.length
+                              {subcategory?.images?.length !== 0 ? 1 : 0}/
+                              {subcategory?.images
+                                ? subcategory?.images?.length
                                 : 0}
                             </Text>
-                          </View>
+                          </View> */}
                         </View>
                         <Text
                           numberOfLines={2}
                           style={[
                             styles().fs12,
-                            styles().fw400,
+                            styles().fw600,
                             { color: currentTheme.black },
                           ]}
                         >
-                          {InventoryCategoryTitle?.name?.toUpperCase()}
+                          {subcategory?.name}
                         </Text>
                       </TouchableOpacity>
                     );

@@ -240,7 +240,7 @@ function CameraAndFileComponent(props) {
                   },
                 ]}
               >
-                <Text style={styles.appButtonText}>Open Gallery123</Text>
+                <Text style={styles.appButtonText}>Open Gallery</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -257,7 +257,7 @@ function CameraAndFileComponent(props) {
                   },
                 ]}
               >
-                <Text style={styles.appButtonText}>Camerasss</Text>
+                <Text style={styles.appButtonText}>Camera</Text>
               </TouchableOpacity>
             </View>
 

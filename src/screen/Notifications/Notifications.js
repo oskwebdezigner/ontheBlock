@@ -172,7 +172,7 @@ export default function Notifications(props) {
       //   backgroundColor: "red",
     },
   });
-  
+
   return (
     <Layout
       navigation={props.navigation}
