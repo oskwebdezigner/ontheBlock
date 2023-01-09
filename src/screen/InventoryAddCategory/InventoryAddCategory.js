@@ -10,11 +10,12 @@ import {
   TouchableOpacity,
   View,
   Image,
+  LayoutAnimation,
+  UIManager,
 } from "react-native";
 import ThemeContext from "../../context/ThemeContext/ThemeContext";
 import { theme } from "../../context/ThemeContext/ThemeColor";
 import styles from "../styles";
-
 import Layout from "../../Component/Layout/Layout";
 import TextField from "../../Component/FloatTextField/FloatTextField";
 import ThemeButton from "../../Component/ThemeButton/ThemeButton";
@@ -49,6 +50,14 @@ import SectionedMultiSelect from "react-native-sectioned-multi-select";
 import fontStyles from "../../utils/fonts/fontStyles";
 
 const { width, height } = Dimensions.get("window");
+
+if (
+  Platform.OS === "android" &&
+  UIManager.setLayoutAnimationEnabledExperimental
+) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
+
 export default function InventoryAddCategory(props) {
   const ADD_INVENTORY = gql`
     ${addInventory}
@@ -80,6 +89,12 @@ export default function InventoryAddCategory(props) {
   const [profilePicLoading, setProfilePicLoading] = useState(false);
 
   const [profilePic, setProfilePic] = useState("");
+
+  const [category, setCategory] = useState("");
+  const [showCategory, setShowCategory] = useState(false);
+
+  const [subCategory, setSubCategory] = useState("");
+  const [showSubCategory, setShowSubCategory] = useState(false);
 
   const [Loading, setLoading] = useState(false);
   const [images, setImages] = useState([]);
@@ -141,6 +156,16 @@ export default function InventoryAddCategory(props) {
   }
   async function AddNewInventory() {
     let status = true;
+    if (category === "") {
+      FlashMessage({ msg: "Select Category!", type: "warning" });
+      status = false;
+      return;
+    }
+    if (subCategory === "") {
+      FlashMessage({ msg: "Select Item Subcategory!", type: "warning" });
+      status = false;
+      return;
+    }
     if (ItemName === "") {
       setItemNameError(true);
       FlashMessage({ msg: "Enter Item Name!", type: "warning" });
@@ -155,19 +180,21 @@ export default function InventoryAddCategory(props) {
           // description: null,
           images: images,
           // is_active: null,
-          mainCatgeory: mainCatgeory._id,
+          // mainCatgeory: mainCatgeory._id,
+          mainCatgeory: category._id,
           model_no: ItemModel,
           name: ItemName,
           property: property?._id,
           serail_no: ItemSerial,
           // type: inventory_id ? inventory_id : ItemCat,
-          type: ItemCat[0],
+          // type: ItemCat[0],
+          type: subCategory._id,
         },
       };
       console.log("new added item data :", data);
       setLoading(true);
       await mutate({
-        variables: data
+        variables: data,
       });
     }
   }
@@ -186,7 +213,7 @@ export default function InventoryAddCategory(props) {
   //     return item._id === ItemCat[0];
   //   })
   // );
-
+  console.log("here your go:", subCategory);
   return (
     <Layout
       navigation={props.navigation}
@@ -194,9 +221,184 @@ export default function InventoryAddCategory(props) {
       withoutScroll={true}
       pagetitle={"Item Details"}
     >
-      <KeyboardAvoidingView style={styles().flex}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles().flex}
+        keyboardVerticalOffset={80}
+      >
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
+          {/* <View style={[styles().flex, styles().mt30]}></View> */}
+          <TouchableOpacity
+            onPress={() => {
+              setShowCategory(!showCategory);
+              LayoutAnimation.configureNext(
+                LayoutAnimation.Presets.easeInEaseOut
+              );
+            }}
+            style={[
+              styles().br10,
+              styles().mt15,
+              styles().bw1,
+              styles().w100,
+              styles().pv5,
+              { borderColor: currentTheme.cEFEFEF },
+            ]}
+          >
+            <View
+              style={[
+                styles().flexRow,
+                styles().justifyBetween,
+                styles().alignCenter,
+                styles().pall10,
+                styles().w100,
+              ]}
+            >
+              <Text
+                style={[
+                  styles().fs12,
+                  styles().fw600,
+                  { color: currentTheme.black },
+                ]}
+              >
+                {category?.name ? category?.name : "Select Category..."}
+              </Text>
+              <MaterialIcons
+                name={
+                  showCategory ? "keyboard-arrow-up" : "keyboard-arrow-down"
+                }
+                size={20}
+                color={currentTheme.black}
+              />
+            </View>
+            {showCategory ? (
+              <View>
+                {data?.categories?.results?.map((item, i, arr) => {
+                  return (
+                    <TouchableOpacity
+                      key={i}
+                      onPress={() => {
+                        setCategory(item);
+                        setSubCategory("");
+                        setShowCategory(false);
+                        LayoutAnimation.configureNext(
+                          LayoutAnimation.Presets.easeInEaseOut
+                        );
+                      }}
+                      style={[
+                        styles().mh10,
+                        {
+                          borderColor: currentTheme.cEFEFEF,
+                          borderBottomWidth: arr?.length - 1 === i ? 0 : 0.5,
+                          paddingVertical: 8,
+                        },
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles().fs12,
+                          styles().fw400,
+                          { color: currentTheme.black },
+                        ]}
+                      >
+                        {item.name}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            ) : null}
+          </TouchableOpacity>
+
+          {category?.name ? (
+            <TouchableOpacity
+              onPress={() => {
+                setShowSubCategory(!showSubCategory);
+                LayoutAnimation.configureNext(
+                  LayoutAnimation.Presets.easeInEaseOut
+                );
+              }}
+              style={[
+                styles().br10,
+                styles().bw1,
+                styles().mt15,
+                styles().w100,
+                styles().pv5,
+                { borderColor: currentTheme.cEFEFEF },
+              ]}
+            >
+              <View
+                style={[
+                  styles().flexRow,
+                  styles().justifyBetween,
+                  styles().alignCenter,
+                  styles().pall10,
+                  styles().w100,
+                ]}
+              >
+                <Text
+                  style={[
+                    styles().fs12,
+                    styles().fw600,
+                    { color: currentTheme.black },
+                  ]}
+                >
+                  {subCategory?.name
+                    ? subCategory?.name
+                    : "Select Sub Category..."}
+                </Text>
+                <MaterialIcons
+                  name={
+                    showSubCategory
+                      ? "keyboard-arrow-up"
+                      : "keyboard-arrow-down"
+                  }
+                  size={20}
+                  color={currentTheme.black}
+                />
+              </View>
+              {showSubCategory ? (
+                <View>
+                  {category?.subCategories?.map((item, i, arr) => {
+                    return (
+                      <TouchableOpacity
+                        key={i}
+                        onPress={() => {
+                          setSubCategory(item);
+                          setShowSubCategory(false);
+                          LayoutAnimation.configureNext(
+                            LayoutAnimation.Presets.easeInEaseOut
+                          );
+                        }}
+                        style={[
+                          styles().mh10,
+                          {
+                            borderColor: currentTheme.cEFEFEF,
+                            borderBottomWidth: arr?.length - 1 === i ? 0 : 0.5,
+                            paddingVertical: 8,
+                          },
+                        ]}
+                      >
+                        <Text
+                          style={[
+                            styles().fs12,
+                            styles().fw400,
+                            { color: currentTheme.black },
+                          ]}
+                        >
+                          {item.name}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              ) : null}
+            </TouchableOpacity>
+          ) : null}
+
+          {/* <View
             style={[
               styles().mt15,
               styles().h60px,
@@ -216,19 +418,7 @@ export default function InventoryAddCategory(props) {
             >
               Item Category
             </Text>
-            {/* <Multiselect
-              ListItems={ItemCategList}
-              SelectText={inventory_name}
-              value={ItemCat}
-              setValue={setItemCat}
-            /> */}
-            {/* <Multiselect
-              ListItems={data?.categories?.results}
-              SelectText={ctg?.name}
-              subCategories={"subCategories"}
-              value={ItemCat}
-              setValue={(e) => setItemCat(e[0])}
-            /> */}
+
             <SectionedMultiSelect
               styles={{
                 button: {
@@ -290,7 +480,7 @@ export default function InventoryAddCategory(props) {
               }}
               selectedItems={ItemCat}
             />
-          </View>
+          </View> */}
 
           <View style={styles().mt15}>
             <TextField

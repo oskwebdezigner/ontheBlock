@@ -30,7 +30,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function TellAboutHome(props) {
   let { user, password, goal } = props?.route?.params;
   // console.log(user);
-  console.log("====ye rhay goals===>", goal);
+  // console.log("====ye rhay goals===>", goal);
 
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
@@ -62,8 +62,9 @@ export default function TellAboutHome(props) {
     fetchPolicy: "cache-and-network",
     onCompleted: ({ propertyTypes }) => {
       setProperty(propertyTypes.results);
+      console.log(propertyTypes.results[2]);
       if (PropertyType === "") {
-        setPropertyType([propertyTypes.results[0]?._id.toString()]);
+        setPropertyType([propertyTypes.results[2]?._id.toString()]);
       }
     },
     onError: (err) => {
@@ -100,7 +101,7 @@ export default function TellAboutHome(props) {
     let status = true;
     if (PropertyNick === "") {
       setPropertyNickError(true);
-      FlashMessage({ msg: "Enter Proper Name", type: "warning" });
+      FlashMessage({ msg: "Enter Proper Name!", type: "warning" });
       status = false;
       return;
     }
@@ -118,11 +119,6 @@ export default function TellAboutHome(props) {
     if (Bathroom === "") {
       setBathroomError(true);
       FlashMessage({ msg: "Enter Bathroom", type: "warning" });
-      status = false;
-      return;
-    }
-    if (value <= 0) {
-      FlashMessage({ msg: "Seleted Property own Years", type: "warning" });
       status = false;
       return;
     }
@@ -149,6 +145,7 @@ export default function TellAboutHome(props) {
         },
       };
       console.log(data);
+      // alert('create')
       mutate({ variables: { ...data } });
     }
   }

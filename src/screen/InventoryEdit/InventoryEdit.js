@@ -10,6 +10,8 @@ import {
   TouchableOpacity,
   View,
   Image,
+  UIManager,
+  LayoutAnimation,
 } from "react-native";
 import ThemeContext from "../../context/ThemeContext/ThemeContext";
 import { theme } from "../../context/ThemeContext/ThemeColor";
@@ -55,6 +57,13 @@ import UserContext from "../../context/User/User";
 import SectionedMultiSelect from "react-native-sectioned-multi-select";
 import fontStyles from "../../utils/fonts/fontStyles";
 
+if (
+  Platform.OS === "android" &&
+  UIManager.setLayoutAnimationEnabledExperimental
+) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
+
 const { width, height } = Dimensions.get("window");
 
 export default function InventoryEdit(props) {
@@ -72,7 +81,7 @@ export default function InventoryEdit(props) {
   `;
   // console.log("props?.route?.params", props?.route?.params);
   let inventory_item = props?.route?.params.inventory_item;
-  let category = props?.route?.params.category;
+  let categoryy = props?.route?.params.category;
   let subCategories = props?.route?.params.subCategories;
   let mainCatgeory = props?.route?.params.mainCatgeory;
 
@@ -98,6 +107,12 @@ export default function InventoryEdit(props) {
 
   const [ItemSerial, setItemSerial] = useState("");
   const [ItemSerialError, setItemSerialError] = useState(false);
+
+  const [category, setCategory] = useState("");
+  const [showCategory, setShowCategory] = useState(false);
+
+  const [subCategory, setSubCategory] = useState("");
+  const [showSubCategory, setShowSubCategory] = useState(false);
 
   const [images, setImages] = useState("");
   //   const [ItemDocName, setItemDocName] = useState("");
@@ -197,6 +212,7 @@ export default function InventoryEdit(props) {
   }
 
   console.log("inventory_item =======:", inventory_item);
+  // console.log("mainCatgeory =======:", mainCatgeory);
 
   const setImage = async (image) => {
     // await uploadImageToCloudinary(image).then((img) => {
@@ -225,12 +241,25 @@ export default function InventoryEdit(props) {
   };
 
   useEffect(() => {
+    let ctg = data?.categories?.results?.find((item) => {
+      return item._id === mainCatgeory?._id;
+    });
+    console.log("ctg====>", ctg);
+
+    let subctg = ctg?.subCategories?.find((item) => {
+      console.log(item._id);
+      return item._id === inventory_item?.type?._id;
+    });
+    console.log("subctg====>", subctg);
+
     setItemCat(inventory_item?.type._id);
     setItemName(inventory_item?.name);
     setItemBrand(inventory_item?.brand);
     setItemModel(inventory_item?.model_no);
     setItemSerial(inventory_item?.serail_no);
     setImages(inventory_item?.images);
+    setCategory(ctg);
+    setSubCategory(subctg);
     refetch();
   }, []);
 
@@ -241,6 +270,11 @@ export default function InventoryEdit(props) {
     //   status = false;
     //   return;
     // }
+    if (subCategory === "") {
+      FlashMessage({ msg: "Select SubCategory!", type: "warning" });
+      status = false;
+      return;
+    }
 
     if (status) {
       setLoading(true);
@@ -249,11 +283,13 @@ export default function InventoryEdit(props) {
         updateInventoryInput: {
           name: ItemName,
           serail_no: ItemSerial,
-          type: ItemCat,
-          mainCatgeory: mainCatgeory?._id,
           model_no: inventory_item?.model_no,
           images: images,
           brand: ItemBrand,
+          mainCatgeory: category?._id,
+          type: subCategory?._id,
+          // mainCatgeory: mainCatgeory?._id,
+          // type: ItemCat,
           // added_by: user?._id,
         },
       };
@@ -285,17 +321,21 @@ export default function InventoryEdit(props) {
     // }
   }
 
-  let ctg = subCategories?.find((item) => {
-    return item._id === ItemCat;
-  });
-
-  // let mainCatgeory = data?.categories?.results?.find((item) => {
-  //   let subs = item.subCategories.find((find) => {
-  //     return find._id === ItemCat[0];
-  //   });
-  //   return subs;
+  // let ctg = category?.find((item) => {
+  //   return item._id !== inventory_item?._id;
   // });
-  console.log("mainCatgeory====>", subCategories, ItemCat);
+
+  // console.log('ctg===',ctg)
+
+  // let ctg = data?.categories?.results?.find((item) => {
+  //   console.log(item._id);
+  //   return item._id === mainCatgeory?._id;
+  //   // let subs = item.subCategories.find((find) => {
+  //   //   return find._id === inventory_item?._id;
+  //   // });
+  //   // return subs;
+  // });
+  // console.log("ctg====>", ctg);
 
   return (
     <Layout
@@ -306,7 +346,7 @@ export default function InventoryEdit(props) {
     >
       <KeyboardAvoidingView style={styles().flex}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <View
+          {/* <View
             style={[
               styles().mt15,
               styles().h60px,
@@ -333,69 +373,174 @@ export default function InventoryEdit(props) {
               value={ItemCat}
               setValue={(e) => setItemCat(e[0])}
             />
-            {/* <SectionedMultiSelect
-              styles={{
-                button: {
-                  backgroundColor: currentTheme.themeBackground,
-                },
-                modalWrapper: {
-                  justifyContent: "center",
-                },
-                container: {
-                  // flex: 0.25,
-                },
-                selectToggle: [
-                  {
-                    paddingTop: 5,
-                    // paddingBottom:20,
-                    // backgroundColor:currentTheme.black,
-                    paddingLeft: 15,
-                    height: 40,
-                    justifyContent: "flex-end",
-                    // borderWidth:2
-                  },
-                ],
-                selectToggleText: {
-                  fontFamily: fontStyles.PoppinsRegular,
-                  fontSize: 12,
-                  color: currentTheme.black,
-                  // borderWidth:2,
-                  // height:'100%',
-                },
-                itemText: {
-                  paddingTop: 10,
-                  fontSize: 14,
-                  fontWeight: "400",
-                  fontFamily: fontStyles.PoppinsRegular,
-                },
+          </View> */}
+
+          <TouchableOpacity
+            onPress={() => {
+              setShowCategory(!showCategory);
+              LayoutAnimation.configureNext(
+                LayoutAnimation.Presets.easeInEaseOut
+              );
+            }}
+            style={[
+              styles().br10,
+              styles().mt15,
+              styles().bw1,
+              styles().w100,
+              styles().pv5,
+              { borderColor: currentTheme.cEFEFEF },
+            ]}
+          >
+            <View
+              style={[
+                styles().flexRow,
+                styles().justifyBetween,
+                styles().alignCenter,
+                styles().pall10,
+                styles().w100,
+              ]}
+            >
+              <Text
+                style={[
+                  styles().fs12,
+                  styles().fw600,
+                  { color: currentTheme.black },
+                ]}
+              >
+                {category?.name ? category?.name : "Select Category..."}
+              </Text>
+              <MaterialIcons
+                name={
+                  showCategory ? "keyboard-arrow-up" : "keyboard-arrow-down"
+                }
+                size={20}
+                color={currentTheme.black}
+              />
+            </View>
+            {showCategory ? (
+              <View>
+                {data?.categories?.results?.map((item, i, arr) => {
+                  return (
+                    <TouchableOpacity
+                      key={i}
+                      onPress={() => {
+                        setCategory(item);
+                        setSubCategory("");
+                        setShowCategory(false);
+                        LayoutAnimation.configureNext(
+                          LayoutAnimation.Presets.easeInEaseOut
+                        );
+                      }}
+                      style={[
+                        styles().mh10,
+                        {
+                          borderColor: currentTheme.cEFEFEF,
+                          borderBottomWidth: arr?.length - 1 === i ? 0 : 0.5,
+                          paddingVertical: 8,
+                        },
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles().fs12,
+                          styles().fw400,
+                          { color: currentTheme.black },
+                        ]}
+                      >
+                        {item.name}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            ) : null}
+          </TouchableOpacity>
+
+          {category?.name ? (
+            <TouchableOpacity
+              onPress={() => {
+                setShowSubCategory(!showSubCategory);
+                LayoutAnimation.configureNext(
+                  LayoutAnimation.Presets.easeInEaseOut
+                );
               }}
-              showCancelButton={true}
-              hideSearch={true}
-              items={data?.categories?.results}
-              selectToggleIconComponent={
-                <AntDesign
-                  name="caretdown"
-                  size={14}
+              style={[
+                styles().br10,
+                styles().bw1,
+                styles().mt15,
+                styles().w100,
+                styles().pv5,
+                { borderColor: currentTheme.cEFEFEF },
+              ]}
+            >
+              <View
+                style={[
+                  styles().flexRow,
+                  styles().justifyBetween,
+                  styles().alignCenter,
+                  styles().pall10,
+                  styles().w100,
+                ]}
+              >
+                <Text
+                  style={[
+                    styles().fs12,
+                    styles().fw600,
+                    { color: currentTheme.black },
+                  ]}
+                >
+                  {subCategory?.name
+                    ? subCategory?.name
+                    : "Select Sub Category..."}
+                </Text>
+                <MaterialIcons
+                  name={
+                    showSubCategory
+                      ? "keyboard-arrow-up"
+                      : "keyboard-arrow-down"
+                  }
+                  size={20}
                   color={currentTheme.black}
-                  style={{ right: 10 }}
                 />
-              }
-              IconRenderer={MaterialIcons}
-              uniqueKey="_id"
-              displayKey="name"
-              subKey={"subCategories"}
-              alwaysShowSelectText={true}
-              single={true}
-              // selectText={  "Select Category"}
-              showDropDowns={true}
-              readOnlyHeadings={true}
-              onSelectedItemsChange={(item) => {
-                console.log("on seleted change :", item);
-                setItemCat(item);
-              }}
-              selectedItems={ItemCat}
-            /> */}
-          </View>
+              </View>
+              {showSubCategory ? (
+                <View>
+                  {category?.subCategories?.map((item, i, arr) => {
+                    return (
+                      <TouchableOpacity
+                        key={i}
+                        onPress={() => {
+                          setSubCategory(item);
+                          setShowSubCategory(false);
+                          LayoutAnimation.configureNext(
+                            LayoutAnimation.Presets.easeInEaseOut
+                          );
+                        }}
+                        style={[
+                          styles().mh10,
+                          {
+                            borderColor: currentTheme.cEFEFEF,
+                            borderBottomWidth: arr?.length - 1 === i ? 0 : 0.5,
+                            paddingVertical: 8,
+                          },
+                        ]}
+                      >
+                        <Text
+                          style={[
+                            styles().fs12,
+                            styles().fw400,
+                            { color: currentTheme.black },
+                          ]}
+                        >
+                          {item.name}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              ) : null}
+            </TouchableOpacity>
+          ) : null}
 
           <View style={styles().mt15}>
             <TextField

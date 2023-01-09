@@ -151,11 +151,11 @@ export default function Landing(props) {
             >
               <Text
                 style={[
-                  styles().fs12,
+                  styles().fs14,
                   styles().mb10,
                   styles().fontRegular,
                   styles().lh18,
-                  { color: currentTheme.textColor },
+                  { color: currentTheme.c50545D },
                 ]}
               >
                 {landingText[page].text1}
@@ -164,40 +164,40 @@ export default function Landing(props) {
                 <View style={[styles().mb10, styles().w100]}>
                   <Text
                     style={[
-                      styles().fs12,
+                      styles().fs14,
                       styles().fontRegular,
                       styles().lh18,
-                      { color: currentTheme.textColor },
+                      { color: currentTheme.c50545D },
                     ]}
                   >
                     - receipts
                   </Text>
                   <Text
                     style={[
-                      styles().fs12,
+                      styles().fs14,
                       styles().fontRegular,
                       styles().lh18,
-                      { color: currentTheme.textColor },
+                      { color: currentTheme.c50545D },
                     ]}
                   >
                     - warranties
                   </Text>
                   <Text
                     style={[
-                      styles().fs12,
+                      styles().fs14,
                       styles().fontRegular,
                       styles().lh18,
-                      { color: currentTheme.textColor },
+                      { color: currentTheme.c50545D },
                     ]}
                   >
                     - insurance information
                   </Text>
                   <Text
                     style={[
-                      styles().fs12,
+                      styles().fs14,
                       styles().fontRegular,
                       styles().lh18,
-                      { color: currentTheme.textColor },
+                      { color: currentTheme.c50545D },
                     ]}
                   >
                     - titles
@@ -206,10 +206,10 @@ export default function Landing(props) {
               ) : null}
               <Text
                 style={[
-                  styles().fs12,
+                  styles().fs14,
                   styles().fontRegular,
                   styles().lh18,
-                  { color: currentTheme.textColor },
+                  { color: currentTheme.c50545D },
                 ]}
               >
                 {landingText[page].text2}

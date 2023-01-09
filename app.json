@@ -9,14 +9,7 @@
       "image": "./assets/splash.png",
       "resizeMode": "cover"
     },
-    "build": {
-      "preview": {
-        "channel": "preview"
-      },
-      "production": {
-        "channel": "production"
-      }
-    },
+
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -45,8 +38,10 @@
         "ACCESS_FINE_LOCATION",
         "android.permission.READ_EXTERNAL_STORAGE",
         "android.permission.WRITE_EXTERNAL_STORAGE",
-        "android.permission.RECORD_AUDIO"
-      ]
+        "android.permission.RECORD_AUDIO",
+        "RECEIVE_BOOT_COMPLETED"
+      ],
+      "googleServicesFile": "./google-services.json"
     },
     "notification": {
       "iosDisplayInForeground": true

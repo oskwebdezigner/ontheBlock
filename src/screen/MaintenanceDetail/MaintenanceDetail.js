@@ -56,10 +56,10 @@ export default function MaintenaceDetail(props) {
       name: "Rechedule Task",
       onPress: () => props.navigation.navigate("ScheduleEdit", { task: item }),
     },
-    {
-      id: 2,
-      name: "Task Does Not Apply To My Home",
-    },
+    // {
+    //   id: 2,
+    //   name: "Task Does Not Apply To My Home",
+    // },
     {
       id: 3,
       name: "Delete",
@@ -385,7 +385,7 @@ export default function MaintenaceDetail(props) {
                           styles().fontRegular,
                           {
                             color:
-                              i === 3
+                              pops.id === 3
                                 ? currentTheme.dangerRed
                                 : currentTheme.textColor,
                           },
