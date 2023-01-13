@@ -19,7 +19,7 @@ import {
 import styles from "../../screen/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { CommonActions } from "@react-navigation/native";
+import { CommonActions, NavigationAction } from "@react-navigation/native";
 
 // const MenuItems = [
 //   {
@@ -240,27 +240,29 @@ export default function SideBar(props) {
               );
             }}
             keyExtractor={(item, index) => index.toString()}
-            ListFooterComponent={<TouchableOpacity
-              onPress={() => Logout()}
-              style={[styles().flexRow, styles().pv10]}
-            >
-              <View style={[styles().mr20, styles().wh20px]}>
-                <Image
-                  source={require("../../assets/images/logout.png")}
-                  style={styles().wh100}
-                  resizeMode="contain"
-                />
-              </View>
-              <Text
-                style={[
-                  styles().fs13,
-                  styles().fw600,
-                  { color: currentTheme.black },
-                ]}
+            ListFooterComponent={
+              <TouchableOpacity
+                onPress={() => Logout()}
+                style={[styles().flexRow, styles().pv10]}
               >
-                Logout
-              </Text>
-            </TouchableOpacity>}
+                <View style={[styles().mr20, styles().wh20px]}>
+                  <Image
+                    source={require("../../assets/images/logout.png")}
+                    style={styles().wh100}
+                    resizeMode="contain"
+                  />
+                </View>
+                <Text
+                  style={[
+                    styles().fs13,
+                    styles().fw600,
+                    { color: currentTheme.black },
+                  ]}
+                >
+                  Logout
+                </Text>
+              </TouchableOpacity>
+            }
           />
           {/* <TouchableOpacity
             onPress={() => Logout()}
@@ -292,7 +294,7 @@ export default function SideBar(props) {
           styles().alignCenter,
           styles().ph15,
           styles().pb25,
-          styles().mt20
+          styles().mt20,
         ]}
       >
         <Text

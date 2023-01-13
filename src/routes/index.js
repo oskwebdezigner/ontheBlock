@@ -78,6 +78,7 @@ import SideBar from "../Component/SideBar/SideBar";
 
 const NavigationStack = createStackNavigator();
 const AuthenticationStack = createStackNavigator();
+const LandingStack = createStackNavigator();
 const MainStack = createStackNavigator();
 const SideDrawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
@@ -90,7 +91,7 @@ const TicketStack = createStackNavigator();
 function authenticationNavigator() {
   return (
     <AuthenticationStack.Navigator headerMode="none">
-      <AuthenticationStack.Screen name="Landing" component={LandingScreen} />
+      {/* <AuthenticationStack.Screen name="Landing" component={LandingScreen} /> */}
       <AuthenticationStack.Screen name="Login" component={Login} />
       <AuthenticationStack.Screen name="LetsBegin" component={LetsBegin} />
       <AuthenticationStack.Screen name="ChooseGoals" component={ChooseGoals} />
@@ -114,21 +115,19 @@ function authenticationNavigator() {
         name="ForgotPassword"
         component={ForgotPassword}
       />
-
-      {/* <AuthenticationStack.Screen name="Signup" component={SignUp} /> */}
-      {/* <AuthenticationStack.Screen
-        name="ForgotPassword"
-        component={ForgotPassword}
-      />
-      <AuthenticationStack.Screen
-        name="Verification"
-        component={Verification}
-      /> */}
       <AuthenticationStack.Screen
         name="ResetPassword"
         component={ResetPassword}
       />
     </AuthenticationStack.Navigator>
+  );
+}
+function LandingNavigator() {
+  return (
+    <LandingStack.Navigator headerMode="none">
+      <LandingStack.Screen name="Landing" component={LandingScreen} />
+      <LandingStack.Screen name="Auth" component={authenticationNavigator} />
+    </LandingStack.Navigator>
   );
 }
 
@@ -353,7 +352,7 @@ function AppContainer(props) {
         <MainStack.Navigator
           headerMode="none"
           screenOptions={{ gestureEnabled: false }}
-          initialRouteName={token ? "noDrawer" : "Auth"}
+          initialRouteName={token ? "noDrawer" : "Landing"}
           // initialRouteName={  "noDrawer"  }
           // screenOptions={{
           // gestureEnabled: false,
@@ -366,6 +365,7 @@ function AppContainer(props) {
           // }}
         >
           <MainStack.Screen name="Auth" component={authenticationNavigator} />
+          <MainStack.Screen name="Landing" component={LandingNavigator} />
           <MainStack.Screen name="noDrawer" component={noDrawer} />
         </MainStack.Navigator>
       </NavigationContainer>

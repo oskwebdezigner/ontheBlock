@@ -23,7 +23,11 @@ import gql from "graphql-tag";
 import Spinner from "../../Component/Spinner/Spinner";
 import RangeSlider, { Slider } from "react-native-range-slider-expo";
 import Multiselect from "../../Component/Multiselect/Multiselect";
-import { PropertyTypes, RegisterWithProperty } from "../../apollo/server";
+import {
+  PropertyTypes,
+  propertyUses,
+  RegisterWithProperty,
+} from "../../apollo/server";
 import FlashMessage from "../../Component/FlashMessage/FlashMessage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -45,12 +49,17 @@ export default function TellAboutHome(props) {
   const [value, setValue] = useState(0);
   const [PropertyType, setPropertyType] = useState("");
   const [property, setProperty] = useState([]);
+  const [Residence, setResidence] = useState("");
 
   const REGISTER_WITH_PROPERTY = gql`
     ${RegisterWithProperty}
   `;
   const PROPERTY_TYPE = gql`
     ${PropertyTypes}
+  `;
+
+  const PROPERTY_USE = gql`
+    ${propertyUses}
   `;
 
   const [mutate, { client }] = useMutation(REGISTER_WITH_PROPERTY, {
@@ -96,17 +105,37 @@ export default function TellAboutHome(props) {
     console.log("RegisterWithProperty error  :", error);
   }
 
+  const {
+    loading: propertyuserLoader,
+    error: propertyuserError,
+    data: propertyuserData,
+    refetch: propertyuserRefetch,
+  } = useQuery(PROPERTY_USE, {
+    fetchPolicy: "cache-and-network",
+    onCompleted: ({ propertyUses }) => {
+      // console.log("propertyUses :", propertyuserData?.propertyUses?.results);
+    },
+    onError: (err) => {
+      console.log("error in propertyUses :", err);
+    },
+  });
+
   async function Register() {
     console.log("enter property type", PropertyType);
     let status = true;
     if (PropertyNick === "") {
       setPropertyNickError(true);
-      FlashMessage({ msg: "Enter Proper Name!", type: "warning" });
+      FlashMessage({ msg: "Enter Residence Type!", type: "warning" });
       status = false;
       return;
     }
     if (PropertyType === "") {
       FlashMessage({ msg: "Select Your Property Type", type: "warning" });
+      status = false;
+      return;
+    }
+    if (Residence === "") {
+      FlashMessage({ msg: "Select Propert Use!", type: "warning" });
       status = false;
       return;
     }
@@ -142,6 +171,7 @@ export default function TellAboutHome(props) {
           name: PropertyNick,
           type: PropertyType[0],
           description: "description",
+          use: Residence,
         },
       };
       console.log(data);
@@ -149,6 +179,11 @@ export default function TellAboutHome(props) {
       mutate({ variables: { ...data } });
     }
   }
+
+  let proptuse = propertyuserData?.propertyUses?.results?.find((item) => {
+    return item._id === Residence;
+  });
+  // console.log(Residence)
   return (
     <AuthLayout withoutScroll={true} navigation={props.navigation}>
       <KeyboardAvoidingView
@@ -196,7 +231,8 @@ export default function TellAboutHome(props) {
                   setPropertyNick(e);
                 }}
                 value={PropertyNick}
-                label="Property Nickname"
+                // label="Property Nickname"
+                label="Residence Type"
                 errorText={PropertyNickError}
                 autoCapitalize="none"
                 style
@@ -231,6 +267,34 @@ export default function TellAboutHome(props) {
               />
             </View>
 
+            <View
+              style={[
+                styles().mt15,
+                styles().h60px,
+                styles().br10,
+                styles().bw1,
+                { borderColor: currentTheme.cEFEFEF },
+              ]}
+            >
+              <Text
+                style={[
+                  styles().ml15,
+                  styles().mt5,
+                  styles().fs12,
+                  styles().fw400,
+                  { color: currentTheme.textColor },
+                ]}
+              >
+                Property Use
+              </Text>
+              <Multiselect
+                ListItems={propertyuserData?.propertyUses?.results}
+                SelectText={proptuse?.name}
+                value={Residence}
+                setValue={(e) => setResidence(e[0])}
+              />
+            </View>
+
             <View style={styles().mt15}>
               <TextField
                 keyboardType="numeric"
@@ -259,16 +323,20 @@ export default function TellAboutHome(props) {
                 keyboardType="numeric"
                 maxLength={3}
                 onChangeText={(e) => {
-                  if (e % 1 != 0) {
-                    FlashMessage({
-                      msg: "Enter a Valid Number",
-                      type: "warning",
-                    });
-                  } else {
-                    setBathroomError(false);
-                    setBathroom(e);
-                  }
+                  setBathroomError(false);
+                  setBathroom(e);
                 }}
+                // onChangeText={(e) => {
+                //   if (e % 1 != 0) {
+                //     FlashMessage({
+                //       msg: "Enter a Valid Number",
+                //       type: "warning",
+                //     });
+                //   } else {
+                //     setBathroomError(false);
+                //     setBathroom(e);
+                //   }
+                // }}
                 value={Bathroom}
                 label="Bathroom(s)"
                 errorText={BathroomError}
@@ -338,7 +406,7 @@ export default function TellAboutHome(props) {
               </View>
             </View>
 
-            <View style={styles().mt15}>
+            <View style={styles().mv20}>
               {Loading ? (
                 <Spinner />
               ) : (

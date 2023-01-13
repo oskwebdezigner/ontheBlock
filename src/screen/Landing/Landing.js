@@ -13,6 +13,7 @@ import ThemeContext from "../../context/ThemeContext/ThemeContext";
 import { theme } from "../../context/ThemeContext/ThemeColor";
 import ThemeButton from "../../Component/ThemeButton/ThemeButton";
 import Layout from "../../Component/Layout/Layout";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { height } = Dimensions.get("window");
 const { width } = Dimensions.get("window");
@@ -58,6 +59,14 @@ export default function Landing(props) {
       _scrollView.current.scrollTo({ x: scrollValue, animated: true });
     }
   }
+
+  const FirstTime = async () => {
+    await AsyncStorage.setItem("first_time", "1");
+  };
+
+  useEffect(() => {
+    // FirstTime();
+  }, []);
 
   //   useEffect(()=>{
   //     let scrollValue = 0;
@@ -245,7 +254,7 @@ export default function Landing(props) {
               Title={page == 2 ? "Start" : "Next"}
               onPress={() =>
                 page == 2
-                  ? props.navigation.navigate("Login")
+                  ? props.navigation.navigate("Auth")
                   : Setpage(page + 1)
               }
             ></ThemeButton>
