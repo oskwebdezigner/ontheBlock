@@ -311,7 +311,7 @@ export default function DocumentListing(props) {
           onPress={() => {
             props.navigation.navigate("AddNewFolder", { property: property });
           }}
-          Title={"Add New Folder"}
+          Title={"Add New Document"}
         />
       </View>
     </Layout>

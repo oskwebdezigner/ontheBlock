@@ -152,9 +152,9 @@ export default function ChooseGoals(props) {
                 <Text
                   numberOfLines={2}
                   style={[
-                    styles().fs11,
+                    styles().fs12,
                     styles().fontRegular,
-                    { color: currentTheme.textColor },
+                    { color: currentTheme.c50545D },
                   ]}
                 >
                   {item.description}

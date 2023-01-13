@@ -14,17 +14,10 @@ import {
 import ThemeContext from "../../context/ThemeContext/ThemeContext";
 import { theme } from "../../context/ThemeContext/ThemeColor";
 import styles from "../styles";
-
 import Layout from "../../Component/Layout/Layout";
 import TextField from "../../Component/FloatTextField/FloatTextField";
 import ThemeButton from "../../Component/ThemeButton/ThemeButton";
-import {
-  AntDesign,
-  Ionicons,
-  FontAwesome,
-  MaterialCommunityIcons,
-  Entypo,
-} from "@expo/vector-icons";
+import { MaterialCommunityIcons, Entypo } from "@expo/vector-icons";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import Spinner from "../../Component/Spinner/Spinner";
@@ -75,17 +68,6 @@ export default function PropertyData(props) {
   const [ZipcodeError, setZipcodeError] = useState(false);
   const [Loading, setLoading] = useState(false);
 
-  const ResidenceList = [
-    {
-      name: "Primary Residence",
-      _id: 0,
-    },
-    {
-      name: "Secondary Residence",
-      _id: 1,
-    },
-  ];
-
   const { loading, error, data, refetch } = useQuery(PROPERTY_TYPE, {
     fetchPolicy: "cache-and-network",
     onCompleted: ({ propertyTypes }) => {},
@@ -102,7 +84,7 @@ export default function PropertyData(props) {
   } = useQuery(PROPERTY_USE, {
     fetchPolicy: "cache-and-network",
     onCompleted: ({ propertyUses }) => {
-      console.log("propertyUses :", propertyuserData);
+      // console.log("propertyUses :", propertyuserData?.propertyUses?.results);
     },
     onError: (err) => {
       console.log("error in propertyUses :", err);
@@ -183,7 +165,7 @@ export default function PropertyData(props) {
     setState(property?.country);
     setZipcode(property?.zip_code);
     setImages(property?.images);
-    setResidence(property?.use?._id ? property?.use?._id : null);
+    setResidence(property?.use !== null ? property?.use?._id : "");
     // setPropertyType(property?.type?._id);
     setPropertyType(
       property?.type?._id
@@ -197,6 +179,7 @@ export default function PropertyData(props) {
   let propt = data?.propertyTypes?.results?.find((item) => {
     return item._id === PropertyType;
   });
+
   let proptuse = propertyuserData?.propertyUses?.results?.find((item) => {
     return item._id === Residence;
   });

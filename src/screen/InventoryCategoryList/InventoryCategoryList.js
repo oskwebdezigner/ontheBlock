@@ -87,15 +87,15 @@ export default function InventoryCatList(props) {
     refetch();
   }, [isFocused]);
 
-  useEffect(() => {
-    console.log("data updated", data);
-  }, [data]);
+  // useEffect(() => {
+  //   console.log("data updated", data);
+  // }, [data]);
 
   const [visible, setIsVisible] = useState(false);
-
   const [imageLists, setImageLists] = useState([]);
 
-  console.log("imageLists", imageLists);
+  // console.log("imageLists", imageLists);
+
   return (
     <Layout
       loading={loading}
