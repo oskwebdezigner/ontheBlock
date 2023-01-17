@@ -76,7 +76,7 @@ export default function HandymenEdit(props) {
   async function onCompleted(data) {
     try {
       FlashMessage({
-        msg: isEdit ? "Handymen Updated!" : "New Handymen Added!",
+        msg: isEdit ? "Handyperson Updated!" : "New Handyperson Added!",
         type: "success",
       });
       console.log("Handyman res :", data);
@@ -104,12 +104,12 @@ export default function HandymenEdit(props) {
       return;
     }
     if (PersonName === "") {
-      FlashMessage({ msg: "Enter Handymen Name", type: "warning" });
+      FlashMessage({ msg: "Enter Handyperson Name", type: "warning" });
       status = false;
       return;
     }
     if (PersonPhone === "") {
-      FlashMessage({ msg: "Enter Handymen Phone", type: "warning" });
+      FlashMessage({ msg: "Enter Handyperson Phone", type: "warning" });
       status = false;
       return;
     }

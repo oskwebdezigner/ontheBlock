@@ -161,10 +161,15 @@ export default function InventoryAddCategory(props) {
       status = false;
       return;
     }
-    if (subCategory === "") {
-      FlashMessage({ msg: "Select Item Subcategory!", type: "warning" });
-      status = false;
-      return;
+
+    // setSubCategory("63a1b5a3bbe7959b45cf154f");
+
+    if (category._id !== "63a1b5a3bbe7959b45cf154f") {
+      if (subCategory === "") {
+        FlashMessage({ msg: "Select Item Subcategory!", type: "warning" });
+        status = false;
+        return;
+      }
     }
     if (ItemName === "") {
       setItemNameError(true);
@@ -188,7 +193,10 @@ export default function InventoryAddCategory(props) {
           serail_no: ItemSerial,
           // type: inventory_id ? inventory_id : ItemCat,
           // type: ItemCat[0],
-          type: subCategory._id,
+          type:
+            category._id !== "63a1b5a3bbe7959b45cf154f"
+              ? subCategory._id
+              : "63a1b5a3bbe7959b45cf154f",
         },
       };
       console.log("new added item data :", data);
@@ -198,14 +206,14 @@ export default function InventoryAddCategory(props) {
       });
     }
   }
-  let mainCatgeory = data?.categories?.results?.find((item) => {
-    let subs = item.subCategories.find((find) => {
-      return find._id === ItemCat[0];
-    });
-    return subs;
-  });
+  // let mainCatgeory = data?.categories?.results?.find((item) => {
+  //   let subs = item.subCategories.find((find) => {
+  //     return find._id === ItemCat[0];
+  //   });
+  //   return subs;
+  // });
 
-  console.log("mainCatgeory====>", mainCatgeory);
+  // console.log("mainCatgeory====>", mainCatgeory);
 
   // console.log(
   //   "subCateogory====>",
@@ -213,7 +221,8 @@ export default function InventoryAddCategory(props) {
   //     return item._id === ItemCat[0];
   //   })
   // );
-  console.log("here your go:", subCategory);
+  // console.log("here your go:", subCategory);
+  console.log("here your go:", category);
   return (
     <Layout
       navigation={props.navigation}
