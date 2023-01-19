@@ -40,14 +40,12 @@ async function uploadImageToCloudinary(image) {
   }
 }
 
-async function uploadToImageKit(file) {
+async function uploadToImageKit(file, base64) {
   return new Promise((resolve, reject) => {
     imagekit.upload(
       {
-        file: file.uri,
+        file: base64,
         fileName: file.name,
-        //you can change this and generate your own name if required
-        // tags: ["tag-1", "tag-2"], //change this or remove it if you want
       },
       function(err, result) {
         if (err) reject(err);

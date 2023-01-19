@@ -1,41 +1,34 @@
 {
   "project_info": {
-    "project_number": "759165704704",
-    "project_id": "ontheblock-67c6d",
-    "storage_bucket": "ontheblock-67c6d.appspot.com"
+    "project_number": "815456534498",
+    "project_id": "ontheblock-f9b78",
+    "storage_bucket": "ontheblock-f9b78.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:759165704704:android:f9ea3548fceabdc581d6e5",
+        "mobilesdk_app_id": "1:815456534498:android:9c0e2562e2176041f383bb",
         "android_client_info": {
-          "package_name": "com.app.ontheblock"
+          "package_name": "ontheblock.hashone.app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "759165704704-gfu1bq2eh3da1kvqjb8eq751h810mmt5.apps.googleusercontent.com",
+          "client_id": "815456534498-us2vah9qrhs49f6qqc9oo7sc93sbls9o.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCrC-9toqFvYCnesMM9SlhUZ30fVunbtyE"
+          "current_key": "AIzaSyCWZNWHd3lAsvoroh7km3uqRrLDeERa1LA"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "759165704704-gfu1bq2eh3da1kvqjb8eq751h810mmt5.apps.googleusercontent.com",
+              "client_id": "815456534498-us2vah9qrhs49f6qqc9oo7sc93sbls9o.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "759165704704-qc5hfbe54r5mupj4018qnec7p99bb610.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.app.ontheblock"
-              }
             }
           ]
         }

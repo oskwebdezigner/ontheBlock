@@ -829,7 +829,7 @@ export default function InventoryEdit(props) {
                   { color: currentTheme.lightRed },
                 ]}
               >
-                You Can Upload Pdf, Word etc
+               You Can Upload pdf, jpeg or png
               </Text>
             </View>
           </View> */}

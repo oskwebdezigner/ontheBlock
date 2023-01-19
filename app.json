@@ -25,11 +25,11 @@
         "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photos",
         "NSPhotoLibraryAddUsageDescription": "Allow $(PRODUCT_NAME) to save photos"
       },
-      "bundleIdentifier": "com.app.ontheblock"
+      "bundleIdentifier": "ontheblock.hashone.app"
     },
     "android": {
       "versionCode": 0,
-      "package": "com.app.ontheblock",
+      "package": "ontheblock.hashone.app",
       "useNextNotificationsApi": true,
       "permissions": [
         "CAMERA",

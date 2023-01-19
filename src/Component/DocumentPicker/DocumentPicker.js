@@ -19,6 +19,7 @@ import { FontAwesome5, FontAwesome } from "@expo/vector-icons";
 import ThemeContext from "../../context/ThemeContext/ThemeContext";
 import { theme } from "../../context/ThemeContext/ThemeColor";
 import * as DocumentPicker from "expo-document-picker";
+// import * as DocumentPicker from "react-native-document-picker";
 import { async } from "validate.js";
 import { uploadImageToCloudinary } from "../../Component/CameraComponent/CloudUpload";
 
@@ -36,6 +37,10 @@ function DocumentComponent(props) {
     let result = await DocumentPicker.getDocumentAsync({
       type: "*/*",
     });
+
+    // var result = await DocumentPicker.pick({
+    //   type: [DocumentPicker.types.pdf],
+    // });
     props.setFile(result);
     // console.log(result);
   };
@@ -44,23 +49,23 @@ function DocumentComponent(props) {
     setSelectedImage(null);
   }
 
-//   if (selectedImage !== null) {
-//     return (
-//       <View style={styles.container}>
-//         <TouchableOpacity onPress={closeSelectedImage}>
-//           <FontAwesome
-//             name="close"
-//             size={24}
-//             color={currentTheme.themeBackground}
-//           />
-//         </TouchableOpacity>
-//         <Image
-//           source={{ uri: selectedImage.localUri }}
-//           style={styles.thumbnail}
-//         />
-//       </View>
-//     );
-//   }
+  //   if (selectedImage !== null) {
+  //     return (
+  //       <View style={styles.container}>
+  //         <TouchableOpacity onPress={closeSelectedImage}>
+  //           <FontAwesome
+  //             name="close"
+  //             size={24}
+  //             color={currentTheme.themeBackground}
+  //           />
+  //         </TouchableOpacity>
+  //         <Image
+  //           source={{ uri: selectedImage.localUri }}
+  //           style={styles.thumbnail}
+  //         />
+  //       </View>
+  //     );
+  //   }
 
   return (
     <View style={[{ flexDirection: "row" }, props.style]}>

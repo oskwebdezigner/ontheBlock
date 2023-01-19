@@ -127,7 +127,7 @@ export default function AddTask(props) {
   const [MaintenanceDescError, setMaintenanceDescError] = useState(false);
 
   const [AssignTask, setAssignTask] = useState("No");
-  const [NotificationCheck, setNotificationCheck] = useState(false);
+  const [NotificationCheck, setNotificationCheck] = useState(true);
   let person = data?.handymen?.results?.find((item) => {
     return item._id === handyman;
   });

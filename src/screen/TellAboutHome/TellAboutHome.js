@@ -125,7 +125,7 @@ export default function TellAboutHome(props) {
     let status = true;
     if (PropertyNick === "") {
       setPropertyNickError(true);
-      FlashMessage({ msg: "Enter Residence Type!", type: "warning" });
+      FlashMessage({ msg: "Enter Residence Name!", type: "warning" });
       status = false;
       return;
     }
@@ -232,7 +232,7 @@ export default function TellAboutHome(props) {
                 }}
                 value={PropertyNick}
                 // label="Property Nickname"
-                label="Residence Type"
+                label="Residence Name"
                 errorText={PropertyNickError}
                 autoCapitalize="none"
                 style

@@ -237,7 +237,7 @@ export default function DocumentEdit(props) {
                 { color: currentTheme.lightRed },
               ]}
             >
-              You Can Upload Pdf, Word etc
+          You Can Upload pdf, jpeg or png
             </Text>
           </View>
         </View> */}
@@ -246,7 +246,10 @@ export default function DocumentEdit(props) {
         {Loading ? (
           <Spinner />
         ) : (
-          <ThemeButton onPress={() => Addfolder()} Title={ folder?.name ? "Update" : "Add"} />
+          <ThemeButton
+            onPress={() => Addfolder()}
+            Title={folder?.name ? "Update" : "Add"}
+          />
         )}
       </View>
     </Layout>

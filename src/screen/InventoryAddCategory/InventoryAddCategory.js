@@ -98,7 +98,7 @@ export default function InventoryAddCategory(props) {
 
   const [Loading, setLoading] = useState(false);
   const [images, setImages] = useState([]);
-
+  let personalitem_id = "63a1b5a3bbe7959b45cf154f";
   const { loading, error, data, refetch } = useQuery(CATEGORIES, {
     variables: {
       options: {
@@ -164,7 +164,7 @@ export default function InventoryAddCategory(props) {
 
     // setSubCategory("63a1b5a3bbe7959b45cf154f");
 
-    if (category._id !== "63a1b5a3bbe7959b45cf154f") {
+    if (category._id !== personalitem_id) {
       if (subCategory === "") {
         FlashMessage({ msg: "Select Item Subcategory!", type: "warning" });
         status = false;
@@ -194,9 +194,9 @@ export default function InventoryAddCategory(props) {
           // type: inventory_id ? inventory_id : ItemCat,
           // type: ItemCat[0],
           type:
-            category._id !== "63a1b5a3bbe7959b45cf154f"
+            category._id !== personalitem_id
               ? subCategory._id
-              : "63a1b5a3bbe7959b45cf154f",
+              : personalitem_id,
         },
       };
       console.log("new added item data :", data);
