@@ -131,7 +131,7 @@ export default function PropertyData(props) {
   async function UpdateProperty() {
     let status = true;
     if (PropertyNick === "") {
-      FlashMessage({ msg: "Enter Residence Type!", type: "warning" });
+      FlashMessage({ msg: "Enter Residence Name!", type: "warning" });
       setPropertyNickError(true);
       status = false;
       return;
@@ -205,7 +205,7 @@ export default function PropertyData(props) {
               }}
               value={PropertyNick}
               // label="Property Nickname"
-              label="Residence Type"
+              label="Residence Name"
               errorText={PropertyNickError}
               autoCapitalize="none"
               style

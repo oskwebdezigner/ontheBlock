@@ -16,9 +16,12 @@ import {
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
+// import * as DocumentPicker from "react-native-document-picker";
+import * as FileSystem from "expo-file-system";
 import { FontAwesome5, FontAwesome } from "@expo/vector-icons";
 import ThemeContext from "../../context/ThemeContext/ThemeContext";
 import { theme } from "../../context/ThemeContext/ThemeColor";
+// import Doc from ''
 
 const { width, height } = Dimensions.get("screen");
 
@@ -50,8 +53,7 @@ function CameraAndFileComponent(props) {
           IOSPicker();
         } else if (buttonIndex === 2) {
           openCameraPickerAsync();
-        }
-        else if (buttonIndex === 3) {
+        } else if (buttonIndex === 3) {
           setFile();
         }
       }
@@ -59,13 +61,22 @@ function CameraAndFileComponent(props) {
   };
 
   const setFile = async () => {
-    
     props.loading(true);
     let document = await DocumentPicker.getDocumentAsync({
-      type: "*/*",
+      type: "application/pdf",
     });
-    console.log("document",document)
-    props.fileUpload(document);
+
+    const file = await FileSystem.readAsStringAsync(document.uri, {
+      encoding: FileSystem.EncodingType.Base64,
+    });
+    let documentBase64 = document
+      ? `data:application/pdf;base64,${file}`
+      : null;
+    // console.log("file ------------>", file);
+    // console.log("documentBase4 ------------>", documentBase64);
+
+    // console.log("document", document);
+    props.fileUpload(document, documentBase64);
     setModalVisible(false);
   };
 
@@ -210,22 +221,22 @@ function CameraAndFileComponent(props) {
             ]}
           >
             <View style={styles.modalView}>
-            <TouchableOpacity
-                  onPress={() => {
-                    setFile()
-                  }}
-                  style={[
-                    styles.appButtonContainer,
-                    {
-                      justifyContent: "center",
-                      margin: 5,
-                      //  borderBottomWidth : 0.6,
-                      //  borderBottomColor : currentTheme.themeBackground
-                    },
-                  ]}
-                >
-                  <Text style={styles.appButtonText}>Upload Document</Text>
-                </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  setFile();
+                }}
+                style={[
+                  styles.appButtonContainer,
+                  {
+                    justifyContent: "center",
+                    margin: 5,
+                    //  borderBottomWidth : 0.6,
+                    //  borderBottomColor : currentTheme.themeBackground
+                  },
+                ]}
+              >
+                <Text style={styles.appButtonText}>Upload Document</Text>
+              </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
                   IOSPicker();

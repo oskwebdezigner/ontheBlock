@@ -48,6 +48,7 @@ export default function InventoryCatList(props) {
   const GET_INVENTORY_BY_MAINCATEGORY_CHILDCATEGORY = gql`
     ${getInventoryMainCategoryAndChildCategory}
   `;
+  
   const property = props?.route?.params?.property;
   const _scrollView = useRef();
   const [page, Setpage] = useState(1);

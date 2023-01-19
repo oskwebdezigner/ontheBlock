@@ -57,7 +57,7 @@ export default function DocumentListing(props) {
           ListHeaderComponent={<View style={styles().pt30} />}
           showsVerticalScrollIndicator={false}
           renderItem={({ item, index }) => {
-            console.log(item.path)
+            // console.log(item.path)
             function get_url_extension(url) {
               return url
                 .split(/[#?]/)[0]
@@ -67,7 +67,7 @@ export default function DocumentListing(props) {
             }
 
             let docType = get_url_extension(item.path);
-            console.log("===>", docType);
+            // console.log("===>", docType);
             let icon =
               docType === "pdf" ? (
                 <FontAwesome5

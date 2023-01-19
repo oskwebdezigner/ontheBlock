@@ -12,7 +12,7 @@ import {
   Image,
   Linking,
 } from "react-native";
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from "expo-image-picker";
 import ThemeContext from "../../context/ThemeContext/ThemeContext";
 import { theme } from "../../context/ThemeContext/ThemeColor";
 import styles from "../styles";
@@ -31,9 +31,11 @@ import {
   addMultipleFiles,
   getImageKitToken,
 } from "../../apollo/server";
-import { uploadToImageKit, uploadImageToImageKit } from "../../Component/CameraComponent/CloudUpload";
+import {
+  uploadToImageKit,
+  uploadImageToImageKit,
+} from "../../Component/CameraComponent/CloudUpload";
 import FlashMessage from "../../Component/FlashMessage/FlashMessage";
-
 
 export default function DocumentEdit(props) {
   const ADD_MULTIPLE_FILES = gql`
@@ -106,7 +108,6 @@ export default function DocumentEdit(props) {
     setUploadNewDocs(() => [...newArr]);
     setDeletedFiles((prevfile) => [...prevfile, deleted[0]]);
   };
-
 
   async function Addfiles() {
     let DEL = deletedFiles?.map((file) => {
@@ -264,42 +265,47 @@ export default function DocumentEdit(props) {
                 </View>
               );
             })}
-      <CameraAndFileComponent 
-      loading = { (e) => {setDocumentfileLoading(e)}} 
-      fileUpload = {async(document)=>{
-        if (document.type === "success") {
-          await uploadToImageKit(document).then((file) => {
-            console.log('file>>>1234',file)
-            setDocumentfileLoading(false);
-            setUploadNewDocs((prevfile) => [
-              ...prevfile,
-              {
-                name: file.name,
-                mimetype: document.mimeType,
-                path: file.url,
-              },
-            ]);
-          });
-        }
-        if (document.type === "cancel") {
-          setDocumentfileLoading(false);
-        }
-      }}
-      update = {async (image) => {console.log('responsesssss>>>',image)
-      uploadImageToImageKit(image)
-      await uploadImageToImageKit(image).then((img) => {
-        console.log('img>>>',img)
-        setUploadNewDocs((prevfile) => [
-              ...prevfile,
-              {
-                name: img.name,
-                mimetype: 'image/jpeg',
-                path: img.url,
-              },
-            ]);
-      });
-      }} > 
-            {/* <TouchableOpacity
+            <CameraAndFileComponent
+              loading={(e) => {
+                setDocumentfileLoading(e);
+              }}
+              fileUpload={async (document, docuemntBase64) => {
+                if (document.type === "success" && docuemntBase64) {
+                  await uploadToImageKit(document, docuemntBase64).then(
+                    (file) => {
+                      setDocumentfileLoading(false);
+                      setUploadNewDocs((prevfile) => [
+                        ...prevfile,
+                        {
+                          name: file.name,
+                          mimetype: document.mimeType,
+                          path: file.url,
+                        },
+                      ]);
+                    }
+                  );
+                }
+                if (document.type === "cancel") {
+                  setDocumentfileLoading(false);
+                }
+              }}
+              update={async (image) => {
+                console.log("responsesssss>>>", image);
+                uploadImageToImageKit(image);
+                await uploadImageToImageKit(image).then((img) => {
+                  console.log("img>>>", img);
+                  setUploadNewDocs((prevfile) => [
+                    ...prevfile,
+                    {
+                      name: img.name,
+                      mimetype: "image/jpeg",
+                      path: img.url,
+                    },
+                  ]);
+                });
+              }}
+            >
+              {/* <TouchableOpacity
               // onPress={() => setFile()}
               onPress={() => setModalVisible(true) }
               style={[
@@ -317,34 +323,34 @@ export default function DocumentEdit(props) {
                 },
               ]}
             > */}
-            <View 
-             style={[
-              styles().mt10,
-              styles().justifyCenter,
-              styles().alignCenter,
-              styles().br5,
-              styles().bw1,
-              styles().wh40px,
-              {
-                top: -3,
-                borderStyle: "dashed",
-                borderColor: currentTheme.textColor,
-                marginLeft: 10,
-              },
-            ]}
-            >
-            {DocumentfileLoading ? (
-                <ActivityIndicator size={"small"} />
-              ) : (
-                <AntDesign
-                  name="addfile"
-                  color={currentTheme.c727477}
-                  size={20}
-                />
-              )}
-            </View>
-            
-            {/* </TouchableOpacity> */}
+              <View
+                style={[
+                  styles().mt10,
+                  styles().justifyCenter,
+                  styles().alignCenter,
+                  styles().br5,
+                  styles().bw1,
+                  styles().wh40px,
+                  {
+                    top: -3,
+                    borderStyle: "dashed",
+                    borderColor: currentTheme.textColor,
+                    marginLeft: 10,
+                  },
+                ]}
+              >
+                {DocumentfileLoading ? (
+                  <ActivityIndicator size={"small"} />
+                ) : (
+                  <AntDesign
+                    name="addfile"
+                    color={currentTheme.c727477}
+                    size={20}
+                  />
+                )}
+              </View>
+
+              {/* </TouchableOpacity> */}
             </CameraAndFileComponent>
           </View>
 
@@ -356,7 +362,7 @@ export default function DocumentEdit(props) {
                 { color: currentTheme.lightRed },
               ]}
             >
-              You Can Upload Pdf, Word etc
+              You Can Upload pdf, jpeg or png
             </Text>
           </View>
         </View>
@@ -472,7 +478,6 @@ export default function DocumentEdit(props) {
     </Layout>
   );
 }
-
 
 const style = StyleSheet.create({
   /* Other styles hidden to keep the example brief... */
