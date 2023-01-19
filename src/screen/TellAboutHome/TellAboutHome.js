@@ -174,7 +174,7 @@ export default function TellAboutHome(props) {
           use: Residence,
         },
       };
-      console.log(data);
+      console.log("property data:", data);
       // alert('create')
       mutate({ variables: { ...data } });
     }

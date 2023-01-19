@@ -37,6 +37,11 @@ export default function ChooseGoals(props) {
 
   const { loading, error, data, refetch } = useQuery(GOALS, {
     fetchPolicy: "cache-and-network",
+    variables: {
+      options: {
+        limit: 1000,
+      },
+    },
     onCompleted: ({ goals }) => {
       // console.log("goals res :", goals.results);
       setTopgoals(goals.results);

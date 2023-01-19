@@ -192,7 +192,7 @@ export default function MaintenaceDetail(props) {
                 ]}
               >
                 {/* {`The ${item?.description} has been completed`} */}
-                {`The Task Has Been Completed!`}
+                {`Task Has Been Completed!`}
               </Text>
             </View>
           </View>
