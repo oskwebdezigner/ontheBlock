@@ -103,7 +103,8 @@ export default function InventoryCatList(props) {
       navigation={props.navigation}
       LeftIcon={true}
       withoutScroll={true}
-      pagetitle={property?.name ? property?.name?.toUpperCase() : "My Stuff"}
+      // pagetitle={property?.name ? property?.name?.toUpperCase() : "My Stuff"}
+      pagetitle={property?.use?.name ? property?.use?.name?.toUpperCase() : "My Stuff"}
       style={[styles().ph0, styles().pl20, { backgroundColor: "transparent" }]}
     >
       <ImageView

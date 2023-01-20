@@ -50,6 +50,7 @@ export default function TellAboutHome(props) {
   const [PropertyType, setPropertyType] = useState("");
   const [property, setProperty] = useState([]);
   const [Residence, setResidence] = useState("");
+  const [address, setAddress] = useState("");
 
   const REGISTER_WITH_PROPERTY = gql`
     ${RegisterWithProperty}
@@ -123,19 +124,19 @@ export default function TellAboutHome(props) {
   async function Register() {
     console.log("enter property type", PropertyType);
     let status = true;
-    if (PropertyNick === "") {
-      setPropertyNickError(true);
-      FlashMessage({ msg: "Enter Residence Name!", type: "warning" });
+    // if (PropertyNick === "") {
+    //   setPropertyNickError(true);
+    //   FlashMessage({ msg: "Enter Residence Name!", type: "warning" });
+    //   status = false;
+    //   return;
+    // }
+    if (Residence === "") {
+      FlashMessage({ msg: "Select Residence Type!", type: "warning" });
       status = false;
       return;
     }
     if (PropertyType === "") {
       FlashMessage({ msg: "Select Your Property Type", type: "warning" });
-      status = false;
-      return;
-    }
-    if (Residence === "") {
-      FlashMessage({ msg: "Select Propert Use!", type: "warning" });
       status = false;
       return;
     }
@@ -148,6 +149,11 @@ export default function TellAboutHome(props) {
     if (Bathroom === "") {
       setBathroomError(true);
       FlashMessage({ msg: "Enter Bathroom", type: "warning" });
+      status = false;
+      return;
+    }
+    if (address === "") {
+      FlashMessage({ msg: "Enter Address", type: "warning" });
       status = false;
       return;
     }
@@ -168,10 +174,11 @@ export default function TellAboutHome(props) {
           bathrooms: parseFloat(Bathroom),
           bedrooms: parseFloat(Bedrooms),
           owned_years: value,
-          name: PropertyNick,
+          name: PropertyNick ? PropertyNick : Residence,
           type: PropertyType[0],
           description: "description",
           use: Residence,
+          address: address,
         },
       };
       console.log("property data:", data);
@@ -183,7 +190,7 @@ export default function TellAboutHome(props) {
   let proptuse = propertyuserData?.propertyUses?.results?.find((item) => {
     return item._id === Residence;
   });
-  // console.log(Residence)
+  // console.log("===>", );
   return (
     <AuthLayout withoutScroll={true} navigation={props.navigation}>
       <KeyboardAvoidingView
@@ -223,19 +230,34 @@ export default function TellAboutHome(props) {
               </Text>
             </View>
 
-            <View style={styles().mt15}>
-              <TextField
-                keyboardType="default"
-                onChangeText={(e) => {
-                  setPropertyNickError(false);
-                  setPropertyNick(e);
+            <View
+              style={[
+                styles().mt15,
+                styles().h60px,
+                styles().br10,
+                styles().bw1,
+                { borderColor: currentTheme.cEFEFEF },
+              ]}
+            >
+              <Text
+                style={[
+                  styles().ml15,
+                  styles().mt5,
+                  styles().fs12,
+                  styles().fw400,
+                  { color: currentTheme.textColor },
+                ]}
+              >
+                {/* Property Use (optional) */}
+                Residence Type
+              </Text>
+              <Multiselect
+                ListItems={propertyuserData?.propertyUses?.results}
+                SelectText={proptuse?.name}
+                value={Residence}
+                setValue={(e) => {
+                  setResidence(e[0]);
                 }}
-                value={PropertyNick}
-                // label="Property Nickname"
-                label="Residence Name"
-                errorText={PropertyNickError}
-                autoCapitalize="none"
-                style
               />
             </View>
 
@@ -267,31 +289,19 @@ export default function TellAboutHome(props) {
               />
             </View>
 
-            <View
-              style={[
-                styles().mt15,
-                styles().h60px,
-                styles().br10,
-                styles().bw1,
-                { borderColor: currentTheme.cEFEFEF },
-              ]}
-            >
-              <Text
-                style={[
-                  styles().ml15,
-                  styles().mt5,
-                  styles().fs12,
-                  styles().fw400,
-                  { color: currentTheme.textColor },
-                ]}
-              >
-                Property Use
-              </Text>
-              <Multiselect
-                ListItems={propertyuserData?.propertyUses?.results}
-                SelectText={proptuse?.name}
-                value={Residence}
-                setValue={(e) => setResidence(e[0])}
+            <View style={styles().mt15}>
+              <TextField
+                keyboardType="default"
+                onChangeText={(e) => {
+                  setPropertyNickError(false);
+                  setPropertyNick(e);
+                }}
+                value={PropertyNick}
+                // label="Property Nickname"
+                label="Property Name (optional)"
+                errorText={PropertyNickError}
+                autoCapitalize="none"
+                style
               />
             </View>
 
@@ -340,6 +350,20 @@ export default function TellAboutHome(props) {
                 value={Bathroom}
                 label="Bathroom(s)"
                 errorText={BathroomError}
+                autoCapitalize="none"
+                style
+              />
+            </View>
+            <View style={styles().mt15}>
+              <TextField
+                keyboardType="default"
+                onChangeText={(e) => {
+                  setAddress(e);
+                }}
+                value={address}
+                // label="Property Nickname"
+                label="Address"
+                // errorText={PropertyNickError}
                 autoCapitalize="none"
                 style
               />

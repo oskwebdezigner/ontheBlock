@@ -130,12 +130,24 @@ export default function PropertyData(props) {
 
   async function UpdateProperty() {
     let status = true;
-    if (PropertyNick === "") {
-      FlashMessage({ msg: "Enter Residence Name!", type: "warning" });
+    if (Residence === "") {
+      FlashMessage({ msg: "Select Residence Type!", type: "warning" });
       setPropertyNickError(true);
       status = false;
       return;
     }
+    if (Street === "") {
+      FlashMessage({ msg: "Enter Address!", type: "warning" });
+      setStreetError(true);
+      status = false;
+      return;
+    }
+    // if (PropertyNick === "") {
+    //   FlashMessage({ msg: "Enter Residence Name!", type: "warning" });
+    //   setPropertyNickError(true);
+    //   status = false;
+    //   return;
+    // }
     if (status) {
       setLoading(true);
       let data = {
@@ -159,7 +171,7 @@ export default function PropertyData(props) {
   }
 
   useEffect(() => {
-    setPropertyNick(property?.name);
+    // setPropertyNick(property?.name);
     setStreet(property?.address);
     setCity(property?.city);
     setState(property?.country);
@@ -191,24 +203,38 @@ export default function PropertyData(props) {
       navigation={props.navigation}
       LeftIcon={true}
       withoutScroll={true}
-      pagetitle={property?.name?.toUpperCase()}
+      // pagetitle={property?.name?.toUpperCase()}
+      pagetitle={property?.use?.name?.toUpperCase()}
       loading={loading}
     >
       <KeyboardAvoidingView style={styles().flex}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={styles().mt15}>
-            <TextField
-              keyboardType="default"
-              onChangeText={(e) => {
-                setPropertyNickError(false);
-                setPropertyNick(e);
-              }}
-              value={PropertyNick}
-              // label="Property Nickname"
-              label="Residence Name"
-              errorText={PropertyNickError}
-              autoCapitalize="none"
-              style
+          <View
+            style={[
+              styles().mt15,
+              styles().h60px,
+              styles().br10,
+              styles().bw1,
+              { borderColor: currentTheme.cEFEFEF },
+            ]}
+          >
+            <Text
+              style={[
+                styles().ml15,
+                styles().mt5,
+                styles().fs12,
+                styles().fw400,
+                { color: currentTheme.textColor },
+              ]}
+            >
+              {/* Property Use (optional) */}
+              Residence Type
+            </Text>
+            <Multiselect
+              ListItems={propertyuserData?.propertyUses?.results}
+              SelectText={proptuse?.name ? proptuse?.name : proptuse?.name}
+              value={Residence}
+              setValue={(e) => setResidence(e[0])}
             />
           </View>
 
@@ -248,31 +274,19 @@ export default function PropertyData(props) {
             />
           </View>
 
-          <View
-            style={[
-              styles().mt15,
-              styles().h60px,
-              styles().br10,
-              styles().bw1,
-              { borderColor: currentTheme.cEFEFEF },
-            ]}
-          >
-            <Text
-              style={[
-                styles().ml15,
-                styles().mt5,
-                styles().fs12,
-                styles().fw400,
-                { color: currentTheme.textColor },
-              ]}
-            >
-              Property Use (optional)
-            </Text>
-            <Multiselect
-              ListItems={propertyuserData?.propertyUses?.results}
-              SelectText={proptuse?.name ? proptuse?.name : proptuse?.name}
-              value={Residence}
-              setValue={(e) => setResidence(e[0])}
+          <View style={styles().mt15}>
+            <TextField
+              keyboardType="default"
+              onChangeText={(e) => {
+                setPropertyNickError(false);
+                setPropertyNick(e);
+              }}
+              value={PropertyNick}
+              // label="Property Nickname"
+              label="Property Name (optional)"
+              errorText={PropertyNickError}
+              autoCapitalize="none"
+              style
             />
           </View>
 
@@ -284,7 +298,7 @@ export default function PropertyData(props) {
                 setStreet(e);
               }}
               value={Street}
-              label="Street Address (optional)"
+              label="Street Address"
               errorText={StreetError}
               autoCapitalize="none"
               style

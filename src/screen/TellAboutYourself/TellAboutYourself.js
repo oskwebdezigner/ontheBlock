@@ -142,6 +142,12 @@ export default function TellAboutYourself(props) {
       status = false;
       return;
     }
+    // if (Address === "") {
+    //   FlashMessage({ msg: "Enter Address!", type: "warning" });
+    //   setAddressError(true);
+    //   status = false;
+    //   return;
+    // }
 
     if (status) {
       setLoading(true);
@@ -165,7 +171,7 @@ export default function TellAboutYourself(props) {
       // });
     }
   }
-  console.log(PhoneNumber);
+  // console.log(PhoneNumber);
   return (
     <AuthLayout withoutScroll={true} navigation={props.navigation}>
       <KeyboardAvoidingView

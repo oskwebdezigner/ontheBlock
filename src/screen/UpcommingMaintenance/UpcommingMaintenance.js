@@ -156,7 +156,8 @@ export default function UpcomminMaintenance(props) {
                           { color: currentTheme.black },
                         ]}
                       >
-                        {item?.property?.name?.toUpperCase()}
+                        {item?.property?.use?.name?.toUpperCase()}
+                        {/* {item?.property?.name?.toUpperCase()} */}
                       </Text>
                       {/* <Text>
                         {item.property.is_completed
