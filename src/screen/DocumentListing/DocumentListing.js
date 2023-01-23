@@ -97,8 +97,11 @@ export default function DocumentListing(props) {
       LeftIcon={true}
       withoutScroll={true}
       pagetitle={
-        property?.name ? property?.name?.toUpperCase() : "My Documents"
+        property?.use?.name ? property?.use?.name?.toUpperCase() : "My Documents"
       }
+      // pagetitle={
+      //   property?.name ? property?.name?.toUpperCase() : "My Documents"
+      // }
       style={[styles().ph0]}
     >
       <View style={[styles().flex, { marginHorizontal: width * 0.04 }]}>

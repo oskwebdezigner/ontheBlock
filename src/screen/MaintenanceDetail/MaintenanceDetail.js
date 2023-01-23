@@ -192,7 +192,7 @@ export default function MaintenaceDetail(props) {
                 ]}
               >
                 {/* {`The ${item?.description} has been completed`} */}
-                {`The Task Has Been Completed!`}
+                {`Task Has Been Completed!`}
               </Text>
             </View>
           </View>
@@ -206,7 +206,8 @@ export default function MaintenaceDetail(props) {
       navigation={props.navigation}
       LeftIcon={true}
       loading={Loading}
-      pagetitle={item?.property?.name?.toUpperCase()}
+      // pagetitle={item?.property?.name?.toUpperCase()}
+      pagetitle={item?.property?.use?.name?.toUpperCase()}
     >
       <TouchableOpacity
         activeOpacity={1}
@@ -271,7 +272,8 @@ export default function MaintenaceDetail(props) {
                 { color: currentTheme.black },
               ]}
             >
-              {item?.property?.name?.toUpperCase()}
+              {/* {item?.property?.name?.toUpperCase()} */}
+              {item?.property?.use?.name?.toUpperCase()}
             </Text>
             <View
               style={[

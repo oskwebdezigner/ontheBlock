@@ -455,6 +455,7 @@ export const upcommingTasksList = `query UpcommingTasksList {
         contact_no
         occupation
       }
+      
       is_completed
       get_notifications
       description
@@ -473,6 +474,11 @@ export const upcommingTasksList = `query UpcommingTasksList {
         images
         address
         description
+        use {
+          _id
+          name
+          description
+        }
       }
     }
     limit

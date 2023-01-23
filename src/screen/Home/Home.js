@@ -32,7 +32,7 @@ export default function Home(props) {
   const UPCOMING_TASK_LIST = gql`
     ${upcommingTasksList}
   `;
-  
+
   const HomeTopList = [
     {
       Image: require("../../assets/images/home-top-img1.png"),
@@ -94,10 +94,10 @@ export default function Home(props) {
     },
     fetchPolicy: "cache-and-network",
     onCompleted: ({ upcommingTasksList }) => {
-      // console.log(
-      //   "upcommingTasksList res ================>",
-      //   upcommingTasksList.results
-      // );
+      console.log(
+        "upcommingTasksList res ================>",
+        upcommingTasksList.results
+      );
     },
     onError: (err) => {
       console.log("error in upcommingTasksList :", err);
@@ -230,6 +230,7 @@ export default function Home(props) {
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     renderItem={({ item, index }) => {
+                      // console.log(item?.use.name);
                       return (
                         <TouchableOpacity
                           activeOpacity={0.5}
@@ -309,7 +310,8 @@ export default function Home(props) {
                               { color: currentTheme.black },
                             ]}
                           >
-                            {item?.name?.toUpperCase()}
+                            {/* {item?.name?.toUpperCase()} */}
+                            {item?.use?.name?.toUpperCase()}
                           </Text>
                           <View
                             style={[
@@ -680,7 +682,8 @@ export default function Home(props) {
                           { color: currentTheme.black },
                         ]}
                       >
-                        {item?.property?.name?.toUpperCase()}
+                        {/* {item?.property?.name?.toUpperCase()} */}
+                        {item?.property?.use?.name?.toUpperCase()}
                       </Text>
                       {/* <Text>
                         {item.property.is_completed

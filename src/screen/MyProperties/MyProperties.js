@@ -137,7 +137,8 @@ export default function MyProperties(props) {
                       { color: currentTheme.black },
                     ]}
                   >
-                    {item.name?.toUpperCase()}
+                    {/* {item.name?.toUpperCase()} */}
+                    {item?.use?.name?.toUpperCase()}
                   </Text>
                   <View
                     style={[
