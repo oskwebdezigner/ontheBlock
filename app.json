@@ -29,7 +29,7 @@
     },
     "android": {
       "versionCode": 0,
-      "package": "ontheblock.hashone.app",
+      "package": "com.app.ontheblock",
       "useNextNotificationsApi": true,
       "permissions": [
         "CAMERA",

@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:815456534498:android:9c0e2562e2176041f383bb",
+        "mobilesdk_app_id": "1:815456534498:android:485f9818b5d81e4ef383bb",
         "android_client_info": {
-          "package_name": "ontheblock.hashone.app"
+          "package_name": "com.app.ontheblock"
         }
       },
       "oauth_client": [
