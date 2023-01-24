@@ -21,9 +21,9 @@
       },
       "usesAppleSignIn": true,
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "This app uses the location to determine the delivery address for your orders.",
-        "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photos",
-        "NSPhotoLibraryAddUsageDescription": "Allow $(PRODUCT_NAME) to save photos"
+        "NSLocationWhenInUseUsageDescription": "This app uses the location to determine the address of your orders.",
+        "NSPhotoLibraryUsageDescription": "Allow Onthe-Block to access your photos",
+        "NSPhotoLibraryAddUsageDescription": "Allow  Onthe-Block to save photos"
       },
       "bundleIdentifier": "com.app.ontheblock"
     },

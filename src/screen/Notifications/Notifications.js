@@ -96,12 +96,12 @@ export default function Notifications(props) {
 
   const { loading, error, data, refetch } = useQuery(NOTIFICATIONS, {
     fetchPolicy: "cache-and-network",
-    // variables: {
-    //   options: {
-    //     // "limit": null,
-    //     page: 1,
-    //   },
-    // },
+    variables: {
+      options: {
+        // limit: null,
+        // page: 1,
+      },
+    },
     onCompleted: ({ notifications }) => {
       console.log("notifications res =====>", notifications.results);
     },

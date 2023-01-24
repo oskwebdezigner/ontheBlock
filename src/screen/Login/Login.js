@@ -309,7 +309,7 @@ export default function Login(props) {
               styles().alignCenter,
             ]}
           >
-            <View
+            {/* <View
               style={[
                 styles().flex,
                 { height: 2, backgroundColor: currentTheme.cEFEFEF },
@@ -330,10 +330,10 @@ export default function Login(props) {
                 styles().flex,
                 { height: 2, backgroundColor: currentTheme.cEFEFEF },
               ]}
-            />
+            /> */}
           </View>
 
-          <View style={styles().mb25}>
+          {/* <View style={styles().mb25}>
             <TouchableOpacity
               // onPress={() => GoogleSignup()}
               style={[
@@ -355,14 +355,14 @@ export default function Login(props) {
                 Sign in with Google
               </Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
 
           <View
             style={[
               styles().flexRow,
               styles().justifyCenter,
               styles().alignCenter,
-              styles().mb30
+              styles().mb30,
             ]}
           >
             <Text
