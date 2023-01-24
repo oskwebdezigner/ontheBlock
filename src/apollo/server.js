@@ -964,27 +964,49 @@ export const deleteProperty = `mutation DeleteProperty($deletePropertyInput: Del
   }
 }`;
 
-export const notifications = `query Notifications($options: options) {
-  notifications(options: $options) {
+export const notifications = `query Notifications($filters: Notificationfilters, $options: options) {
+  notifications(filters: $filters, options: $options) {
     results {
-      createdAt
-      image
-      seen
-      subTitle
-      task {
+      _id
+      property {
         _id
-        added_by {
-          email
-        }
+        name
+        images
+        address
       }
+      seen
       title
       to
       type
+      createdAt
+      updatedAt
+      notification
+      subTitle
+      task {
+        _id
+        get_notifications
+        schedule_date
+      }
     }
-    page
-    limit
-    totalPages
-    totalResults
+  }
+}`;
+
+export const UpdateNotification = `mutation UpdateNotification($updateNotificationId: ID!, $updateNotification: updateNotification) {
+  updateNotification(id: $updateNotificationId, updateNotification: $updateNotification) {
+    title
+    seen
+    type
+    subTitle
+    notification
+    createdAt
+    property {
+      _id
+      images
+      name
+    }
+    task {
+      _id
+    }
   }
 }`;
 

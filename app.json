@@ -28,7 +28,7 @@
       "bundleIdentifier": "com.app.ontheblock"
     },
     "android": {
-      "versionCode": 0,
+      "versionCode": 1,
       "package": "com.app.ontheblock",
       "useNextNotificationsApi": true,
       "permissions": [
