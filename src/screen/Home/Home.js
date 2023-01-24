@@ -94,10 +94,10 @@ export default function Home(props) {
     },
     fetchPolicy: "cache-and-network",
     onCompleted: ({ upcommingTasksList }) => {
-      console.log(
-        "upcommingTasksList res ================>",
-        upcommingTasksList.results
-      );
+      // console.log(
+      //   "upcommingTasksList res ================>",
+      //   upcommingTasksList.results
+      // );
     },
     onError: (err) => {
       console.log("error in upcommingTasksList :", err);
