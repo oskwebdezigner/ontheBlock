@@ -1057,3 +1057,9 @@ export const propertyUses = `query PropertyUses($options: options, $filters: pro
     }
   }
 }`;
+
+export const DeactiveAccount = `mutation DeactiveAccount($email: String) {
+  deactiveAccount(email: $email) {
+    message
+  }
+}`;
