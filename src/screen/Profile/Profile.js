@@ -52,6 +52,9 @@ export default function Profile(props) {
       FlashMessage({ msg: "Account Deleted!", type: "success" });
       console.log("DeactiveAccount res :", data);
       setDeletePopup(false);
+      await AsyncStorage.clear().then(() =>
+        console.log("async clear - logout!")
+      );
       props.navigation.dispatch(
         CommonActions.reset({
           index: 0,
@@ -75,6 +78,7 @@ export default function Profile(props) {
 
   async function DeleteProfile() {
     setLoading(true);
+    console.log(user?.email);
     await mutate({
       variables: {
         email: user?.email,
