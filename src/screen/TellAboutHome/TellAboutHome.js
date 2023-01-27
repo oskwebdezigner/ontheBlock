@@ -51,6 +51,8 @@ export default function TellAboutHome(props) {
   const [property, setProperty] = useState([]);
   const [Residence, setResidence] = useState("");
   const [address, setAddress] = useState("");
+  const [zip_code, setZip_code] = useState("");
+  const [zip_codeError, setZip_codeError] = useState(false);
 
   const REGISTER_WITH_PROPERTY = gql`
     ${RegisterWithProperty}
@@ -152,8 +154,14 @@ export default function TellAboutHome(props) {
       status = false;
       return;
     }
-    if (address === "") {
-      FlashMessage({ msg: "Enter Address", type: "warning" });
+    // if (address === "") {
+    //   FlashMessage({ msg: "Enter Address", type: "warning" });
+    //   status = false;
+    //   return;
+    // }
+    if (zip_code === "") {
+      FlashMessage({ msg: "Enter Zip Code", type: "warning" });
+      setZip_codeError(true);
       status = false;
       return;
     }
@@ -178,7 +186,8 @@ export default function TellAboutHome(props) {
           type: PropertyType[0],
           description: "description",
           use: Residence,
-          address: address,
+          // address: address,
+          zip_code: zip_code,
         },
       };
       console.log("property data:", data);
@@ -354,7 +363,7 @@ export default function TellAboutHome(props) {
                 style
               />
             </View>
-            <View style={styles().mt15}>
+            {/* <View style={styles().mt15}>
               <TextField
                 keyboardType="default"
                 onChangeText={(e) => {
@@ -367,8 +376,21 @@ export default function TellAboutHome(props) {
                 autoCapitalize="none"
                 style
               />
+            </View> */}
+            <View style={styles().mt15}>
+              <TextField
+                keyboardType="default"
+                onChangeText={(e) => {
+                  setZip_codeError(false);
+                  setZip_code(e);
+                }}
+                value={zip_code}
+                label="Zip Code"
+                errorText={zip_codeError}
+                autoCapitalize="none"
+                style
+              />
             </View>
-
             <View
               style={[
                 styles().mt15,

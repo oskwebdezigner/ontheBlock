@@ -136,9 +136,15 @@ export default function PropertyData(props) {
       status = false;
       return;
     }
-    if (Street === "") {
-      FlashMessage({ msg: "Enter Address!", type: "warning" });
-      setStreetError(true);
+    // if (Street === "") {
+    //   FlashMessage({ msg: "Enter Address!", type: "warning" });
+    //   setStreetError(true);
+    //   status = false;
+    //   return;
+    // }
+    if (Zipcode === "") {
+      FlashMessage({ msg: "Enter Zip Code!", type: "warning" });
+      setZipcodeError(true);
       status = false;
       return;
     }
@@ -207,7 +213,11 @@ export default function PropertyData(props) {
       pagetitle={property?.use?.name?.toUpperCase()}
       loading={loading}
     >
-      <KeyboardAvoidingView style={styles().flex}>
+      <KeyboardAvoidingView
+        style={styles().flex}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
+      >
         <ScrollView showsVerticalScrollIndicator={false}>
           <View
             style={[
@@ -298,7 +308,7 @@ export default function PropertyData(props) {
                 setStreet(e);
               }}
               value={Street}
-              label="Street Address"
+              label="Street Address (optional)"
               errorText={StreetError}
               autoCapitalize="none"
               style
@@ -343,7 +353,7 @@ export default function PropertyData(props) {
                 setZipcode(e);
               }}
               value={Zipcode}
-              label="Zipcode (optional)"
+              label="Zipcode"
               errorText={ZipcodeError}
               autoCapitalize="none"
               style
