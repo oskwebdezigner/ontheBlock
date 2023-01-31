@@ -22,8 +22,8 @@
       "usesAppleSignIn": true,
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "This app uses the location to determine the address of your orders.",
-        "NSPhotoLibraryUsageDescription": "Allow Onthe-Block to access your photos",
-        "NSPhotoLibraryAddUsageDescription": "Allow  Onthe-Block to save photos"
+        "NSPhotoLibraryUsageDescription": "Allow Onthe-Block to access your photos to update your property images.",
+        "NSPhotoLibraryAddUsageDescription": "Allow Onthe-Block to save photos of your property."
       },
       "bundleIdentifier": "com.app.ontheblock"
     },
