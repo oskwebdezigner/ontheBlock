@@ -235,14 +235,14 @@ export default function TellAboutYourself(props) {
           if (data.length) {
             const location = data[0];
             let delivery_address = Object.keys(location)
-              .map((key) => location[key])
-              .join(" ");
+              ?.map((key) => location[key])
+              ?.join(" ");
             console.log("data on delivery_address", delivery_address);
             setAddress(delivery_address);
           }
         })
         .catch((error) => {
-          console.log("Error : ", error);
+          console.log("Error in regionchange : ", error);
         });
     }
   }
@@ -255,8 +255,8 @@ export default function TellAboutYourself(props) {
       let region = {
         latitude: location?.coords?.latitude,
         longitude: location?.coords?.longitude,
-        latitudeDelta: 0.1,
-        longitudeDelta: 0.1,
+        latitudeDelta: 0.03,
+        longitudeDelta: 0.03,
       };
       setRegion(region);
       regionChange(region);
@@ -266,7 +266,7 @@ export default function TellAboutYourself(props) {
   useEffect(() => {
     Currentlocation();
   }, [isFocus]);
-
+  console.log(Address);
   return (
     <AuthLayout withoutScroll={true} navigation={props.navigation}>
       <KeyboardAvoidingView
@@ -429,19 +429,19 @@ export default function TellAboutYourself(props) {
             ]}
           >
             <MapView
-              showsCompass
-              onMapReady={setMargin}
+              // showsCompass
+              // onMapReady={setMargin}
               region={{
-                latitude: parseFloat(region.latitude),
-                longitude: parseFloat(region.longitude),
-                latitudeDelta: 0.1,
-                longitudeDelta: 0.1,
+                latitude: parseFloat(region?.latitude),
+                longitude: parseFloat(region?.longitude),
+                latitudeDelta: 0.03,
+                longitudeDelta: 0.03,
               }}
               initialRegion={{
-                latitude: parseFloat(region.latitude),
-                longitude: parseFloat(region.longitude),
-                latitudeDelta: 0.1,
-                longitudeDelta: 0.1,
+                latitude: parseFloat(region?.latitude),
+                longitude: parseFloat(region?.longitude),
+                latitudeDelta: 0.03,
+                longitudeDelta: 0.03,
               }}
               loadingEnabled={true}
               // showsUserLocation={true}
@@ -454,8 +454,8 @@ export default function TellAboutYourself(props) {
             >
               <Marker
                 coordinate={{
-                  latitude: parseFloat(region.latitude),
-                  longitude: parseFloat(region.longitude),
+                  latitude: parseFloat(region?.latitude),
+                  longitude: parseFloat(region?.longitude),
                 }}
               />
             </MapView>
