@@ -14,7 +14,7 @@ import {
 import ThemeContext from "../../context/ThemeContext/ThemeContext";
 import { theme } from "../../context/ThemeContext/ThemeColor";
 import styles from "../styles";
-import { CommonActions } from "@react-navigation/native";
+import { CommonActions, useIsFocused } from "@react-navigation/native";
 import {
   Ionicons,
   Foundation,
@@ -34,14 +34,27 @@ import { useQuery, useMutation, useSubscription } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import { SendPhoneCode } from "../../apollo/server";
 import Spinner from "../../Component/Spinner/Spinner";
-const { width, height } = Dimensions.get("window");
+import MapView, {
+  PROVIDER_GOOGLE,
+  Marker,
+  PROVIDER_DEFAULT,
+} from "react-native-maps";
+import MapInput from "../../Component/MapInput/MapInput";
+import * as Location from "expo-location";
+import * as Permission from "expo-permissions";
 
+const { width, height } = Dimensions.get("window");
+const LATITUDE = 6.4598198;
+const LONGITUDE = 3.5242564;
+const LATITUDE_DELTA = 0.1;
+const LONGITUDE_DELTA = 0.1;
 export default function TellAboutYourself(props) {
   let goal = props?.route?.params.goal;
   const SEND_PHONE_CODE = gql`
     ${SendPhoneCode}
   `;
   const { phone } = useRef();
+  let isFocus = useIsFocused();
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
 
@@ -61,6 +74,41 @@ export default function TellAboutYourself(props) {
   const [AddressError, setAddressError] = useState(false);
 
   const [loading, setLoading] = useState(false);
+
+  const [mapMargin, setMapMargin] = useState(1);
+
+  const [region, setRegion] = useState({
+    latitude: LATITUDE,
+    latitudeDelta: LATITUDE_DELTA,
+    longitude: LONGITUDE,
+    longitudeDelta: LONGITUDE_DELTA,
+  });
+
+  function setMargin() {
+    setMapMargin(0);
+  }
+
+  const [delivery_address, setDeliveryAddress] = useState("");
+
+  function onChangeDeliveryAddress(address) {
+    setDeliveryAddress(address);
+  }
+
+  function onChangeDeliveryRegion(region) {
+    console.log("==========", region);
+    setRegion(region);
+  }
+
+  function getCoordsFromName(loc, description, addressComponent) {
+    let region = {
+      latitude: loc.lat,
+      longitude: loc.lng,
+      latitudeDelta: 0.1,
+      longitudeDelta: 0.1,
+    };
+    setRegion(region);
+    setDeliveryAddress(description);
+  }
 
   const [mutate, { client }] = useMutation(SEND_PHONE_CODE, {
     onCompleted,
@@ -172,6 +220,53 @@ export default function TellAboutYourself(props) {
     }
   }
   // console.log(PhoneNumber);
+  async function regionChange(region) {
+    const { status } = await Permission.askAsync(
+      Permission.LOCATION_FOREGROUND
+    );
+
+    if (status === "granted") {
+      Location.reverseGeocodeAsync({
+        latitude: region.latitude,
+        longitude: region.longitude,
+      })
+        .then((data) => {
+          console.log("data on regionChange(region)", data);
+          if (data.length) {
+            const location = data[0];
+            let delivery_address = Object.keys(location)
+              .map((key) => location[key])
+              .join(" ");
+            console.log("data on delivery_address", delivery_address);
+            setAddress(delivery_address);
+          }
+        })
+        .catch((error) => {
+          console.log("Error : ", error);
+        });
+    }
+  }
+
+  async function Currentlocation() {
+    let location = await Location.getCurrentPositionAsync({
+      enableHighAccuracy: true,
+    });
+    if (location) {
+      let region = {
+        latitude: location?.coords?.latitude,
+        longitude: location?.coords?.longitude,
+        latitudeDelta: 0.1,
+        longitudeDelta: 0.1,
+      };
+      setRegion(region);
+      regionChange(region);
+    }
+  }
+
+  useEffect(() => {
+    Currentlocation();
+  }, [isFocus]);
+
   return (
     <AuthLayout withoutScroll={true} navigation={props.navigation}>
       <KeyboardAvoidingView
@@ -309,6 +404,61 @@ export default function TellAboutYourself(props) {
                 setAddress(text);
               }}
             />
+          </View>
+          {/* <View style={styles().mb20}>
+            <MapInput
+              onChangeAddress={(data) => onChangeDeliveryAddress(data)}
+              onChangeRegion={(data) => onChangeDeliveryRegion(data)}
+              delivery_address={delivery_address}
+              notifyChange={(loc, description, addressComponent) => {
+                console.log("===========>", loc, description, addressComponent);
+                getCoordsFromName(loc, description, addressComponent);
+              }}
+              region={region}
+            />
+          </View> */}
+          <View
+            style={[
+              {
+                height: 120,
+                width: "100%",
+                borderRadius: 10,
+                overflow: "hidden",
+                marginBottom: 20,
+              },
+            ]}
+          >
+            <MapView
+              showsCompass
+              onMapReady={setMargin}
+              region={{
+                latitude: parseFloat(region.latitude),
+                longitude: parseFloat(region.longitude),
+                latitudeDelta: 0.1,
+                longitudeDelta: 0.1,
+              }}
+              initialRegion={{
+                latitude: parseFloat(region.latitude),
+                longitude: parseFloat(region.longitude),
+                latitudeDelta: 0.1,
+                longitudeDelta: 0.1,
+              }}
+              loadingEnabled={true}
+              // showsUserLocation={true}
+              provider={PROVIDER_DEFAULT}
+              showsMyLocationButton={true}
+              style={{
+                width: "100%",
+                height: "100%",
+              }}
+            >
+              <Marker
+                coordinate={{
+                  latitude: parseFloat(region.latitude),
+                  longitude: parseFloat(region.longitude),
+                }}
+              />
+            </MapView>
           </View>
 
           <View style={styles().mt10}>

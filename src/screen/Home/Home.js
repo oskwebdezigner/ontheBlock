@@ -203,7 +203,7 @@ export default function Home(props) {
                     { color: currentTheme.black },
                   ]}
                 >
-                  Your Properties
+                  My Properties
                 </Text>
                 <TouchableOpacity
                   onPress={() => {

@@ -22,6 +22,8 @@ import * as SplashScreen from "expo-splash-screen";
 import * as Notifications from "expo-notifications";
 import "react-native-url-polyfill/auto";
 import * as ImagePicker from "expo-image-picker";
+import * as Location from "expo-location";
+
 const themeValue = "Yellow";
 const STATUSBAR_HEIGHT = StatusBar.currentHeight;
 
@@ -109,7 +111,16 @@ export default function App() {
       );
     } catch (error) {}
   }, [theme]);
-
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.log("Permission to access location was denied");
+        return;
+      }
+      let location = await Location.getCurrentPositionAsync({});
+    })();
+  }, []);
   const MyStatusBar = ({ backgroundColor, ...props }) => (
     <View style={[{ height: STATUSBAR_HEIGHT }, { backgroundColor }]}>
       <SafeAreaView
@@ -151,7 +162,7 @@ export default function App() {
       setToken(token);
     }
     let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    console.log("permissionResult",permissionResult)
+    console.log("permissionResult", permissionResult);
     if (permissionResult.granted === false) {
       //   FlashMessage({ message: "Permission to access camera roll is required!", type: "warning", position: 'top', height: 0.025 })
       Alert.alert("Permission to access camera roll is required!");

@@ -64,7 +64,7 @@ export default function UpcomminMaintenance(props) {
       navigation={props.navigation}
       LeftIcon={true}
       withoutScroll={true}
-      pagetitle={"Upcomming Maintenance"}
+      pagetitle={"Upcoming Maintenance"}
       loading={upcomingLoading}
       style={[styles().ph0]}
     >

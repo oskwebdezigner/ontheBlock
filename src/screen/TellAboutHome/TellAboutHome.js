@@ -181,7 +181,7 @@ export default function TellAboutHome(props) {
         propertyInput: {
           bathrooms: parseFloat(Bathroom),
           bedrooms: parseFloat(Bedrooms),
-          owned_years: value,
+          owned_years: value === 10 ? "10+" : value,
           name: PropertyNick ? PropertyNick : Residence,
           type: PropertyType[0],
           description: "description",
@@ -199,7 +199,7 @@ export default function TellAboutHome(props) {
   let proptuse = propertyuserData?.propertyUses?.results?.find((item) => {
     return item._id === Residence;
   });
-  // console.log("===>", );
+  console.log("===>", value);
   return (
     <AuthLayout withoutScroll={true} navigation={props.navigation}>
       <KeyboardAvoidingView
@@ -410,7 +410,7 @@ export default function TellAboutHome(props) {
                   { color: currentTheme.textColor },
                 ]}
               >
-                How long have you owned your home?
+                How many years have you owned your home?
               </Text>
               <View
                 style={[
@@ -447,7 +447,7 @@ export default function TellAboutHome(props) {
                     { color: currentTheme.black },
                   ]}
                 >
-                  {value}
+                  {value === 10 ? "10+" : value}
                 </Text>
               </View>
             </View>
