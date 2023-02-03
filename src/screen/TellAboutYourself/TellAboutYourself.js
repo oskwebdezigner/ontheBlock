@@ -10,6 +10,7 @@ import {
   Image,
   KeyboardAvoidingView,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import ThemeContext from "../../context/ThemeContext/ThemeContext";
 import { theme } from "../../context/ThemeContext/ThemeColor";
@@ -23,6 +24,7 @@ import {
   Octicons,
   AntDesign,
   FontAwesome,
+  Entypo,
 } from "@expo/vector-icons";
 import PhoneInput from "react-native-phone-input";
 // import TextField from '../../Component/TextField/TextField';
@@ -74,19 +76,14 @@ export default function TellAboutYourself(props) {
   const [AddressError, setAddressError] = useState(false);
 
   const [loading, setLoading] = useState(false);
-
-  const [mapMargin, setMapMargin] = useState(1);
-
+  const [locationLoader, setLocationLoader] = useState(false);
+  const [currentAddress, setCurrentAddress] = useState("");
   const [region, setRegion] = useState({
     latitude: LATITUDE,
     latitudeDelta: LATITUDE_DELTA,
     longitude: LONGITUDE,
     longitudeDelta: LONGITUDE_DELTA,
   });
-
-  function setMargin() {
-    setMapMargin(0);
-  }
 
   const [delivery_address, setDeliveryAddress] = useState("");
 
@@ -226,22 +223,24 @@ export default function TellAboutYourself(props) {
     );
 
     if (status === "granted") {
-      Location.reverseGeocodeAsync({
+      await Location.reverseGeocodeAsync({
         latitude: region.latitude,
         longitude: region.longitude,
       })
         .then((data) => {
           console.log("data on regionChange(region)", data);
-          if (data.length) {
+          if (data?.length) {
             const location = data[0];
-            let delivery_address = Object.keys(location)
+            let delivery_address = Object?.keys(location)
               ?.map((key) => location[key])
               ?.join(" ");
             console.log("data on delivery_address", delivery_address);
+            setLocationLoader(false);
             setAddress(delivery_address);
           }
         })
         .catch((error) => {
+          setLocationLoader(false);
           console.log("Error in regionchange : ", error);
         });
     }
@@ -258,13 +257,14 @@ export default function TellAboutYourself(props) {
         latitudeDelta: 0.03,
         longitudeDelta: 0.03,
       };
+      await regionChange(region);
       setRegion(region);
-      regionChange(region);
+      setCurrentAddress(region);
     }
   }
 
   useEffect(() => {
-    Currentlocation();
+    // Currentlocation();
   }, [isFocus]);
   console.log(Address);
   return (
@@ -417,49 +417,72 @@ export default function TellAboutYourself(props) {
               region={region}
             />
           </View> */}
-          <View
-            style={[
-              {
-                height: 120,
-                width: "100%",
-                borderRadius: 10,
-                overflow: "hidden",
-                marginBottom: 20,
-              },
-            ]}
-          >
-            <MapView
-              // showsCompass
-              // onMapReady={setMargin}
-              region={{
-                latitude: parseFloat(region?.latitude),
-                longitude: parseFloat(region?.longitude),
-                latitudeDelta: 0.03,
-                longitudeDelta: 0.03,
-              }}
-              initialRegion={{
-                latitude: parseFloat(region?.latitude),
-                longitude: parseFloat(region?.longitude),
-                latitudeDelta: 0.03,
-                longitudeDelta: 0.03,
-              }}
-              loadingEnabled={true}
-              // showsUserLocation={true}
-              provider={PROVIDER_DEFAULT}
-              showsMyLocationButton={true}
-              style={{
-                width: "100%",
-                height: "100%",
-              }}
+          {Address ? (
+            <View
+              style={[
+                {
+                  height: 120,
+                  width: "100%",
+                  borderRadius: 5,
+                  overflow: "hidden",
+                  marginBottom: 20,
+                },
+              ]}
             >
-              <Marker
-                coordinate={{
+              <MapView
+                // showsCompass
+                // onMapReady={setMargin}
+                region={{
                   latitude: parseFloat(region?.latitude),
                   longitude: parseFloat(region?.longitude),
+                  latitudeDelta: 0.03,
+                  longitudeDelta: 0.03,
                 }}
+                initialRegion={{
+                  latitude: parseFloat(region?.latitude),
+                  longitude: parseFloat(region?.longitude),
+                  latitudeDelta: 0.03,
+                  longitudeDelta: 0.03,
+                }}
+                loadingEnabled={true}
+                // showsUserLocation={true}
+                provider={PROVIDER_DEFAULT}
+                onMarkerPress={() => Currentlocation()}
+                // showsMyLocationButton={true}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                }}
+              >
+                <Marker
+                  coordinate={{
+                    latitude: parseFloat(region?.latitude),
+                    longitude: parseFloat(region?.longitude),
+                  }}
+                />
+              </MapView>
+            </View>
+          ) : locationLoader ? (
+            <ActivityIndicator
+              style={[styles().alignSelfEnd]}
+              size={"small"}
+              color={currentTheme.themeBackground}
+            />
+          ) : (
+            <TouchableOpacity
+              style={[styles().alignSelfEnd]}
+              onPress={() => {
+                setLocationLoader(true);
+                Currentlocation();
+              }}
+            >
+              <Entypo
+                name="location"
+                size={20}
+                color={currentTheme.themeBackground}
               />
-            </MapView>
-          </View>
+            </TouchableOpacity>
+          )}
 
           <View style={styles().mt10}>
             {loading ? (
