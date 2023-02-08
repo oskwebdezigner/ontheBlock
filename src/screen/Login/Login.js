@@ -37,11 +37,18 @@ import Spinner from "../../Component/Spinner/Spinner";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Notifications from "expo-notifications";
 import getEnvVars from "../../../environment";
-import * as Google from "expo-google-app-auth";
+// import * as Google from "expo-google-app-auth";
+import * as Google from "expo-auth-session/providers/google";
+import * as AppleAuthentication from "expo-apple-authentication";
 
 const { width, height } = Dimensions.get("window");
 
-const { ANDROID_CLIENT_ID_GOOGLE, IOS_CLIENT_ID_GOOGLE } = getEnvVars();
+const {
+  ANDROID_CLIENT_ID_GOOGLE,
+  IOS_CLIENT_ID_GOOGLE,
+  EXPO_CLIENT_ID,
+} = getEnvVars();
+
 export default function Login(props) {
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
@@ -51,6 +58,9 @@ export default function Login(props) {
   const [passError, setPasswordError] = useState(false);
   const [Loading, setLoading] = useState(false);
   const [notificationToken, setNotificationToken] = useState("");
+  const [enableApple, setEnableApple] = useState(false);
+  const [googleAccessToken, setGoogleAccessToken] = useState("");
+  const [googleUserInfo, setGoogleUserInfo] = useState("");
 
   const LOGIN = gql`
     ${login}
@@ -88,6 +98,7 @@ export default function Login(props) {
       });
     }
   }
+
   const [ConfirmiconEye, setConfirmIconEye] = useState("eye-slash");
   function onChangeIconConfirm() {
     if (ConfirmiconEye === "eye") {
@@ -152,35 +163,102 @@ export default function Login(props) {
     }
   }
 
-  async function GoogleSignup() {
-    try {
-      console.log("ANDROID_CLIENT_ID_GOOGLE", ANDROID_CLIENT_ID_GOOGLE);
-      console.log("IOS_CLIENT_ID_GOOGLE", IOS_CLIENT_ID_GOOGLE);
-      const { type, accessToken, user } = await Google.logInAsync({
-        iosClientId: IOS_CLIENT_ID_GOOGLE,
-        androidClientId: ANDROID_CLIENT_ID_GOOGLE,
-        iosStandaloneAppClientId: IOS_CLIENT_ID_GOOGLE,
-        androidStandaloneAppClientId: ANDROID_CLIENT_ID_GOOGLE,
-      });
-      // console.log("accessToken",accessToken);
-      console.log("user", user);
+  const checkIfSupportsAppleAuthentication = async () => {
+    let abc = await AppleAuthentication.isAvailableAsync();
+    setEnableApple(abc);
+  };
 
-      if (type === "success") {
-        console.log("TYPE:", type, "ACCESS_TOKEN:", accessToken, "USER:", user);
-        // / `accessToken` is now valid and can be used to get data from the Google API with HTTP requests /;
-        return user;
-      } else {
-        return false;
-      }
-    } catch (err) {
-      console.log("error arha", err);
+  const AppleSignup = () => {
+    return (
+      <AppleAuthentication.AppleAuthenticationButton
+        buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
+        buttonStyle={[
+          //  AppleAuthentication.AppleAuthenticationButtonStyle.WHITE
+          AppleAuthentication.AppleAuthenticationButtonStyle.BLACK,
+        ]}
+        cornerRadius={100}
+        style={[
+          {
+            width: "100%",
+            textTransform: "uppercase",
+            justifyContent: "space-around",
+            height: 55,
+          },
+        ]}
+        onPress={async () => {
+          // setLoading(true);
+          try {
+            const credential = await AppleAuthentication.signInAsync({
+              requestedScopes: [
+                AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+                AppleAuthentication.AppleAuthenticationScope.EMAIL,
+              ],
+            });
+
+            if (credential) {
+              // let token = (await Notifications.getExpoPushTokenAsync()).data;
+              // Alert.alert(JSON.stringify(credential));
+              console.log("Apple credentials:", credential);
+              // await isAppleAvailable(credential);
+              // setLoading(false);
+              // let token = null;
+              // try {
+              //   token = (await Notifications.getExpoPushTokenAsync()).data;
+              //   console.log("notification token", token);
+              // } catch (error) {
+              //   // alert('token'+JSON.stringify(error))
+              // }
+
+              //create user api here
+            }
+            // signed in
+          } catch (e) {
+            // setLoading(false);
+            if (e.code === "ERR_CANCELLED") {
+              // handle that the user canceled the sign-in flow
+              console.log("error Apple auth :", e);
+            } else {
+              // handle other errors
+              // setLoading(false);
+            }
+          }
+        }}
+      />
+    );
+  };
+
+  const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
+    expoClientId: EXPO_CLIENT_ID,
+    iosClientId: IOS_CLIENT_ID_GOOGLE,
+    androidClientId: ANDROID_CLIENT_ID_GOOGLE,
+  });
+
+  React.useEffect(() => {
+    if (response?.type === "success") {
+      const { authentication } = response;
+      setGoogleAccessToken(authentication.accessToken);
+      console.log("authentication", authentication);
     }
+  }, [response]);
+
+  async function getUserDataByGoogleToken() {
+    let userInfoResponse = await fetch(
+      "https://www.googleapis.com/userinfo/v2/me",
+      {
+        headers: { Authorization: `Bearer ${googleAccessToken}` },
+      }
+    );
+    userInfoResponse.json().then((data) => {
+      setGoogleUserInfo(data);
+      console.log("google user data :", data);
+      // alert(JSON.stringify(data));
+    });
   }
 
   useEffect(() => {
     permissionForPushNotificationsAsync();
+    checkIfSupportsAppleAuthentication();
   }, []);
-
   return (
     <AuthLayout withoutScroll={true} navigation={props.navigation}>
       <KeyboardAvoidingView
@@ -309,7 +387,7 @@ export default function Login(props) {
               styles().alignCenter,
             ]}
           >
-            {/* <View
+            <View
               style={[
                 styles().flex,
                 { height: 2, backgroundColor: currentTheme.cEFEFEF },
@@ -330,12 +408,19 @@ export default function Login(props) {
                 styles().flex,
                 { height: 2, backgroundColor: currentTheme.cEFEFEF },
               ]}
-            /> */}
+            />
           </View>
 
-          {/* <View style={styles().mb25}>
+          <View style={styles().mb15}>
             <TouchableOpacity
-              // onPress={() => GoogleSignup()}
+              disabled={!request}
+              onPress={
+                googleAccessToken
+                  ? getUserDataByGoogleToken()
+                  : () => {
+                      promptAsync({ useProxy: false, showInRecents: true });
+                    }
+              }
               style={[
                 styles().bw1,
                 styles().br50,
@@ -355,14 +440,15 @@ export default function Login(props) {
                 Sign in with Google
               </Text>
             </TouchableOpacity>
-          </View> */}
-
+          </View>
+          {enableApple ? <AppleSignup /> : null}
           <View
             style={[
               styles().flexRow,
               styles().justifyCenter,
               styles().alignCenter,
               styles().mb30,
+              styles().mt30,
             ]}
           >
             <Text
@@ -370,6 +456,7 @@ export default function Login(props) {
                 styles().fs12,
                 styles().fontRegular,
                 { color: currentTheme.lightBlue },
+                ``,
               ]}
             >
               Don't have an account?{" "}

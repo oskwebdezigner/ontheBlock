@@ -29,6 +29,13 @@
             {
               "client_id": "815456534498-us2vah9qrhs49f6qqc9oo7sc93sbls9o.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "815456534498-l2deosv2facij8kfuqvrv49dcvndkgvj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.app.ontheblock"
+              }
             }
           ]
         }

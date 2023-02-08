@@ -48,6 +48,7 @@ export default function ChooseGoals(props) {
     },
     onError: (err) => {
       console.log("error in goals :", err);
+      FlashMessage({ msg: err.message, type: "danger" });
     },
   });
 
