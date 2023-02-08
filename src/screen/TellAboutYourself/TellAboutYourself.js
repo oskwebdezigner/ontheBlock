@@ -405,6 +405,7 @@ export default function TellAboutYourself(props) {
               }}
             />
           </View>
+          
           {/* <View style={styles().mb20}>
             <MapInput
               onChangeAddress={(data) => onChangeDeliveryAddress(data)}
@@ -417,6 +418,7 @@ export default function TellAboutYourself(props) {
               region={region}
             />
           </View> */}
+{/*           
           {Address ? (
             <View
               style={[
@@ -482,7 +484,7 @@ export default function TellAboutYourself(props) {
                 color={currentTheme.themeBackground}
               />
             </TouchableOpacity>
-          )}
+          )} */}
 
           <View style={styles().mt10}>
             {loading ? (
