@@ -379,7 +379,7 @@ export default function Login(props) {
             )}
           </View>
 
-          <View
+          {/* <View
             style={[
               styles().flexRow,
               styles().mv25,
@@ -409,9 +409,9 @@ export default function Login(props) {
                 { height: 2, backgroundColor: currentTheme.cEFEFEF },
               ]}
             />
-          </View>
+          </View> */}
 
-          <View style={styles().mb15}>
+          {/* <View style={styles().mb15}>
             <TouchableOpacity
               disabled={!request}
               onPress={
@@ -440,8 +440,10 @@ export default function Login(props) {
                 Sign in with Google
               </Text>
             </TouchableOpacity>
-          </View>
-          {enableApple ? <AppleSignup /> : null}
+          </View> */}
+
+          {/* {enableApple ? <AppleSignup /> : null} */}
+
           <View
             style={[
               styles().flexRow,

@@ -40,6 +40,50 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:815456534498:android:ae39f49d877c2dfbf383bb",
+        "android_client_info": {
+          "package_name": "com.ontheblock"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "815456534498-dr6hq76qm36i84gj07qgam95oesqc21m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ontheblock",
+            "certificate_hash": "99f3984785c7383e4b6ceb14d27f17796fed819d"
+          }
+        },
+        {
+          "client_id": "815456534498-us2vah9qrhs49f6qqc9oo7sc93sbls9o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWZNWHd3lAsvoroh7km3uqRrLDeERa1LA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "815456534498-us2vah9qrhs49f6qqc9oo7sc93sbls9o.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "815456534498-l2deosv2facij8kfuqvrv49dcvndkgvj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.app.ontheblock"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

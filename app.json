@@ -26,11 +26,11 @@
         "NSPhotoLibraryUsageDescription": "Allow Onthe-Block to access your photos to update your property images.",
         "NSPhotoLibraryAddUsageDescription": "Allow Onthe-Block to save photos of your property."
       },
-      "bundleIdentifier": "com.app.ontheblock"
+      "bundleIdentifier": "com.ontheblock"
     },
     "android": {
       "versionCode": 3,
-      "package": "com.app.ontheblock",
+      "package": "com.ontheblock",
       "useNextNotificationsApi": true,
       "permissions": [
         "CAMERA",
