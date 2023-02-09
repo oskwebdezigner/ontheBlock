@@ -24,13 +24,14 @@
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "This app uses the location to determine the address of your orders.",
         "NSPhotoLibraryUsageDescription": "Allow Onthe-Block to access your photos to update your property images.",
-        "NSPhotoLibraryAddUsageDescription": "Allow Onthe-Block to save photos of your property."
+        "NSPhotoLibraryAddUsageDescription": "Allow Onthe-Block to save photos of your property.",
+        "NSCameraUsageDescription": "Allow Onthe-Block to use your camera to update your profile picture."
       },
-      "bundleIdentifier": "com.ontheblock"
+      "bundleIdentifier": "com.app.ontheblock"
     },
     "android": {
-      "versionCode": 3,
-      "package": "com.ontheblock",
+      "versionCode": 4,
+      "package": "com.app.ontheblock",
       "useNextNotificationsApi": true,
       "permissions": [
         "CAMERA",
